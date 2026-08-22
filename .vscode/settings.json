@@ -8,7 +8,7 @@
   "typescript.format.enable": false,
   "javascript.format.enable": false,
 
-  // Formatter por linguagem (obrigatório no Cursor/VS Code)
+  // Formatter por linguagem — Prettier, nunca Prettier ESLint
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
@@ -42,7 +42,7 @@
     "editor.formatOnSave": true
   },
 
-  // ESLint fix ao salvar, depois Prettier formata o arquivo inteiro
+  // ESLint aplica --fix ao salvar (imports, props, unused). Prettier formata o arquivo.
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
     "source.organizeImports": "never"
@@ -52,16 +52,14 @@
   "eslint.enable": true,
   "eslint.useFlatConfig": true,
   "eslint.format.enable": false,
+  "eslint.run": "onType",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "eslint.workingDirectories": [{ "pattern": "./" }],
 
-  // --- Prettier (usa o Prettier do projeto + plugins) ---
+  // --- Prettier (resolve o do projeto + prettier.config.mjs automaticamente) ---
   "prettier.enable": true,
   "prettier.requireConfig": true,
-  "prettier.configPath": "prettier.config.mjs",
-  "prettier.ignorePath": ".prettierignore",
-  "prettier.prettierPath": "./node_modules/prettier/index.cjs",
-  "prettier.resolveGlobalModules": true,
+  "prettier.resolveGlobalModules": false,
 
   // --- TypeScript workspace ---
   "typescript.tsdk": "node_modules/typescript/lib",

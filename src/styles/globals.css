@@ -25,3 +25,8 @@ select:-webkit-autofill:focus {
   box-shadow: 0 0 0px 1000px transparent inset;
   background-color: transparent !important;
 }
+
+
+.sidebar__menu-item-content {
+  @apply h-10 min-h-10 max-h-10;
+}

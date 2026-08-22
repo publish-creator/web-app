@@ -19,7 +19,7 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
   return (
     <>
-      <Sidebar>
+      <Sidebar className='bg-black max-w-[222px] border-none '>
         <SidebarContents
           basePath={basePath}
           disableNavigation={disableNavigation}
@@ -53,23 +53,17 @@ function SidebarContents({
 }: SidebarContentsProps) {
   return (
     <>
-      <Sidebar.Header>
-        <div className="flex items-center gap-3 px-1 py-1">
-          <Avatar className="size-9">
+      <Sidebar.Header className='h-14 px-3  py-0 flex items-center flex-row '>
+          <Avatar className="size-8">
             <Avatar.Image
               alt="Kate Moore"
-              src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue-light.jpg"
             />
-            <Avatar.Fallback>KM</Avatar.Fallback>
+            {/* <Avatar.Fallback>KM</Avatar.Fallback> */}
           </Avatar>
-          <div className="flex min-w-0 flex-col" data-sidebar="label">
-            <span className="text-foreground text-sm leading-tight font-medium">Kate Moore</span>
-            <span className="text-muted text-xs leading-tight font-medium">Admin</span>
-          </div>
-        </div>
+          
       </Sidebar.Header>
-      <Sidebar.Content>
-        <Sidebar.Group>
+      <Sidebar.Content className='p-3'>
+        <Sidebar.Group >
           <Sidebar.Menu aria-label="Dashboard navigation">
             {NAV_ITEMS.map((item) => (
               <SidebarNavItem
@@ -126,15 +120,18 @@ function SidebarNavItem({
 
   return (
     <Sidebar.MenuItem
+      className='h-11 min-h-11 max-h-11'
       {...(disableNavigation ? {} : { href: fullHref })}
       id={`${idPrefix}${item.href}`}
       isCurrent={isCurrent}
       textValue={item.label}
     >
+        {!!Icon && 
       <Sidebar.MenuIcon>
-        <Icon className="size-4" />
+        <Icon  />
       </Sidebar.MenuIcon>
-      <Sidebar.MenuLabel>{item.label}</Sidebar.MenuLabel>
+        }
+      <Sidebar.MenuLabel className='font-bold'>{item.label}</Sidebar.MenuLabel>
       {item.badge ? (
         <Sidebar.MenuChip>
           <Chip color="success" size="sm" variant="soft">

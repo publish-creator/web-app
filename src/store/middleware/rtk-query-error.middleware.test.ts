@@ -84,14 +84,14 @@ describe('rtkQueryErrorMiddleware Engine Pipeline', () => {
       status: number | string;
       data?: Record<string, unknown> | string | null | undefined;
       error?: string | undefined;
-      expectMsg: string;
+      expectMsg: string | null;
     }
 
     const mappingMatrix: Scenario[] = [
       {
         status: 401,
         data: { message: 'Expired session payload' },
-        expectMsg: 'Expired session payload',
+        expectMsg: null,
       },
       { status: 403, data: 'Forbidden action message', expectMsg: 'Forbidden action message' },
       { status: 422, data: {}, expectMsg: 'Request failed with status 422' },
@@ -123,7 +123,13 @@ describe('rtkQueryErrorMiddleware Engine Pipeline', () => {
       middlewareInstance(targetAction);
 
       // Assert
-      expect(toast.danger).toHaveBeenCalledWith(scenario.expectMsg);
+      if (scenario.expectMsg) {
+        expect(toast.danger).toHaveBeenCalledWith(scenario.expectMsg);
+      } else {
+        expect(toast.danger).not.toHaveBeenCalled();
+      }
+
+      vi.mocked(toast.danger).mockClear();
     });
   });
 });

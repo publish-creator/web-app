@@ -1,2 +1,2 @@
-export { setSession, sessionReducer, sessionSelectors } from './session.slice';
+export { resetUser, setSession, sessionReducer, sessionSelectors } from './session.slice';
 export type { SessionState } from './session.slice';

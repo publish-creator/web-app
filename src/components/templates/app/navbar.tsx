@@ -7,6 +7,7 @@ import { Avatar, Button } from '@heroui/react';
 
 import { IconButton } from '@/components/base/icon-button';
 import { formatCurrency } from '@/utils/format-currency';
+import { useSession } from '@/providers/session-provider';
 
 export interface DashboardNavbarProps {
   /** Title rendered in the navbar. Falls back to the home-page greeting. */
@@ -14,6 +15,7 @@ export interface DashboardNavbarProps {
 }
 
 export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavbarProps) {
+  const { user } = useSession();
   return (
     <Navbar maxWidth="full">
       <Navbar.Header>
@@ -28,15 +30,17 @@ export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavba
           <IconButton label="Notifications" size="sm" variant="tertiary">
             <Bell className="size-4" />
           </IconButton>
-          <Button className='text-lg font-bold' size="sm" variant='tertiary'>
-           {formatCurrency(1000)}
+          <Button className="text-lg font-bold" size="sm" variant="tertiary">
+            {formatCurrency(1000)}
           </Button>
-          
-          <Avatar className='ring-2 size-6.5  ring-offset-2 ring-offset-background ring-accent' size='sm'>
-            <Avatar.Image
-              alt="Kate Moore"
-            />
-            {/* <Avatar.Fallback>KM</Avatar.Fallback> */}
+
+          <Avatar
+            className="ring-offset-background ring-accent size-6.5 ring-2 ring-offset-2"
+            color="accent"
+            size="sm"
+          >
+            {user?.avatar && <Avatar.Image alt="Kate Moore" src={user?.avatar} />}
+            {!user?.avatar && <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>}
           </Avatar>
         </div>
       </Navbar.Header>

@@ -13,9 +13,17 @@ import { sessionReducer } from './slices/session.slice';
 
 export const resetStateAction = createAction('resetState');
 
-export const rootReducer = combineReducers({
+const appReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   session: sessionReducer,
 });
+
+export const rootReducer: typeof appReducer = (state, action) => {
+  if (resetStateAction.match(action)) {
+    return appReducer(undefined, action);
+  }
+
+  return appReducer(state, action);
+};
 
 export type RootReducerState = ReturnType<typeof rootReducer>;

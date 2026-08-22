@@ -2,14 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { baseQueryWithReauth } from './base-query';
 
-export const apiTagTypes = [
-  'Auth',
-  'Users',
-  'Dashboard',
-  'DashboardStats',
-  'Analytics',
-  'Orders',
-] as const;
+export const apiTagTypes = ['Auth', 'Users', 'OffersCategory', 'Offers'] as const;
 
 export type ApiTagType = (typeof apiTagTypes)[number];
 

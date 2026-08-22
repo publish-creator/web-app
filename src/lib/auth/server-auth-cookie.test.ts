@@ -3,55 +3,50 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import { cookies } from 'next/headers';
 
-import { appConfig } from '@/config/app-config';
-
-import { getServerAuthToken } from './server-auth-cookie';
+import { getServerAuthToken, getServerCookieHeader } from './server-auth-cookie';
 
 vi.mock('next/headers', () => ({
   cookies: vi.fn(),
 }));
 
-vi.mock('@/config/app-config', () => ({
-  appConfig: {
-    token: 'agenus_session_auth_token',
-  },
-}));
-
-describe('getServerAuthToken Server Core Extraction', () => {
+describe('getServerCookieHeader', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should resolve headers asynchronously and extract the exact session token value', async () => {
-    // Arrange
-    const dummyTokenValue = 'server-side-resolved-jwt';
-    const mockGet = vi.fn().mockReturnValue({ value: dummyTokenValue });
+  it('should serialize every request cookie so the API can authenticate via httpOnly', async () => {
+    const mockGetAll = vi.fn().mockReturnValue([
+      { name: 'accessToken', value: 'server-side-resolved-jwt' },
+      { name: 'refreshToken', value: 'refresh-jwt' },
+    ]);
     vi.mocked(cookies).mockResolvedValue({
-      get: mockGet,
+      getAll: mockGetAll,
     } as unknown as ReadonlyRequestCookies);
 
-    // Act
-    const result = await getServerAuthToken();
+    const result = await getServerCookieHeader();
 
-    // Assert
     expect(cookies).toHaveBeenCalled();
-    expect(mockGet).toHaveBeenCalledWith(appConfig.token);
-    expect(result).toBe(dummyTokenValue);
+    expect(mockGetAll).toHaveBeenCalled();
+    expect(result).toBe('accessToken=server-side-resolved-jwt; refreshToken=refresh-jwt');
   });
 
-  it('should return undefined gracefully using optional chaining when session key is missing', async () => {
-    // Arrange
-    const mockGet = vi.fn().mockReturnValue(undefined);
+  it('should return undefined when no cookies are present', async () => {
+    const mockGetAll = vi.fn().mockReturnValue([]);
     vi.mocked(cookies).mockResolvedValue({
-      get: mockGet,
+      getAll: mockGetAll,
     } as unknown as ReadonlyRequestCookies);
 
-    // Act
-    const result = await getServerAuthToken();
+    const result = await getServerCookieHeader();
 
-    // Assert
-    expect(cookies).toHaveBeenCalled();
-    expect(mockGet).toHaveBeenCalledWith(appConfig.token);
     expect(result).toBeUndefined();
+  });
+
+  it('should keep getServerAuthToken as a cookie-header alias', async () => {
+    const mockGetAll = vi.fn().mockReturnValue([{ name: 'token', value: 'jwt' }]);
+    vi.mocked(cookies).mockResolvedValue({
+      getAll: mockGetAll,
+    } as unknown as ReadonlyRequestCookies);
+
+    await expect(getServerAuthToken()).resolves.toBe('token=jwt');
   });
 });

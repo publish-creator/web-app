@@ -22,14 +22,7 @@ export default function SignInPage() {
     },
   });
   const onSubmit = (data: SignInSchemaInput) => {
-    void signIn(data)
-      .unwrap()
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    void signIn(data);
   };
   return (
     <div className="flex h-full min-h-screen w-full items-center justify-center">

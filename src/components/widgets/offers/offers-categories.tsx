@@ -1,6 +1,12 @@
+import type { OffersCategoryListResponse } from '@/store/services/offers-category/offers-category.types';
 import { Card } from '@heroui/react';
 
-export const OffersCategories = () => {
+interface OffersCategoriesProps {
+  data: OffersCategoryListResponse | undefined;
+}
+
+export const OffersCategories = ({ data }: OffersCategoriesProps) => {
+  if (!data) return null;
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -8,13 +14,21 @@ export const OffersCategories = () => {
         <p className="text-muted mt-0.5 text-sm">Filter the catalog by vertical</p>
       </div>
       <div className="flex flex-wrap gap-4">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <Card className="flex h-19.25 flex-row gap-6 overflow-hidden rounded-lg" key={index}>
+        {data.data.map((category) => (
+          <Card
+            className="hover:bg-surface-hover flex h-19.25 cursor-pointer flex-row gap-6 overflow-hidden rounded-lg transition-colors duration-300"
+            key={category.id}
+          >
             <div>
-              <p className="text-[15px] font-bold">Category {index + 1}</p>
-              <p className="text-muted text-xs">66 offers</p>
+              <p className="text-[15px] font-bold">{category.title}</p>
+              <p className="text-muted text-xs">{category._count.offers} offers</p>
             </div>
-            <div className="bg-surface-secondary -mr-4 -mb-4 size-[78px] min-h-[78px] min-w-[78px] rounded-lg" />
+            <div className="-mr-4 -mb-4 size-[78px] min-h-[78px] min-w-[78px] rounded-lg">
+              <img
+                alt={category.title}
+                src={category?.image?.url ?? 'https://placehold.co/78x78'}
+              />
+            </div>
           </Card>
         ))}
       </div>

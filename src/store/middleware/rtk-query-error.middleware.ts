@@ -52,7 +52,6 @@ function logStructuredError(log: StructuredApiLog): void {
 
 function handleStatusSideEffects(status: FetchBaseQueryError['status'], code: ApiErrorCode): void {
   if (status === 401) {
-    // Future: trigger refresh token flow or global logout
     return;
   }
 
@@ -100,7 +99,13 @@ export const rtkQueryErrorMiddleware: Middleware = () => (next) => (action) => {
 
     logStructuredError(log);
     handleStatusSideEffects(error.status, code);
-    toast.danger(message);
+
+    const isSilentEndpoint = endpoint === 'getSession' || endpoint === 'signOut';
+    const isSilentUnauthorized = error.status === 401 && endpoint !== 'signIn';
+
+    if (!isSilentEndpoint && !isSilentUnauthorized) {
+      toast.danger(message);
+    }
 
     // Future: dispatch pushFeedback({ type: 'error', message })
     // Future: Sentry.captureException / analytics.track('api_error', log)

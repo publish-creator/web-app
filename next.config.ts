@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
         hostname: 'img.heroui.chat',
         protocol: 'https',
       },
+      {
+        hostname: 'placehold.co',
+        protocol: 'https',
+      },
+      {
+        hostname: 'files.hwaffiliate.com',
+        protocol: 'https',
+      },
     ],
   },
 };

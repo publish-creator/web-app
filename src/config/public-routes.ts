@@ -7,4 +7,4 @@ export const publicRoutes = [
 ] as const;
 
 export const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = '/auth/sign-in';
-export const REDIRECT_SIGN_OUT_ROUTE = '/auth/sign-out';
+export const REDIRECT_SIGN_OUT_ROUTE = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;

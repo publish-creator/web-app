@@ -2,8 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import { rtkQueryErrorMiddleware } from './middleware/rtk-query-error.middleware';
+import { sessionListenerMiddleware } from './middleware/session.listener';
 import { rootReducer } from './root-reducer';
 import { api } from './services/api/base-api';
+
+export { resetAppState } from './reset-app-state';
 
 export function makeStore() {
   return configureStore({
@@ -14,6 +17,7 @@ export function makeStore() {
           ignoredActions: ['api/executeQuery/pending', 'api/executeQuery/fulfilled'],
         },
       })
+        .prepend(sessionListenerMiddleware.middleware)
         .concat(api.middleware)
         .concat(rtkQueryErrorMiddleware),
     devTools: process.env.NODE_ENV !== 'production',

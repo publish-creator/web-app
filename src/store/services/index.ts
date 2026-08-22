@@ -3,7 +3,13 @@ export type { ApiTagType } from './api/base-api';
 export { baseQueryWithReauth, generateRequestId, resolveBaseUrl } from './api/base-query';
 export type { ApiExtraOptions, RequestHeadersContext } from './api/types';
 
-export { authApi, useGetSessionQuery, useLazyGetSessionQuery, useSignInMutation } from './auth';
+export {
+  authApi,
+  useGetSessionQuery,
+  useLazyGetSessionQuery,
+  useSignInMutation,
+  useSignOutMutation,
+} from './auth';
 export type { Session, SignInDto, SignInResponse } from './auth';
 
 export { dashboardApi } from './dashboard';

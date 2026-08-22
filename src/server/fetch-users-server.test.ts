@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { env } from '@/env';
-import { getServerAuthToken } from '@/lib/auth/server-auth-cookie';
+import { getServerCookieHeader } from '@/lib/auth/server-auth-cookie';
 
 import { fetchUsersServer } from './fetch-users-server';
 
@@ -13,7 +13,7 @@ vi.mock('@/env', () => ({
 }));
 
 vi.mock('@/lib/auth/server-auth-cookie', () => ({
-  getServerAuthToken: vi.fn(),
+  getServerCookieHeader: vi.fn(),
 }));
 
 describe('fetchUsersServer Network Operations', () => {
@@ -24,9 +24,9 @@ describe('fetchUsersServer Network Operations', () => {
     mutableEnv.NEXT_PUBLIC_API_URL = 'https://api.agenus.com.br';
   });
 
-  it('should construct a query string url with optional bounds and forward tokens securely', async () => {
+  it('should construct a query string url with optional bounds and forward cookies securely', async () => {
     // Arrange
-    vi.mocked(getServerAuthToken).mockResolvedValue('mock-token-abc');
+    vi.mocked(getServerCookieHeader).mockResolvedValue('accessToken=mock-token-abc');
     const mockResponseData = { data: [], total: 0, totalPages: 0 };
 
     const mockFetch = vi.fn().mockResolvedValue({
@@ -51,7 +51,7 @@ describe('fetchUsersServer Network Operations', () => {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: 'Bearer mock-token-abc',
+          Cookie: 'accessToken=mock-token-abc',
         },
         cache: 'no-store',
       },
@@ -61,7 +61,7 @@ describe('fetchUsersServer Network Operations', () => {
 
   it('should ignore params dictionary bindings if search and filter attributes are missing', async () => {
     // Arrange
-    vi.mocked(getServerAuthToken).mockResolvedValue(undefined);
+    vi.mocked(getServerCookieHeader).mockResolvedValue(undefined);
 
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -94,7 +94,7 @@ describe('fetchUsersServer Network Operations', () => {
 
   it('should throw clear exceptions when HTTP response status codes are not OK', async () => {
     // Arrange
-    vi.mocked(getServerAuthToken).mockResolvedValue(undefined);
+    vi.mocked(getServerCookieHeader).mockResolvedValue(undefined);
 
     const mockFetch = vi.fn().mockResolvedValue({
       ok: false,

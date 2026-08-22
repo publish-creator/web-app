@@ -1,10 +1,10 @@
 import { Button, Card } from '@heroui/react';
-import { Safe2Icon } from '@solar-icons/react/bold';
+import { HeartIcon, HourglassLineIcon, RocketIcon } from '@solar-icons/react/bold';
 
 const AS_OPTIONS = [
-  { icon: Safe2Icon, label: 'Featured' },
-  { icon: Safe2Icon, label: 'Favorites' },
-  { icon: Safe2Icon, label: 'Quests' },
+  { icon: RocketIcon, label: 'My' },
+  { icon: HeartIcon, label: 'Favorites' },
+  { icon: HourglassLineIcon, label: 'Waiting' },
 ];
 
 export const OffersHeader = () => {

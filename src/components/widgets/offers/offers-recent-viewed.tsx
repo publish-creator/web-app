@@ -1,9 +1,15 @@
+import type { OffersListResponse } from '@/store/services/offers/offers.types';
 import { formatCurrency } from '@/utils/format-currency';
 import { Button, Card } from '@heroui/react';
 import { MenuDotsIcon } from '@solar-icons/react/bold';
 import { AltArrowLeftIcon, AltArrowRightIcon } from '@solar-icons/react/linear';
 
-export const OffersRecentViewed = () => {
+interface OffersRecentViewedProps {
+  data: OffersListResponse | undefined;
+}
+
+export const OffersRecentViewed = ({ data }: OffersRecentViewedProps) => {
+  if (!data) return null;
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -24,18 +30,18 @@ export const OffersRecentViewed = () => {
         </div>
       </div>
       <div className="grid grid-cols-7 gap-4">
-        {Array.from({ length: 7 }).map((_, index) => (
-          <Card className="flex flex-col gap-1 overflow-hidden rounded-xl p-1 pb-2" key={index}>
-            <div className="bg-surface-secondary aspect-video rounded-xl" />
+        {data?.data?.map((offer) => (
+          <Card className="flex flex-col gap-1 overflow-hidden rounded-xl p-1 pb-2" key={offer?.id}>
+            <div className="bg-surface-secondary aspect-video overflow-hidden rounded-xl">
+              <img alt={offer?.title} src={offer?.file ?? 'https://placehold.co/600x400'} />
+            </div>
             <div className="px-2">
-              <p className="line-clamp-1 text-sm font-bold">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo temporibus reiciendis
-                nemo, ipsam omnis eveniet est error provident ipsa modi voluptatum rem et voluptatem
-                maiores, non quos cupiditate officiis similique!
-              </p>
+              <p className="line-clamp-1 text-sm font-bold">{offer.title}</p>
               <div className="mt-0.5 flex items-center justify-between">
-                <p className="text-muted text-[12px]">Category</p>
-                <p className="text-success text-[12px]">{formatCurrency(10)} Payout</p>
+                <p className="text-muted text-[12px]">{offer.category.title}</p>
+                <p className="text-success text-[12px]">
+                  {formatCurrency(offer.commissionValue)} Payout
+                </p>
               </div>
             </div>
           </Card>

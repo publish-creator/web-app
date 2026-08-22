@@ -1,16 +1,14 @@
 'use client';
 
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-import { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
-import { usePathname, useRouter } from 'next/navigation';
-
-import { REDIRECT_SIGN_OUT_ROUTE, publicRoutes } from '@/config/public-routes';
-import { getAuthCookie, removeAuthCookie } from '@/lib/auth/client-auth-cookie';
+import { publicRoutes, REDIRECT_SIGN_OUT_ROUTE } from '@/config/public-routes';
+import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { resetStateAction } from '@/store/root-reducer';
-import { api, useLazyGetSessionQuery } from '@/store/services';
+import { resetAppState } from '@/store/reset-app-state';
+import { useLazyGetSessionQuery, useSignOutMutation } from '@/store/services';
 import type { User } from '@/store/services';
 
 interface SessionProviderProps {
@@ -31,66 +29,50 @@ export const SessionContext = createContext<SessionContextType>({
 
 const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   const pathname = usePathname();
-  const router = useRouter();
   const dispatch = useAppDispatch();
+  const [authSignOut] = useSignOutMutation();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const { user } = useAppSelector((state) => state.session);
-  const token = getAuthCookie();
-  const sessionInitStarted = useRef(false);
 
-  const publicRoute = publicRoutes.find((item) => pathname.startsWith(item.path));
+  const hasPublicRoutes = publicRoutes.find((item) => pathname.startsWith(item.path));
 
-  const [getSession, { isLoading: getSessionLoading }] = useLazyGetSessionQuery();
-
-  const onSignOut = useCallback(() => {
-    removeAuthCookie();
-    dispatch(resetStateAction());
-    dispatch(api.util.resetApiState());
-    window.location.href = REDIRECT_SIGN_OUT_ROUTE;
-  }, [dispatch]);
-
-  const initiateSession = useCallback(async () => {
-    if (token) {
-      if (publicRoute) {
-        if (publicRoute.whenAuthenticated === 'redirect') {
-          router.replace('/');
-          return;
-        }
-        return;
-      }
-
-      const result = await getSession({ token });
-
-      if ('error' in result) {
-        const error = result.error as FetchBaseQueryError;
-        const status = 'status' in error ? error.status : undefined;
-
-        if (status === 401) {
-          onSignOut();
-        }
-      }
-
-      return;
-    }
-
-    if (publicRoute) {
-      return;
-    }
-  }, [getSession, onSignOut, publicRoute, router, token]);
+  const [getSession, { isError, isLoading: getSessionLoading }] = useLazyGetSessionQuery();
 
   useEffect(() => {
-    if (sessionInitStarted.current) {
-      return;
-    }
+    if (hasPublicRoutes && !user?.id) return;
+    void getSession();
+  }, [getSession, hasPublicRoutes, pathname, user?.id]);
 
-    sessionInitStarted.current = true;
-    void initiateSession();
-  }, [initiateSession]);
+  const onSignOut = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+
+    try {
+      await authSignOut().unwrap();
+    } catch {
+      // Cookie may already be expired; continue with the local reset.
+    } finally {
+      AuthRefreshManager.reset();
+      resetAppState(dispatch);
+      window.location.href = REDIRECT_SIGN_OUT_ROUTE;
+    }
+  };
+
+  useEffect(() => {
+    if (isError && !hasPublicRoutes) {
+      void onSignOut();
+    }
+    // Same contract as Astron: react to session error, not to onSignOut identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError]);
 
   return (
     <SessionContext.Provider
       value={{
         onSignOut,
-        isLoading: getSessionLoading,
+        isLoading: getSessionLoading || isLoggingOut,
         user,
       }}
     >

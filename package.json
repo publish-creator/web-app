@@ -5,9 +5,9 @@
   "type": "module",
   "packageManager": "pnpm@10.7.1",
   "scripts": {
-    "dev": "next dev --port 3003",
+    "dev": "next dev --turbopack --port 9004 --experimental-https",
     "build": "next build",
-    "start": "next start --port 3003",
+    "start": "next start --turbopack --port 9004 --experimental-https",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:strict": "eslint . --max-warnings=0",

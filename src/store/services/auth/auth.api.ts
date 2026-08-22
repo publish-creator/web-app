@@ -1,17 +1,15 @@
-import { setSession } from '@/store/slices';
+import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
 
 import { api } from '../api/base-api';
 import type { Session, SignInDto, SignInResponse } from './auth.types';
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getSession: builder.query<Session, { token: string }>({
-      query: () => {
-        return {
-          url: '/auth/session',
-          method: 'POST',
-        };
-      },
+    getSession: builder.query<Session, void>({
+      query: () => ({
+        url: '/auth/sessions',
+        method: 'POST',
+      }),
       providesTags: [{ type: 'Auth', id: 'SESSION' }],
     }),
     signIn: builder.mutation<SignInResponse, SignInDto>({
@@ -20,19 +18,34 @@ export const authApi = api.injectEndpoints({
         method: 'POST',
         body,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      extraOptions: { skipAuth: true },
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
 
-          if (data.token) {
-            dispatch(setSession({ user: data.user, token: data.token }));
-            window.location.href = '/';
+          if (data.needTwoFactor) {
+            return;
           }
+
+          AuthRefreshManager.reset();
+          await dispatch(
+            authApi.endpoints.getSession.initiate(undefined, { forceRefetch: true }),
+          ).unwrap();
+          window.location.href = '/';
         } catch {}
       },
+    }),
+    signOut: builder.mutation<void, void>({
+      query: () => ({
+        url: '/auth/signout',
+        method: 'POST',
+      }),
+      extraOptions: { skipAuth: true },
+      invalidatesTags: [{ type: 'Auth', id: 'SESSION' }],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetSessionQuery, useLazyGetSessionQuery, useSignInMutation } = authApi;
+export const { useGetSessionQuery, useLazyGetSessionQuery, useSignInMutation, useSignOutMutation } =
+  authApi;

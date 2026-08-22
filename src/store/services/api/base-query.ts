@@ -1,13 +1,19 @@
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react';
+import type {
+  BaseQueryApi,
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from '@reduxjs/toolkit/query';
+import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { REDIRECT_SIGN_OUT_ROUTE } from '@/config/public-routes';
 import { env } from '@/env';
-import { getAuthCookie } from '@/lib/auth/client-auth-cookie';
+import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
+import { RequestMutex } from '@/lib/auth/request-mutex';
 
 import type { ApiExtraOptions } from './types';
 
-const REQUEST_TIMEOUT_MS = 30_000;
-const MAX_RETRIES = 0;
+const mutex = new RequestMutex();
 
 function generateRequestId(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -15,15 +21,6 @@ function generateRequestId(): string {
   }
 
   return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-}
-
-/** Prepared for future auth token resolution (cookies, session storage, etc.). */
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  return getAuthCookie() ?? null;
-  // Future: read from secure session storage or auth slice
 }
 
 function resolveBaseUrl(): string {
@@ -48,41 +45,48 @@ function resolveBaseUrl(): string {
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: resolveBaseUrl(),
-  timeout: REQUEST_TIMEOUT_MS,
+  credentials: 'include',
   prepareHeaders: (headers, { extraOptions }) => {
     const options = extraOptions as ApiExtraOptions | undefined;
-    const requestId = generateRequestId();
-
-    headers.set('Content-Type', 'application/json');
-    headers.set('Accept', 'application/json');
-    headers.set('X-Request-Id', requestId);
-
-    if (!options?.skipAuth) {
-      const token = getAuthToken();
-
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-    }
 
     if (options?.workspaceId) {
       headers.set('X-Workspace-Id', options.workspaceId);
     }
 
     if (typeof window !== 'undefined') {
-      headers.set('Accept-Language', navigator.language);
-      headers.set('X-Timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
+      headers.set('accept-language', navigator.language);
     }
 
     return headers;
   },
 });
 
-const baseQueryWithRetry = retry(rawBaseQuery, { maxRetries: MAX_RETRIES });
+async function retryAfterRefresh(
+  args: string | FetchArgs,
+  api: BaseQueryApi,
+  extraOptions: ApiExtraOptions | undefined,
+) {
+  const refreshSuccess = await AuthRefreshManager.refresh();
+
+  if (refreshSuccess) {
+    return rawBaseQuery(args, api, extraOptions ?? {});
+  }
+
+  const { resetAppState } = await import('@/store/reset-app-state');
+
+  resetAppState(api.dispatch);
+
+  if (typeof window !== 'undefined') {
+    window.location.href = REDIRECT_SIGN_OUT_ROUTE;
+  }
+
+  return { error: { status: 401, data: 'Session expired' } as FetchBaseQueryError };
+}
 
 /**
- * Wraps base query with retry and prepares for token refresh orchestration.
- * Refresh flow will be implemented in a future auth phase.
+ * Same contract as the working Astron client:
+ * cookies via `credentials: "include"`, no Bearer token, refresh on 401.
+ * Extra custom headers are avoided — they fail CORS on this API.
  */
 export const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
@@ -90,20 +94,43 @@ export const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError,
   ApiExtraOptions
 > = async (args, api, extraOptions) => {
-  const result = await baseQueryWithRetry(
-    args,
-    api,
-    extraOptions as Parameters<typeof baseQueryWithRetry>[2],
-  );
+  const options = extraOptions as ApiExtraOptions | undefined;
 
-  if (result.error?.status === 401) {
-    // Future: attempt refresh token, update session, retry original request
-    // const refreshResult = await baseQueryWithRetry('/auth/refresh', api, extraOptions);
-    // if (refreshResult.data) return baseQueryWithRetry(args, api, extraOptions);
-    // Future: dispatch logout / redirect to sign-in
+  if (options?.skipAuth) {
+    return rawBaseQuery(args, api, extraOptions ?? {});
+  }
+
+  await mutex.waitForUnlock();
+
+  if (AuthRefreshManager.lastRefreshFailed) {
+    return { error: { status: 401, data: 'Session expired' } as FetchBaseQueryError };
+  }
+
+  let result = await rawBaseQuery(args, api, extraOptions ?? {});
+
+  if (!(result.error && result.error.status === 401)) {
+    return result;
+  }
+
+  if (!mutex.isLocked()) {
+    const release = await mutex.acquire();
+
+    try {
+      result = await retryAfterRefresh(args, api, options);
+    } finally {
+      release();
+    }
+
+    return result;
+  }
+
+  await mutex.waitForUnlock();
+
+  if (!AuthRefreshManager.lastRefreshFailed) {
+    result = await rawBaseQuery(args, api, extraOptions ?? {});
   }
 
   return result;
 };
 
-export { generateRequestId, getAuthToken, resolveBaseUrl };
+export { generateRequestId, resolveBaseUrl };

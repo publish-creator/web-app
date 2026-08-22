@@ -1,30 +1,16 @@
-import { Tabs } from '@heroui/react';
-import { Widget4Icon } from '@solar-icons/react/bold';
-import { SliderMinimalisticHorizontalIcon } from '@solar-icons/react/bold-duotone';
+import type { OffersListResponse } from '@/store/services/offers/offers.types';
+import { OffersListContent } from './offer-list-content';
+import { OffersListHeader } from './offers-list-header';
 
-export const OffersList = () => {
+interface OffersListProps {
+  data: OffersListResponse | undefined;
+}
+
+export const OffersList = ({ data }: OffersListProps) => {
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xl font-semibold">All Offers</p>
-          <p className="text-muted mt-0.5 text-sm">309 offers</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <Tabs defaultSelectedKey="all">
-            <Tabs.ListContainer>
-              <Tabs.List>
-                <Tabs.Tab id="all">
-                  <Widget4Icon size="16px" />
-                </Tabs.Tab>
-                <Tabs.Tab id="featured">
-                  <SliderMinimalisticHorizontalIcon size="16px" />
-                </Tabs.Tab>
-              </Tabs.List>
-            </Tabs.ListContainer>
-          </Tabs>
-        </div>
-      </div>
+    <div className="space-y-4">
+      <OffersListHeader />
+      <OffersListContent data={data} />
     </div>
   );
 };

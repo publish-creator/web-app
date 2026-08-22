@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { getServerAuthToken } from '@/lib/auth/server-auth-cookie';
+import { getServerCookieHeader } from '@/lib/auth/server-auth-cookie';
 import type { UsersListParams, UsersListResponse } from '@/store/services/users/users.types';
 
 export async function fetchUsersServer(params: UsersListParams): Promise<UsersListResponse> {
@@ -9,7 +9,7 @@ export async function fetchUsersServer(params: UsersListParams): Promise<UsersLi
     throw new Error('NEXT_PUBLIC_API_URL is not configured');
   }
 
-  const token = await getServerAuthToken();
+  const cookieHeader = await getServerCookieHeader();
   const url = new URL('/users', apiUrl);
 
   if (params.page != null) {
@@ -33,7 +33,7 @@ export async function fetchUsersServer(params: UsersListParams): Promise<UsersLi
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
     },
     cache: 'no-store',
   });

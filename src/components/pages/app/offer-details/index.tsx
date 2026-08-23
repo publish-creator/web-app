@@ -17,7 +17,7 @@ export const OfferDetails = () => {
           <div className="flex items-center gap-2">
             <Tabs>
               <Tabs.ListContainer>
-                <Tabs.List>
+                <Tabs.List aria-label="Offer sections">
                   <Tabs.Tab>Details</Tabs.Tab>
                   <Tabs.Tab>Metrics</Tabs.Tab>
                   <Tabs.Tab>publications</Tabs.Tab>
@@ -28,7 +28,7 @@ export const OfferDetails = () => {
               <ShareIcon />
               Shared
             </Button>
-            <Button isIconOnly variant="tertiary">
+            <Button aria-label="Toggle favorite" isIconOnly variant="tertiary">
               <HeartIcon />
             </Button>
           </div>
@@ -160,10 +160,10 @@ export const OfferDetails = () => {
                       <Table.Cell>{formatCurrency(100)}</Table.Cell>
                       <Table.Cell className="">
                         <div className="flex justify-end">
-                          <Button isIconOnly size="sm" variant="ghost">
+                          <Button aria-label="Copy offer" isIconOnly size="sm" variant="ghost">
                             <CopyBoldIcon />
                           </Button>
-                          <Button isIconOnly size="sm" variant="ghost">
+                          <Button aria-label="View offer" isIconOnly size="sm" variant="ghost">
                             <EyeIcon />
                           </Button>
                         </div>

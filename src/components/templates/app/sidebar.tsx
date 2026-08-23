@@ -19,7 +19,7 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
   return (
     <>
-      <Sidebar className='bg-black max-w-[222px] border-none '>
+      <Sidebar aria-label="Main navigation" className="max-w-[222px] border-none bg-black">
         <SidebarContents
           basePath={basePath}
           disableNavigation={disableNavigation}
@@ -53,14 +53,10 @@ function SidebarContents({
 }: SidebarContentsProps) {
   return (
     <>
-      <Sidebar.Header className='h-14 px-3  py-0 flex items-center flex-row '>
-          <Avatar className="size-8">
-            <Avatar.Image
-              alt="Kate Moore"
-            />
-            {/* <Avatar.Fallback>KM</Avatar.Fallback> */}
-          </Avatar>
-          
+      <Sidebar.Header className="flex h-14 flex-row items-center px-3 py-0">
+        <Avatar aria-label="Workspace" className="size-8">
+          <Avatar.Fallback>C</Avatar.Fallback>
+        </Avatar>
       </Sidebar.Header>
       <Sidebar.Content className='p-3'>
         <Sidebar.Group >

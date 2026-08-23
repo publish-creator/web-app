@@ -142,7 +142,8 @@ export function EmployeesTable() {
             </Button>
           </div>
           <SearchField
-            className="w-full sm:w-[220px]"
+            aria-label="Search employees"
+            className="w-full sm:w-55"
             name="employee-search"
             onChange={handleSearchChange}
           >

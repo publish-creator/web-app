@@ -2,7 +2,7 @@
 
 import { Bell, Magnifier } from '@gravity-ui/icons';
 
-import { Navbar } from '@heroui-pro/react';
+import { AppLayout, Navbar } from '@heroui-pro/react';
 import { Avatar, Button } from '@heroui/react';
 
 import { IconButton } from '@/components/base/icon-button';
@@ -19,9 +19,7 @@ export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavba
   return (
     <Navbar maxWidth="full">
       <Navbar.Header>
-        {/* <AppLayout.MenuToggle />
-        <Sidebar.Trigger />
-        <h1 className="text-foreground truncate text-xl font-semibold">{title}</h1> */}
+        <AppLayout.MenuToggle aria-label="Open navigation" />
         <Navbar.Spacer />
         <div className="flex items-center gap-2">
           <IconButton label="Search" size="sm" variant="tertiary">
@@ -35,12 +33,13 @@ export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavba
           </Button>
 
           <Avatar
+            aria-label={user?.name ?? 'User'}
             className="ring-offset-background ring-accent size-6.5 ring-2 ring-offset-2"
             color="accent"
             size="sm"
           >
-            {user?.avatar && <Avatar.Image alt="Kate Moore" src={user?.avatar} />}
-            {!user?.avatar && <Avatar.Fallback>{user?.name?.charAt(0)}</Avatar.Fallback>}
+            {user?.avatar ? <Avatar.Image alt={user.name} src={user.avatar} /> : null}
+            <Avatar.Fallback>{user?.name?.charAt(0) ?? 'U'}</Avatar.Fallback>
           </Avatar>
         </div>
       </Navbar.Header>

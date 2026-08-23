@@ -18,13 +18,13 @@ export const OffersRecentViewed = ({ data }: OffersRecentViewedProps) => {
           <p className="text-muted mt-0.5 text-sm">Viewed offers recently</p>
         </div>
         <div className="flex items-center gap-1">
-          <Button isIconOnly size="sm" variant="ghost">
+          <Button aria-label="Previous offers" isIconOnly size="sm" variant="ghost">
             <AltArrowLeftIcon size="16px" />
           </Button>
-          <Button isIconOnly size="sm" variant="ghost">
+          <Button aria-label="Next offers" isIconOnly size="sm" variant="ghost">
             <AltArrowRightIcon size="16px" />
           </Button>
-          <Button isIconOnly size="sm" variant="ghost">
+          <Button aria-label="More options" isIconOnly size="sm" variant="ghost">
             <MenuDotsIcon className="rotate-90" size="16px" />
           </Button>
         </div>

@@ -26,7 +26,12 @@ export function QuerySearchField({
   placeholder = 'Search...',
 }: QuerySearchFieldProps) {
   return (
-    <SearchFieldComponent className={className} name={name} variant="secondary">
+    <SearchFieldComponent
+      aria-label={placeholder}
+      className={className}
+      name={name}
+      variant="secondary"
+    >
       <SearchFieldComponent.Group>
         <SearchFieldComponent.SearchIcon />
         <SearchFieldComponent.Input

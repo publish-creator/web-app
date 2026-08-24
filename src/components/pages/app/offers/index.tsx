@@ -13,7 +13,7 @@ export const OffersPage = () => {
   const { data: offers } = useGetOffersQuery({ page: 2, pageSize: 12 });
   console.log(offersCategories);
   return (
-    <div className="flex h-full flex-col gap-8 px-20 pb-8">
+    <div className="container-wrapper">
       <OffersHeader />
       <OffersCategories data={offersCategories} />
       <OffersRecentViewed data={recentOffers} />

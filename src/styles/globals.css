@@ -26,7 +26,10 @@ select:-webkit-autofill:focus {
   background-color: transparent !important;
 }
 
-
 .sidebar__menu-item-content {
-  @apply h-10 min-h-10 max-h-10;
+  @apply h-10 max-h-10 min-h-10;
+}
+
+.container-wrapper {
+  @apply mx-auto flex h-full max-w-400 flex-col gap-8 py-8;
 }

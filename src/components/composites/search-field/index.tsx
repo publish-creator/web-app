@@ -1,10 +1,10 @@
 'use client';
 
-import { SearchField as SearchFieldComponent } from '@heroui/react';
+import { cn, SearchField as SearchFieldComponent } from '@heroui/react';
 
 export type QuerySearchFieldProps = {
   className?: string;
-  inputValue: string;
+  inputValue?: string;
   name?: string;
   onClear: () => void;
   onInputChange: (value: string) => void;
@@ -17,7 +17,7 @@ export type QuerySearchFieldProps = {
  * Input state is local; URL updates are debounced in the hook.
  */
 export function QuerySearchField({
-  className = 'w-full sm:w-[240px]',
+  className = '',
   inputValue,
   name = 'search',
   onClear,
@@ -28,7 +28,7 @@ export function QuerySearchField({
   return (
     <SearchFieldComponent
       aria-label={placeholder}
-      className={className}
+      className={cn('w-full sm:w-[240px]', className) as string}
       name={name}
       variant="secondary"
     >

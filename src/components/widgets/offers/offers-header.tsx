@@ -9,7 +9,7 @@ const AS_OPTIONS = [
 
 export const OffersHeader = () => {
   return (
-    <div className="flex flex-col items-center gap-6 pt-16 pb-8">
+    <div className="flex flex-col items-center gap-6 pb-8">
       <div className="flex flex-col gap-2 text-center">
         <p className="text-5xl font-bold">
           Find your next <br />

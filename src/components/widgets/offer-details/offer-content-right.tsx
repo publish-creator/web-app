@@ -3,9 +3,9 @@ import { OfferBuyLinks } from './offer-buy-links';
 
 export const OfferContentRight = () => {
   return (
-    <div className="flex flex-col gap-4">
-      <OfferBuyLinks />
+    <div className="sticky top-20 flex h-fit flex-col gap-4">
       <OfferApply />
+      <OfferBuyLinks />
     </div>
   );
 };

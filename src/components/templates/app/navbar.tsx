@@ -8,7 +8,6 @@ import { Avatar, Button } from '@heroui/react';
 import { IconButton } from '@/components/base/icon-button';
 import { formatCurrency } from '@/utils/format-currency';
 import { useSession } from '@/providers/session-provider';
-import Image from 'next/image';
 
 export interface DashboardNavbarProps {
   /** Title rendered in the navbar. Falls back to the home-page greeting. */
@@ -21,9 +20,9 @@ export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavba
     <Navbar maxWidth="full">
       <Navbar.Header>
         <AppLayout.MenuToggle aria-label="Open navigation" />
-        <Navbar.Brand>
+        {/* <Navbar.Brand>
           <Image alt="Logo" height={100} src="/logo.svg" width={100} />
-        </Navbar.Brand>
+        </Navbar.Brand> */}
         <Navbar.Spacer />
         <div className="flex items-center gap-2">
           <IconButton label="Search" size="sm" variant="tertiary">

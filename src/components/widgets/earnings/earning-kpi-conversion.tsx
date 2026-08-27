@@ -5,7 +5,7 @@ import { formatCurrency } from '@/utils/format-currency';
 import { TrendChip, Widget } from '@heroui-pro/react';
 
 interface EarningKPIConversionProps {
-  data: OrdersMetrics;
+  data: OrdersMetrics | undefined;
 }
 
 export function EarningKPIConversion({ data }: EarningKPIConversionProps) {

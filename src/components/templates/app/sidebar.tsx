@@ -116,7 +116,7 @@ function SidebarNavItem({
   const isCurrent =
     item.href === '/'
       ? pathname === fullHref || pathname === basePath || pathname === `${basePath}/`
-      : pathname === fullHref || pathname.startsWith(`${fullHref}/`);
+      : pathname === fullHref;
 
   return (
     <Sidebar.MenuItem

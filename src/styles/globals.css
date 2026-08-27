@@ -1,13 +1,8 @@
 @import '@heroui/styles/css';
 @import '@heroui-pro/react/css';
-
-@source '../**/*.{ts,tsx}';
-
 @import './main.themes.css' layer(theme);
 
-body {
-  background-color: var(--background);
-}
+@source '../**/*.{ts,tsx}';
 
 /* Remove autofill background do Chrome */
 input:-webkit-autofill,
@@ -27,9 +22,20 @@ select:-webkit-autofill:focus {
 }
 
 .sidebar__menu-item-content {
-  @apply h-10 max-h-10 min-h-10;
+  @apply h-10 max-h-10 min-h-10 data-[selected=true]:bg-red-300;
 }
 
 .container-wrapper {
   @apply mx-auto flex h-full max-w-400 flex-col gap-8 py-8;
+}
+
+.sidebar__menu-item[data-current='true'] .sidebar__menu-item-content {
+}
+
+.sidebar__menu-item[data-current='true'] .sidebar__menu-label {
+  @apply text-accent!;
+}
+
+.sidebar__menu-item[data-current='true'] .sidebar__menu-icon {
+  @apply text-accent!;
 }

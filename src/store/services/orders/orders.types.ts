@@ -21,3 +21,32 @@ export type UpdateOrderStatusDto = {
   id: string;
   status: OrderStatus;
 };
+
+export type OrdersConversionGraph = {
+  graphTotal: number;
+  graph: [
+    {
+      valueNet: number;
+      conversions: number;
+      checkoutViews: number;
+      date: string;
+    },
+  ];
+  totalValueNet: number;
+  totalConversions: number;
+  totalCheckoutViews: number;
+};
+
+export type OrdersMetrics = {
+  totalGross: number;
+  totalNet: number;
+  totalSales: number;
+  profitPercentage: string;
+  aov: number;
+  affiliateNetworkValue: number;
+  salesFrequency: {
+    value: string;
+    unit: string;
+  };
+  lastSaleAt: string;
+};

@@ -4,6 +4,7 @@ import {
   UsersGroupRoundedIcon,
   VideoFrame2Icon,
   WalletIcon,
+  WidgetAddIcon,
 } from '@solar-icons/react/bold';
 import { HomeIcon } from '@solar-icons/react/bold/home';
 import type { ComponentType } from 'react';
@@ -22,6 +23,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/creators', icon: UsersGroupRoundedIcon, label: 'Creators' },
   { href: '/creators/profile', icon: UsersGroupRoundedIcon, label: 'Creators Profile' },
   { href: '/creative-library', icon: VideoFrame2Icon, label: 'Creative Library' },
+  { href: '/tools', icon: WidgetAddIcon, label: 'Tools' },
   { href: '/master-classes', icon: SquareAcademicCap2Icon, label: 'Master Classes' },
 ] as const;
 

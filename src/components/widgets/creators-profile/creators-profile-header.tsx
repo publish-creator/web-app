@@ -1,9 +1,10 @@
 import { Button, Tabs } from '@heroui/react';
 import { AddCircleBoldIcon } from '@solar-icons/react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export const CreatorsProfileHeader = () => {
   const pathname = usePathname();
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between">
       <div>
@@ -13,7 +14,7 @@ export const CreatorsProfileHeader = () => {
       <div className="flex items-center gap-2">
         <Tabs
           onSelectionChange={(value) => {
-            console.log(value);
+            router.push(value as string);
           }}
           selectedKey={pathname}
         >
@@ -28,7 +29,7 @@ export const CreatorsProfileHeader = () => {
             </Tabs.List>
           </Tabs.ListContainer>
         </Tabs>
-        <Button>
+        <Button onPress={() => router.push('/creators/profile/create')}>
           <AddCircleBoldIcon />
           Add
         </Button>

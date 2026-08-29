@@ -1,5 +1,6 @@
 'use client';
 
+import { AppBreadcrumbs } from '@/components/widgets/shared';
 import { OnboardingCard } from '@/components/widgets/shared/onboarding-card';
 import { Button, Tabs } from '@heroui/react';
 import { WalletIcon } from '@solar-icons/react/linear';
@@ -12,6 +13,7 @@ export const EarningsTemplate = ({ children }: { children: React.ReactNode }) =>
       <div className="flex flex-col gap-4">
         <div className="flex justify-between">
           <div>
+            <AppBreadcrumbs labels={{ earnings: 'Earnings' }} />
             <h1 className="text-2xl font-bold">Earnings</h1>
             <p className="text-muted text-sm">View your earnings and transactions history.</p>
           </div>

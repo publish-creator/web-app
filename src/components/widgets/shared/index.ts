@@ -1,3 +1,4 @@
+export { AppBreadcrumbs, buildNavBreadcrumbs } from './app-breadcrumbs';
 export { AnalyticsKpiRow } from './analytics-kpi-row';
 export { DeviceBreakdownCard } from './device-breakdown-card';
 export { KpiRow } from './kpi-row';

@@ -75,3 +75,5 @@ Copie `.env.example` para `.env.local` e ajuste. Validar via `src/env.ts`.
 ## CI
 
 GitHub Actions: `ci.yml` (format, lint, typecheck, build) e `security.yml` (audit + dependency review).
+
+# web

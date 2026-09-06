@@ -32,12 +32,15 @@ export const EarningsTemplate = ({ children }: { children: React.ReactNode }) =>
                 <Tabs.List aria-label="Offer sections">
                   <Tabs.Tab href={`/earnings`} id="/earnings">
                     Earnings
+                    <Tabs.Indicator />
                   </Tabs.Tab>
                   <Tabs.Tab href={`/earnings/orders`} id="/earnings/orders">
                     Orders
+                    <Tabs.Indicator />
                   </Tabs.Tab>
                   <Tabs.Tab href={`/earnings/subscriptions`} id="/earnings/subscriptions">
                     Subscriptions
+                    <Tabs.Indicator />
                   </Tabs.Tab>
                 </Tabs.List>
               </Tabs.ListContainer>

@@ -93,6 +93,15 @@ select:autofill {
   }
   .sidebar__header {
   }
+
+  .tabs:not(.tabs--secondary) > .tabs__list-container .tabs__tab[data-selected='true'] {
+    color: var(--accent);
+  }
+
+  .tabs:not(.tabs--secondary) > .tabs__list-container .tabs__indicator {
+    background-color: var(--surface );
+    /* box-shadow: none; */
+  }
 }
 
 .sidebar__menu-item[data-current='true'] .sidebar__menu-item-content {

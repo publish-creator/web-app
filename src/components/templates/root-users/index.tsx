@@ -26,10 +26,12 @@ export default function RootUsersTemplate({ children }: { children: React.ReactN
               <Tabs.Tab href={`/root/users`} id="/root/users">
                 <ShieldUserIcon className="mr-2 size-4" />
                 Administrators
+                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab href={`/root/users/affiliates`} id="/root/users/affiliates">
                 <UsersGroupTwoRoundedIcon className="mr-2 size-4" />
                 Affiliates
+                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab
                 className="whitespace-nowrap"
@@ -38,6 +40,7 @@ export default function RootUsersTemplate({ children }: { children: React.ReactN
               >
                 <UsersGroupRoundedIcon className="mr-2 size-4" />
                 Co-Producers
+                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
           </Tabs.ListContainer>

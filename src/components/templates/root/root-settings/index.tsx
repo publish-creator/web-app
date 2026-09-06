@@ -27,14 +27,17 @@ export default function RootSettingsTemplate({ children }: { children: React.Rea
               <Tabs.Tab href={`/root/settings`} id="/root/settings">
                 <Widget2BoldIcon className="mr-2 size-4" />
                 Offers
+                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab href={`/root/settings/permissions`} id="/root/settings/permissions">
                 <ShieldKeyholeIcon className="mr-2 size-4" />
                 Permissions
+                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab href={`/root/settings/avatars`} id="/root/settings/avatars">
                 <GalleryBoldIcon className="mr-2 size-4" />
                 Avatars
+                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
           </Tabs.ListContainer>

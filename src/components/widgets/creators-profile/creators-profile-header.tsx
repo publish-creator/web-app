@@ -20,11 +20,13 @@ export const CreatorsProfileHeader = () => {
         >
           <Tabs.ListContainer>
             <Tabs.List aria-label="Offer sections">
-              <Tabs.Tab href={`/creators/profile`} id="/creators/profile">
+              <Tabs.Tab href={`/creators/profile/old`} id="/creators/profile/old">
                 Overview
+                <Tabs.Indicator />
               </Tabs.Tab>
-              <Tabs.Tab href={`/creators/profile/account`} id="/creators/profile/account">
+              <Tabs.Tab href={`/creators/profile/old/account`} id="/creators/profile/old/account">
                 Accounts
+                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
           </Tabs.ListContainer>

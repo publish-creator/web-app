@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">MarkePublish — número de celular</title><desc id="desc">Celular com discagem, contato e adição segura do número.</desc><defs>
+  <linearGradient id="brand" x1="35" y1="38" x2="205" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#22E8CF"/><stop offset=".55" stop-color="#09C7C4"/><stop offset="1" stop-color="#028CB6"/>
+  </linearGradient>
+  <linearGradient id="soft" x1="51" y1="49" x2="190" y2="194" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#D9FFF8"/><stop offset="1" stop-color="#74E5DD"/>
+  </linearGradient>
+  <linearGradient id="deep" x1="55" y1="42" x2="190" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#0C7386"/><stop offset="1" stop-color="#074656"/>
+  </linearGradient>
+</defs>
+<g id="mobile-contact">
+  <rect x="65" y="25" width="111" height="190" rx="29" fill="url(#deep)" stroke="#14D7CA" stroke-width="6"/>
+  <rect x="81" y="46" width="79" height="139" rx="18" fill="url(#soft)"/>
+  <path d="M104 38h33" stroke="#8AF2E8" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="120" cy="200" r="7" fill="#95F2E8"/>
+  <g fill="#087D91"><circle cx="99" cy="105" r="6"/><circle cx="120" cy="105" r="6"/><circle cx="141" cy="105" r="6"/><circle cx="99" cy="128" r="6"/><circle cx="120" cy="128" r="6"/><circle cx="141" cy="128" r="6"/><circle cx="99" cy="151" r="6"/><circle cx="120" cy="151" r="6"/><circle cx="141" cy="151" r="6"/></g>
+  <circle cx="120" cy="77" r="18" fill="url(#brand)"/><path d="M105 93c5-10 25-10 30 0" stroke="#078096" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="178" cy="68" r="25" fill="url(#brand)" stroke="#E0FFF9" stroke-width="4"/>
+  <path d="M178 56v24m-12-12h24" stroke="#083F4C" stroke-width="7" stroke-linecap="round"/>
+</g>
+<path d="M45 67c-15 15-20 33-18 52m12-65-8 5 8 7" stroke="#13CFC5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>

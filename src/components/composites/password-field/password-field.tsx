@@ -20,7 +20,7 @@ export function PasswordField({
 
   return (
     <TextField {...props} isInvalid={!!errorMessage}>
-      <Label>{label}</Label>
+      {label ? <Label>{label}</Label> : null}
       <InputGroup>
         <InputGroup.Input
           className="w-full"

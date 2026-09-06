@@ -3,19 +3,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Avatar, Button, Card, Checkbox, Link, Spinner } from '@heroui/react';
+import { Button, Checkbox, Link, Spinner } from '@heroui/react';
+import { LetterIcon } from '@solar-icons/react/linear';
 
 import { PasswordField, TextField } from '@/components/composites';
 import { useSignInMutation } from '@/store/services/auth';
-import { AlternativeSign } from '@/widgets/auth';
+import { AlternativeSign, AuthFlowHeader } from '@/widgets/auth';
 
 import { signInSchema } from './sign-in.schema';
+
 import type { SignInSchemaInput } from './sign-in.schema';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function SignInPage() {
   const [signIn, { isLoading }] = useSignInMutation();
-  const router = useRouter();
   const form = useForm<SignInSchemaInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -26,74 +27,102 @@ export default function SignInPage() {
   const onSubmit = (data: SignInSchemaInput) => {
     void signIn(data);
   };
-  return (
-    <div className="flex h-full min-h-screen w-full items-center justify-center">
-      <div className="flex flex-col items-center justify-center">
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Card className="w-[400px]">
-            <Card.Header className="flex flex-col items-center gap-2">
-              <Avatar />
-              <div className="flex flex-col items-center">
-                <Card.Title>Entrar</Card.Title>
-                <Card.Description>Digite seu email e senha para entrar no sistema</Card.Description>
-              </div>
-            </Card.Header>
-            <Card.Content className="flex flex-col gap-4">
-              <fieldset className="flex flex-col gap-2">
-                <Controller
-                  control={form.control}
-                  name="email"
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      errorMessage={fieldState.error?.message}
-                      label="Email"
-                      placeholder="Digite seu email"
-                      variant="secondary"
-                    />
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name="password"
-                  render={({ field, fieldState }) => (
-                    <PasswordField
-                      {...field}
-                      errorMessage={fieldState.error?.message}
-                      label="Senha"
-                      placeholder="Digite sua senha"
-                      variant="secondary"
-                    />
-                  )}
-                />
-                <div className="flex items-center justify-between">
-                  <Checkbox id="remember-me" variant="secondary">
-                    <Checkbox.Control>
-                      <Checkbox.Indicator />
-                    </Checkbox.Control>
-                    <Checkbox.Content className="text-sm">Lembrar-me</Checkbox.Content>
-                  </Checkbox>
-                  <Link
-                    className="text-primary text-muted text-sm no-underline"
-                    href="/forgot-password"
-                  >
-                    Esqueceu sua senha?
-                  </Link>
-                </div>
-              </fieldset>
-              <Button fullWidth isPending={isLoading} type="submit">
-                {isLoading ? <Spinner className="size-4" color="current" /> : 'Entrar'}
-              </Button>
 
-              <AlternativeSign onSignUp={() => router.push('/auth/sign-up')} />
-            </Card.Content>
-            <Card.Footer className="justify-center">
-              <p className="text-muted text-center text-sm">
-                © 2026 - Todos os direitos reservados
-              </p>
-            </Card.Footer>
-          </Card>
-        </form>
+  return (
+    <div className="auth-sign-in-bg bg-background text-foreground relative flex min-h-screen w-full flex-col">
+      <div className="from-background/80 pointer-events-none absolute inset-x-0 top-0 z-10 h-28 bg-linear-to-b to-transparent" />
+
+      <div className="relative z-20 flex min-h-screen w-full flex-col">
+        <AuthFlowHeader
+          action={
+            <p className="text-muted text-xs font-medium">
+              Não possui conta?{' '}
+              <Link className="text-accent text-xs font-medium no-underline" href="/auth/sign-up">
+                Criar conta
+              </Link>
+            </p>
+          }
+        />
+
+        <div className="relative flex flex-1 grow flex-col justify-center pt-6 md:pt-10">
+          <div className="flex w-full flex-1 justify-center overflow-x-hidden px-8 pb-10">
+            <div className="flex w-full max-w-[450px] flex-col items-center gap-6">
+              <Image alt="Logo" height={104} src="/images/markepublish-icone.svg" width={104} />
+
+              <form className="flex w-full flex-col gap-8" onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <h1 className="text-2xl font-semibold tracking-tight">Entrar</h1>
+                  <p className="text-muted max-w-101 text-sm leading-relaxed">
+                    Digite seu email e senha para entrar no sistema
+                  </p>
+                </div>
+
+                <fieldset className="flex flex-col gap-3">
+                  <Controller
+                    control={form.control}
+                    name="email"
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        aria-label="Email"
+                        errorMessage={fieldState.error?.message}
+                        placeholder="Digite seu email"
+                        startContent={<LetterIcon className="text-muted size-5" />}
+                        type="email"
+                        variant="secondary"
+                      />
+                    )}
+                  />
+                  <Controller
+                    control={form.control}
+                    name="password"
+                    render={({ field, fieldState }) => (
+                      <PasswordField
+                        {...field}
+                        aria-label="Senha"
+                        errorMessage={fieldState.error?.message}
+                        placeholder="Digite sua senha"
+                        variant="secondary"
+                      />
+                    )}
+                  />
+                  <div className="flex items-center justify-between">
+                    <Checkbox id="remember-me" variant="secondary">
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                      <Checkbox.Content className="text-sm">Lembrar-me</Checkbox.Content>
+                    </Checkbox>
+                    <Link className="text-muted text-sm no-underline" href="/forgot-password">
+                      Esqueceu sua senha?
+                    </Link>
+                  </div>
+                </fieldset>
+
+                <Button fullWidth isPending={isLoading} size="lg" type="submit">
+                  {isLoading ? <Spinner className="size-4" color="current" /> : 'Entrar'}
+                </Button>
+              </form>
+
+              <div className="w-full">
+                <AlternativeSign />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer className="hidden flex-col items-center justify-center gap-1 py-4 text-center md:flex">
+          <p className="text-muted text-xs">
+            © 2026 - Todos os direitos reservados |{' '}
+            <Link className="text-muted text-xs no-underline" href="#">
+              Termos
+            </Link>{' '}
+            |{' '}
+            <Link className="text-muted text-xs no-underline" href="#">
+              Privacidade
+            </Link>
+          </p>
+        </footer>
       </div>
     </div>
   );

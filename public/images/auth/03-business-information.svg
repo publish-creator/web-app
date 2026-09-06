@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">MarkePublish — informações do negócio</title><desc id="desc">Estabelecimento de marketplace com duas rotas de cadastro empresarial.</desc><defs>
+  <linearGradient id="brand" x1="35" y1="38" x2="205" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#22E8CF"/><stop offset=".55" stop-color="#09C7C4"/><stop offset="1" stop-color="#028CB6"/>
+  </linearGradient>
+  <linearGradient id="soft" x1="51" y1="49" x2="190" y2="194" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#D9FFF8"/><stop offset="1" stop-color="#74E5DD"/>
+  </linearGradient>
+  <linearGradient id="deep" x1="55" y1="42" x2="190" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#0C7386"/><stop offset="1" stop-color="#074656"/>
+  </linearGradient>
+</defs>
+<g id="business-information">
+  <path d="M55 91h130v94c0 11-9 20-20 20H75c-11 0-20-9-20-20V91Z" fill="url(#deep)" stroke="#0FCFC4" stroke-width="5"/>
+  <path d="m48 91 17-46h110l17 46" fill="url(#brand)" stroke="#77EFE4" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M49 91c0 13 10 23 23 23s23-10 23-23c0 13 11 23 24 23s24-10 24-23c0 13 10 23 23 23s23-10 23-23" stroke="#EFFFFC" stroke-width="7" stroke-linecap="round"/>
+  <rect x="75" y="134" width="35" height="71" rx="10" fill="url(#brand)"/>
+  <rect x="126" y="133" width="39" height="34" rx="9" fill="#C8FAF3"/>
+  <path d="M120 38v-15m-12 10 12-10 12 10" stroke="#16D7CA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="registration-choice"><path d="M185 145h20v42h-20" stroke="#63E9DF" stroke-width="5" stroke-linecap="round"/><circle cx="205" cy="145" r="7" fill="#1AD9CC"/><circle cx="205" cy="187" r="7" fill="#068FAF"/></g></svg>

@@ -66,5 +66,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
 
   // --- Tailwind ---
-  "tailwindCSS.experimental.classRegex": [["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]]
+  "tailwindCSS.experimental.classRegex": [["tv\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]],
+  "cSpell.words": ["Marke"]
 }

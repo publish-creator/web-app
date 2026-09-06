@@ -15,11 +15,6 @@ export function AuthSignUpIllustration({ step }: { step: number }) {
   const illustration = STEP_ILLUSTRATIONS[step] ?? STEP_ILLUSTRATIONS[1];
 
   return (
-    <Image
-      alt={illustration.alt}
-      height={160}
-      src={illustration.src}
-      width={160}
-    />
+    <Image alt={illustration?.alt ?? ''} height={160} src={illustration?.src ?? ''} width={160} />
   );
 }

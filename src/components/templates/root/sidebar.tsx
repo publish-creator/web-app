@@ -4,7 +4,7 @@ import { Sidebar } from '@heroui-pro/react';
 import { Avatar, Chip } from '@heroui/react';
 
 import type { NavItem } from '@/config/nav-items';
-import { FOOTER_ITEMS, NAV_ITEMS } from '@/config/nav-items';
+import { FOOTER_ITEMS, NAV_ITEMS_ROOT } from '@/config/nav-items';
 import { useSession } from '@/providers/session-provider';
 
 interface DashboardSidebarProps {
@@ -21,7 +21,7 @@ export function DashboardSidebar({
   return (
     <>
       {/* <Sidebar.Provider navigate={router.push}> */}
-      <Sidebar aria-label="Main navigation" className="bg-surface max-w-80 border-none">
+      <Sidebar aria-label="Main navigation" className="bg-surface max-w-72 border-none">
         <SidebarContents
           basePath={basePath}
           disableNavigation={disableNavigation}
@@ -65,7 +65,7 @@ function SidebarContents({
       <Sidebar.Content className="p-3">
         <Sidebar.Group>
           <Sidebar.Menu aria-label="Dashboard navigation">
-            {NAV_ITEMS.map((item) => (
+            {NAV_ITEMS_ROOT.map((item) => (
               <SidebarNavItem
                 basePath={basePath}
                 disableNavigation={disableNavigation}

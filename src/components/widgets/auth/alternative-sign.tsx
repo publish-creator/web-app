@@ -1,6 +1,6 @@
 import { Button } from '@heroui/react';
 
-export function AlternativeSign() {
+export function AlternativeSign({ onSignUp }: { onSignUp: () => void }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full items-center gap-2">
@@ -8,7 +8,7 @@ export function AlternativeSign() {
         <p className="text-muted text-sm">ou</p>
         <div className="bg-surface-secondary h-px w-full" />
       </div>
-      <Button fullWidth variant="secondary">
+      <Button fullWidth onClick={onSignUp} variant="secondary">
         Criar conta
       </Button>
       <Button fullWidth variant="tertiary">

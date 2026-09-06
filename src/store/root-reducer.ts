@@ -9,13 +9,15 @@ import './services/auth/auth.api';
 import './services/dashboard/dashboard.api';
 import './services/orders/orders.api';
 import './services/users/users.api';
-import { sessionReducer } from './slices/session.slice';
+import { sessionReducer } from './slices/session/session.slice';
+import { signUpReducer } from './slices/sign-up/sign-up.slice';
 
 export const resetStateAction = createAction('resetState');
 
 const appReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   session: sessionReducer,
+  signUp: signUpReducer,
 });
 
 export const rootReducer: typeof appReducer = (state, action) => {

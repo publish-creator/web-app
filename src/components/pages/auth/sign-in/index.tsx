@@ -11,9 +11,11 @@ import { AlternativeSign } from '@/widgets/auth';
 
 import { signInSchema } from './sign-in.schema';
 import type { SignInSchemaInput } from './sign-in.schema';
+import { useRouter } from 'next/navigation';
 
 export default function SignInPage() {
   const [signIn, { isLoading }] = useSignInMutation();
+  const router = useRouter();
   const form = useForm<SignInSchemaInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -83,7 +85,7 @@ export default function SignInPage() {
                 {isLoading ? <Spinner className="size-4" color="current" /> : 'Entrar'}
               </Button>
 
-              <AlternativeSign />
+              <AlternativeSign onSignUp={() => router.push('/auth/sign-up')} />
             </Card.Content>
             <Card.Footer className="justify-center">
               <p className="text-muted text-center text-sm">

@@ -1,4 +1,5 @@
 export { AppBreadcrumbs, buildNavBreadcrumbs } from './app-breadcrumbs';
+export { ThemeSwitcher } from './theme-switcher';
 export { AnalyticsKpiRow } from './analytics-kpi-row';
 export { DeviceBreakdownCard } from './device-breakdown-card';
 export { KpiRow } from './kpi-row';

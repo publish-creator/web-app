@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">MarkePublish — código OTP do e-mail</title><desc id="desc">Seis células de código vinculadas a uma mensagem e indicador de tempo.</desc><defs>
+  <linearGradient id="brand" x1="35" y1="38" x2="205" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#22E8CF"/><stop offset=".55" stop-color="#09C7C4"/><stop offset="1" stop-color="#028CB6"/>
+  </linearGradient>
+  <linearGradient id="soft" x1="51" y1="49" x2="190" y2="194" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#D9FFF8"/><stop offset="1" stop-color="#74E5DD"/>
+  </linearGradient>
+  <linearGradient id="deep" x1="55" y1="42" x2="190" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#0C7386"/><stop offset="1" stop-color="#074656"/>
+  </linearGradient>
+</defs>
+<g id="email-otp">
+  <path d="M56 61c0-10 8-18 18-18h91c10 0 18 8 18 18v61c0 10-8 18-18 18H74c-10 0-18-8-18-18V61Z" fill="url(#deep)" stroke="#20D6C8" stroke-width="5"/>
+  <path d="m66 61 42 35a17 17 0 0 0 22 0l43-35" stroke="#B9F9F1" stroke-width="7" stroke-linecap="round"/>
+  <g transform="translate(25 124)">
+    <rect width="190" height="67" rx="20" fill="#092F39" stroke="#087E91" stroke-width="4"/>
+    <g fill="url(#brand)">
+      <rect x="13" y="14" width="24" height="39" rx="8"/><rect x="41" y="14" width="24" height="39" rx="8"/><rect x="69" y="14" width="24" height="39" rx="8"/>
+      <rect x="97" y="14" width="24" height="39" rx="8"/><rect x="125" y="14" width="24" height="39" rx="8"/><rect x="153" y="14" width="24" height="39" rx="8"/>
+    </g>
+    <g fill="#EFFFFC"><circle cx="25" cy="34" r="4"/><circle cx="53" cy="34" r="4"/><circle cx="81" cy="34" r="4"/><circle cx="109" cy="34" r="4"/><circle cx="137" cy="34" r="4"/><circle cx="165" cy="34" r="4"/></g>
+  </g>
+  <circle cx="190" cy="58" r="25" fill="url(#brand)" stroke="#CFFFF7" stroke-width="4"/>
+  <path d="M190 45v14l10 6" stroke="#083F4C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<path d="m185 203 8 7 17-20" stroke="#13CFC5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>

@@ -46,6 +46,12 @@ export function AppShell({ basePath = '', children }: AppShellProps) {
     return ROUTE_LABELS.get(relative) ?? HOME_GREETING;
   }, [pathname, basePath]);
 
+  const relativePath = pathname.slice(basePath.length) || '/';
+
+  if (relativePath === '/mfa') {
+    return children;
+  }
+
   return (
     <AppLayout
       className=""

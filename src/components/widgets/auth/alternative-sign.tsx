@@ -1,6 +1,6 @@
 import { Button } from '@heroui/react';
 
-export function AlternativeSign() {
+export function AlternativeSign({ onSignUp }: { onSignUp?: () => void }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex w-full items-center gap-2">
@@ -8,10 +8,12 @@ export function AlternativeSign() {
         <p className="text-muted text-sm">ou</p>
         <div className="bg-surface-secondary h-px w-full" />
       </div>
-      <Button fullWidth variant="secondary">
-        Criar conta
-      </Button>
-      <Button fullWidth variant="tertiary">
+      {onSignUp ? (
+        <Button fullWidth onClick={onSignUp} type="button" variant="secondary">
+          Criar conta
+        </Button>
+      ) : null}
+      <Button fullWidth type="button" variant="tertiary">
         <svg height="1em" viewBox="0 0 48 48" width="1em" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 0h48v48H0z" fill="none" />
           <path
@@ -33,7 +35,7 @@ export function AlternativeSign() {
         </svg>
         <p>Google</p>
       </Button>
-      <Button fullWidth variant="tertiary">
+      <Button fullWidth type="button" variant="tertiary">
         <svg height="1em" viewBox="0 0 256 256" width="1em" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 0h256v256H0z" fill="none" />
           <path

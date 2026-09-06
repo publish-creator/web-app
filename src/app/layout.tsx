@@ -6,8 +6,8 @@ import { AppProviders } from '@/providers';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  description: 'A multi-page dashboard starter built with HeroUI Pro.',
-  title: 'HeroUI Pro - Dashboard Template',
+  description: 'MarkePublish',
+  title: 'MarkePublish',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

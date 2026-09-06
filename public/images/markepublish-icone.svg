@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" role="img"
+  aria-labelledby="title desc">
+  <title id="title">MarkePublish — Offer Prism</title>
+  <desc id="desc">Símbolo vetorial da MarkePublish: uma oferta de marketplace se transforma em múltiplas peças prontas
+    para publicação.</desc>
+
+  <defs>
+    <linearGradient id="markepublish-primary" x1="45" y1="55" x2="196" y2="205" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14E6C8" />
+      <stop offset="1" stop-color="#029FC5" />
+    </linearGradient>
+    <linearGradient id="markepublish-output" x1="165" y1="122" x2="207" y2="195" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#37F0D4" />
+      <stop offset="1" stop-color="#087FAE" />
+    </linearGradient>
+  </defs>
+
+  <g id="markepublish-offer-prism">
+    <g id="marketplace-layers">
+      <path opacity="0.3" fill="url(#markepublish-primary)"
+        d="M40 92 112 45a18 18 0 0 1 19-.5l58 34.7a18 18 0 0 1 .7 30.5l-69 45.8a18 18 0 0 1-19.7.2l-60.3-33.5A18 18 0 0 1 40 92Z" />
+      <path opacity="0.58" fill="url(#markepublish-primary)"
+        d="M40 119 112 72a18 18 0 0 1 19-.5l58 34.7a18 18 0 0 1 .7 30.5l-69 45.8a18 18 0 0 1-19.7.2l-60.3-33.5A18 18 0 0 1 40 119Z" />
+    </g>
+
+    <path id="content-transformation" fill="url(#markepublish-primary)"
+      d="M40 146 112 99a18 18 0 0 1 19-.5l44.5 26.6-32.8 21.8-20.8-12.4a12 12 0 0 0-12.7.3l-25.8 16.8 26.2 14.6a12 12 0 0 0 12.4-.1l19.4-12.9 31.8 19-52.5 34.8a18 18 0 0 1-19.7.2l-60.3-33.5A18 18 0 0 1 40 146Z" />
+
+    <g id="publish-outputs" fill="url(#markepublish-output)">
+      <rect x="171" y="123" width="30" height="30" rx="9" transform="rotate(32 171 123)" />
+      <rect x="188" y="158" width="21" height="21" rx="6" transform="rotate(32 188 158)" />
+      <rect x="157" y="180" width="16" height="16" rx="5" transform="rotate(32 157 180)" />
+    </g>
+  </g>
+</svg>

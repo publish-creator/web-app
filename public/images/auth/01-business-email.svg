@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">MarkePublish — e-mail comercial</title><desc id="desc">Envelope comercial com assinatura de negócio e fluxo de entrada.</desc><defs>
+  <linearGradient id="brand" x1="35" y1="38" x2="205" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#22E8CF"/><stop offset=".55" stop-color="#09C7C4"/><stop offset="1" stop-color="#028CB6"/>
+  </linearGradient>
+  <linearGradient id="soft" x1="51" y1="49" x2="190" y2="194" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#D9FFF8"/><stop offset="1" stop-color="#74E5DD"/>
+  </linearGradient>
+  <linearGradient id="deep" x1="55" y1="42" x2="190" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#0C7386"/><stop offset="1" stop-color="#074656"/>
+  </linearGradient>
+</defs>
+<g id="business-email">
+  <path d="M43 91c0-11 9-20 20-20h104c11 0 20 9 20 20v76c0 11-9 20-20 20H63c-11 0-20-9-20-20V91Z" fill="url(#brand)"/>
+  <path d="m53 88 50 42a18 18 0 0 0 23 0l51-42" stroke="#F0FFFC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m52 173 39-37m87 37-39-37" stroke="#9DF4EA" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+  <circle cx="176" cy="76" r="30" fill="#083E4B" stroke="#65EEE1" stroke-width="5"/>
+  <path d="M163 82v-17h26v17m-31 0h36m-29-17v-7h22v7" stroke="#EFFFFC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="incoming-flow" stroke="url(#brand)" stroke-width="5" stroke-linecap="round"><path d="M24 114h10m-16 14h16"/><path d="m28 101 10 13-10 13"/></g>
+<circle cx="205" cy="167" r="7" fill="#19D7CA"/><rect x="194" y="187" width="13" height="13" rx="4" transform="rotate(30 194 187)" fill="#069FBD"/></svg>

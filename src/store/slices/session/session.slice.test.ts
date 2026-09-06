@@ -1,10 +1,10 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { authApi } from '../services/auth/auth.api';
-import type { User } from '../services/users/users.types';
-import { resetUser, sessionReducer, sessionSelectors, setSession } from './session.slice';
-import type { SessionState } from './session.slice';
+import { authApi } from '../../services/auth/auth.api';
+import type { User } from '../../services/users/users.types';
+import { resetUser, sessionReducer, sessionSelectors, setSession } from '../session.slice';
+import type { SessionState } from '../session.slice';
 
 vi.mock('../services/auth/auth.api', () => ({
   authApi: {

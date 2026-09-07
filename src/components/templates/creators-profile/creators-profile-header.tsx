@@ -1,6 +1,5 @@
 'use client';
 
-import { AppBreadcrumbs } from '@/components/widgets/shared/app-breadcrumbs';
 import { Button, Tabs } from '@heroui/react';
 import { AddCircleBoldIcon } from '@solar-icons/react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -12,8 +11,7 @@ export const CreatorsProfileHeader = () => {
   return (
     <div className="flex items-center justify-between">
       <div>
-        <AppBreadcrumbs labels={{ account: 'Accounts' }} />
-        <h1 className="text-2xl font-bold">Creators Profile</h1>
+        <h1 className="text-3xl font-bold">Creators Profile</h1>
         <p className="text-muted text-sm">lorum ipsum dolor sit amet</p>
       </div>
       <div className="flex items-center gap-2">
@@ -25,11 +23,13 @@ export const CreatorsProfileHeader = () => {
         >
           <Tabs.ListContainer>
             <Tabs.List aria-label="Offer sections">
-              <Tabs.Tab href={`/creators/profile`} id="/creators/profile">
+              <Tabs.Tab href={`/creators/profile/old`} id="/creators/profile/old">
                 Overview
+                <Tabs.Indicator />
               </Tabs.Tab>
-              <Tabs.Tab href={`/creators/profile/account`} id="/creators/profile/account">
+              <Tabs.Tab href={`/creators/profile/old/account`} id="/creators/profile/old/account">
                 Accounts
+                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
           </Tabs.ListContainer>

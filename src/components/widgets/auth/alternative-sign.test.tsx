@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AlternativeSign } from './alternative-sign';
 
 describe('AlternativeSign Layout Assembly', () => {
   it('should mount registration options and provider elements cleanly onto the visual tree', () => {
     // Act
-    render(<AlternativeSign />);
+    render(<AlternativeSign onSignUp={vi.fn()} />);
 
     // Assert
     expect(screen.getByText('ou')).toBeInTheDocument();

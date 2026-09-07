@@ -48,10 +48,12 @@ export function CreatorsProfileCreateIdentity() {
                   <Tabs.Tab className="flex flex-row items-center gap-2" id="individual">
                     <UserIcon size={16} />
                     Individual
+                    <Tabs.Indicator />
                   </Tabs.Tab>
                   <Tabs.Tab className="flex flex-row items-center gap-2" id="company">
                     <BuildingsIcon size={16} />
                     Company
+                    <Tabs.Indicator />
                   </Tabs.Tab>
                 </Tabs.List>
               </Tabs.ListContainer>

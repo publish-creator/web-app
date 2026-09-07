@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">MarkePublish — código OTP do celular</title><desc id="desc">Celular recebendo mensagem com seis dígitos, sinal, tempo e confirmação.</desc><defs>
+  <linearGradient id="brand" x1="35" y1="38" x2="205" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#22E8CF"/><stop offset=".55" stop-color="#09C7C4"/><stop offset="1" stop-color="#028CB6"/>
+  </linearGradient>
+  <linearGradient id="soft" x1="51" y1="49" x2="190" y2="194" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#D9FFF8"/><stop offset="1" stop-color="#74E5DD"/>
+  </linearGradient>
+  <linearGradient id="deep" x1="55" y1="42" x2="190" y2="207" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#0C7386"/><stop offset="1" stop-color="#074656"/>
+  </linearGradient>
+</defs>
+<g id="sms-otp">
+  <rect x="45" y="28" width="105" height="184" rx="27" fill="url(#deep)" stroke="#15D8CB" stroke-width="6"/>
+  <rect x="60" y="47" width="75" height="137" rx="16" fill="#D8FFF8"/>
+  <path d="M78 39h39" stroke="#8BF2E8" stroke-width="6" stroke-linecap="round"/><circle cx="98" cy="198" r="7" fill="#8FF2E8"/>
+  <path d="M72 74h51v56H88l-16 14V74Z" fill="url(#brand)"/>
+  <g fill="#064A59"><circle cx="81" cy="98" r="4"/><circle cx="89" cy="98" r="4"/><circle cx="97" cy="98" r="4"/><circle cx="105" cy="98" r="4"/><circle cx="113" cy="98" r="4"/><circle cx="121" cy="98" r="4"/></g>
+  <path d="M159 66c18 7 31 21 37 39m-31-57c28 10 48 31 56 58" stroke="url(#brand)" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="188" cy="151" r="36" fill="url(#brand)" stroke="#DFFFF9" stroke-width="5"/>
+  <path d="m170 151 12 12 24-30" stroke="#063F4D" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<path d="M165 198h38" stroke="#13CFC5" stroke-width="5" stroke-linecap="round"/><circle cx="160" cy="198" r="5" fill="#13CFC5"/></svg>

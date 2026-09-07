@@ -21,9 +21,18 @@ export const OfferHeader = () => {
         >
           <Tabs.ListContainer>
             <Tabs.List aria-label="Offer sections">
-              <Tabs.Tab href={`/offers/${id}`}>Details</Tabs.Tab>
-              <Tabs.Tab href={`/offers/${id}/metrics`}>Metrics</Tabs.Tab>
-              <Tabs.Tab href={`/offers/${id}/publications`}>publications</Tabs.Tab>
+              <Tabs.Tab href={`/offers/${id}`}>
+                Details
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab href={`/offers/${id}/metrics`}>
+                Metrics
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab href={`/offers/${id}/publications`}>
+                Publications
+                <Tabs.Indicator />
+              </Tabs.Tab>
             </Tabs.List>
           </Tabs.ListContainer>
         </Tabs>

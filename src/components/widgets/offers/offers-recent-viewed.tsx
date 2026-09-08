@@ -1,8 +1,10 @@
-import type { OffersListResponse } from '@/store/services/offers/offers.types';
-import { formatCurrency } from '@/utils/format-currency';
-import { Button, Card } from '@heroui/react';
 import { MenuDotsIcon } from '@solar-icons/react/bold';
 import { AltArrowLeftIcon, AltArrowRightIcon } from '@solar-icons/react/linear';
+
+import { Button, Card } from '@heroui/react';
+
+import type { OffersListResponse } from '@/store/services/offers/offers.types';
+import { formatCommission } from '@/utils/format-commission';
 
 interface OffersRecentViewedProps {
   data: OffersListResponse | undefined;
@@ -33,14 +35,20 @@ export const OffersRecentViewed = ({ data }: OffersRecentViewedProps) => {
         {data?.data?.map((offer) => (
           <Card className="flex flex-col gap-1 overflow-hidden rounded-xl p-1 pb-2" key={offer?.id}>
             <div className="bg-surface-secondary aspect-video overflow-hidden rounded-xl">
-              <img alt={offer?.title} src={offer?.file ?? 'https://placehold.co/600x400'} />
+              {/* eslint-disable-next-line @next/next/no-img-element -- offer covers, flags and category icons come from arbitrary hosts an admin pastes; next/image would need every one allowlisted */}
+              <img alt={offer?.title} src={offer?.imageUrl ?? 'https://placehold.co/600x400'} />
             </div>
             <div className="px-2">
               <p className="line-clamp-1 text-sm font-bold">{offer.title}</p>
               <div className="mt-0.5 flex items-center justify-between">
-                <p className="text-muted text-[12px]">{offer.category.title}</p>
+                <p className="text-muted text-[12px]">{offer.category?.name ?? 'Sem categoria'}</p>
                 <p className="text-success text-[12px]">
-                  {formatCurrency(offer.commissionValue)} Payout
+                  {formatCommission(
+                    offer.frontCommissionValue,
+                    offer.frontCommissionType,
+                    offer.currency,
+                  )}{' '}
+                  Payout
                 </p>
               </div>
             </div>

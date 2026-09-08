@@ -1,14 +1,13 @@
 'use client';
 
-import type { Offer } from '@/store/services/offers/offers.types';
+import { InfoCircleIcon } from '@solar-icons/react/linear';
 
 import { useLayoutEffect, useRef, useState } from 'react';
 
 import { Button, Card } from '@heroui/react';
-import { HeartIcon } from '@solar-icons/react/bold';
-import { InfoCircleIcon } from '@solar-icons/react/linear';
 
-import { formatCurrency } from '@/utils/format-currency';
+import type { Offer } from '@/store/services/offers/offers.types';
+import { formatCommission } from '@/utils/format-commission';
 
 interface OfferListCardProps {
   data: Offer;
@@ -24,23 +23,9 @@ const BEVEL = 15;
 const INFO_BUTTON_RESERVE = 52;
 const MIN_NOTCH_WIDTH = 48;
 
-const COUNTRY_FLAG_ALIASES: Record<string, string> = {
-  uk: 'gb',
-  'united kingdom': 'gb',
-  'united states': 'us',
-  australia: 'au',
-  canada: 'ca',
-  poland: 'pl',
-};
-
-function getCountryCode(country: string): string {
-  const normalized = country.trim().toLowerCase();
-
-  return COUNTRY_FLAG_ALIASES[normalized] ?? normalized;
-}
-
+/** The API stores ISO-3166 alpha-2 in uppercase; the flag service serves them lowercase. */
 function getCircleFlagUrl(country: string): string {
-  return `https://hatscripts.github.io/circle-flags/flags/${getCountryCode(country)}.svg`;
+  return `https://hatscripts.github.io/circle-flags/flags/${country.trim().toLowerCase()}.svg`;
 }
 
 function buildOfferImageMask(width: number, height: number, notchWidth: number): string {
@@ -81,7 +66,7 @@ export const OfferListCard = ({ data, onPress }: OfferListCardProps) => {
   const titleRef = useRef<HTMLSpanElement>(null);
   const [mask, setMask] = useState(() => buildOfferImageMask(488, 244, 179));
 
-  const countries = data.country ?? [];
+  const countries = data.countries ?? [];
   const visibleCountries = countries.slice(0, VISIBLE_COUNTRIES);
   const extraCountries = Math.max(countries.length - VISIBLE_COUNTRIES, 0);
 
@@ -121,13 +106,14 @@ export const OfferListCard = ({ data, onPress }: OfferListCardProps) => {
             WebkitMask: mask,
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element -- offer covers, flags and category icons come from arbitrary hosts an admin pastes; next/image would need every one allowlisted */}
           <img
             alt={data.title}
             className="absolute inset-0 size-full object-cover select-none"
             decoding="async"
             draggable={false}
             loading="lazy"
-            src={data.file ?? 'https://placehold.co/600x300'}
+            src={data.imageUrl ?? 'https://placehold.co/600x300'}
           />
         </div>
 
@@ -151,34 +137,19 @@ export const OfferListCard = ({ data, onPress }: OfferListCardProps) => {
         </Button>
       </div>
       <div className="absolute top-3 right-3 z-10">
-        <div className="relative flex items-center">
-          <Button
-            className="absolute top-0 right-0 z-20 transition-transform duration-300 group-hover:-translate-x-[36px]"
-            size="sm"
-            variant="tertiary"
-          >
-            Apply
-          </Button>
-          <Button
-            aria-label="Toggle favorite"
-            aria-pressed={data.isFavorite}
-            className="bg-surface-secondary z-10 size-8 rounded-full transition-opacity duration-300 sm:opacity-0 sm:group-hover:opacity-100"
-            isIconOnly
-            size="sm"
-            variant="secondary"
-          >
-            <HeartIcon className={data.isFavorite ? 'text-danger' : undefined} size={14} />
-          </Button>
-        </div>
+        <Button size="sm" variant="tertiary">
+          Apply
+        </Button>
       </div>
 
       <div className="mt-auto flex items-center justify-between px-1">
         <div>
           <p className="text-muted mb-1.5 text-[10px] leading-none font-medium">
-            {data.category?.title}
+            {data.category?.name ?? 'Sem categoria'}
           </p>
           <p className="text-success text-lg leading-none font-extrabold tracking-tight">
-            {formatCurrency(data.commissionValue, data.currency)} Payout
+            {formatCommission(data.frontCommissionValue, data.frontCommissionType, data.currency)}{' '}
+            Payout
           </p>
         </div>
 
@@ -194,6 +165,7 @@ export const OfferListCard = ({ data, onPress }: OfferListCardProps) => {
                 key={country}
                 style={{ zIndex: VISIBLE_COUNTRIES - index }}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element -- offer covers, flags and category icons come from arbitrary hosts an admin pastes; next/image would need every one allowlisted */}
                 <img
                   alt={country}
                   className="block size-5 rounded-full"

@@ -1,99 +1,83 @@
 import type { PaginatedResponse, PaginationParams } from '../types';
 
+export type OfferStatus = 'DRAFT' | 'PUBLISHED' | 'INACTIVE';
+
 export type CommissionType = 'CPA' | 'REV_SHARE';
 
-export type OfferStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ARCHIVED';
+export type CommissionMode = 'STANDARD' | 'ADVANCED';
 
-export type AffiliateRole = 'NONE' | 'AFFILIATE' | 'PARTNER';
+export type PaymentPlatform = 'SPARK' | 'BUY_GOODS';
+
+export type OfferPlatformRole =
+  | 'AFFILIATE'
+  | 'CO_PRODUCER'
+  | 'PARTNER'
+  | 'ROOT'
+  | 'FINANCE'
+  | 'ONBOARDING'
+  | 'COMMERCIAL';
+
+export type TaxonomyRef = {
+  id: string;
+  name: string;
+};
+
+export type OfferTag = {
+  id: string;
+  name: string;
+  active: boolean;
+  /**
+   * Ids, not names. The write side of the API takes `userTags` as names and resolves them; reading
+   * an offer back gives the ids they resolved to.
+   */
+  userTagIds: string[];
+};
 
 export type Offer = {
-  commissionType: string;
-  commissionValue: number;
-  pvUrl: string;
-  kind: string;
-  request: [
-    {
-      sessions: number;
-      visitors: number;
-      pageViews: number;
-      initiatedCheckouts: number;
-      clicks: number;
-      totalSales: number;
-      totalPaidSales: number;
-      addPaymentInfo: number;
-      addToCart: number;
-      totalCommissionGross: number;
-      totalCommissionNet: number;
-      createdAt: string;
-      updatedAt: string;
-      commissionType: CommissionType;
-      commissionValue: number;
-      backCommissionType: CommissionType;
-      backCommissionValue: number;
-      subscriptionCommissionType: CommissionType;
-      subscriptionCommissionValue: number;
-      partnerAffiliate: {
-        user: {
-          name: string;
-          id: string;
-          code: string;
-          email: string;
-          phone: string;
-          avatar: {
-            url: string;
-          };
-        };
-      };
-      id: string;
-      offerId: string;
-      status: OfferStatus;
-      code: string;
-      userId: string;
-      affiliateRole: AffiliateRole;
-      timeOnPage: number;
-      partnerAffiliateId: string;
-    },
-  ];
-  isFavorite: true;
-  totalVsl: number;
-  allowedUsers: [
-    {
-      id: string;
-      name: string;
-      avatar: string;
-    },
-  ];
   id: string;
+  /** Public identifier, `off_` plus a random suffix. Shown to people; `id` is internal. */
   code: string;
-  status: string;
   title: string;
-  description: string;
-  category: {
-    id: string;
-    title: string;
-  };
-  allowedPlatformRoles: [string];
-  country: [string];
-  typeId: string;
-  type: string;
-  currency: string;
+  description: string | null;
+  imageUrl: string | null;
+  status: OfferStatus;
+  angle: string | null;
+  currency: string | null;
+  paymentPlatform: PaymentPlatform;
+  /** ISO-3166 alpha-2, uppercase. Already the union of the explicit list and every country group. */
+  countries: string[];
+  countryGroupIds: string[];
+  pvUrl: string | null;
+  isAvailableForAllUsers: boolean;
+  allowedPlatformRoles: OfferPlatformRole[];
+  allowedUserIds: string[];
+  tags: OfferTag[];
+  category: TaxonomyRef | null;
+  niche: TaxonomyRef | null;
+  structure: TaxonomyRef | null;
+  commissionMode: CommissionMode;
+  frontCommissionType: CommissionType;
+  /**
+   * A decimal string, never a number: the column is `Decimal(12,2)` and the API serialises it as a
+   * string so a float cannot round it on the way here. It is a plain amount, not cents — `100` means
+   * one hundred — and with `REV_SHARE` it is a percentage rather than money.
+   */
+  frontCommissionValue: string;
   backCommissionType: CommissionType;
-  backCommissionValue: number;
-  subscriptionCommissionType: CommissionType;
-  subscriptionCommissionValue: number;
-  isAvailableForAllUsers: true;
-  totalClicks: number;
-  affiliates: number;
-  rating: number;
-  file: string;
+  backCommissionValue: string;
+  recurrenceCommissionType: CommissionType;
+  recurrenceCommissionValue: string;
   createdAt: string;
   updatedAt: string;
 };
 
+export type OfferOrderBy = 'createdAt' | 'updatedAt' | 'title' | 'status';
+
 export type OffersListParams = PaginationParams & {
+  /** Searches title, description and code, ignoring case. */
   filter?: string;
-  /** Mapped from URL `status` (e.g. active, inactive). */
-  status?: string;
+  orderBy?: OfferOrderBy;
+  order?: 'asc' | 'desc';
 };
 
 export type OffersListResponse = PaginatedResponse<Offer>;

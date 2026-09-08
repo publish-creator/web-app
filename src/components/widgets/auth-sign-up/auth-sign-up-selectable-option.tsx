@@ -1,6 +1,6 @@
-import { Surface } from '@heroui/react';
-
 import type { ReactNode } from 'react';
+
+import { Surface } from '@heroui/react';
 
 interface AuthSignUpSelectableOptionProps {
   icon: ReactNode;
@@ -19,9 +19,9 @@ export function AuthSignUpSelectableOption({
     <button
       aria-checked={isSelected}
       className="w-full text-left"
+      onClick={onSelect}
       role="radio"
       type="button"
-      onClick={onSelect}
     >
       <Surface
         className={`flex min-h-20 w-full items-center gap-4 rounded-2xl p-4 transition-colors ${

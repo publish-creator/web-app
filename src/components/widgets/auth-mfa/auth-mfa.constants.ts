@@ -1,15 +1,5 @@
-export const MFA_SECRET = 'MARK EP7K 4P2Q X8LA';
-
-export const MFA_RECOVERY_CODES = [
-  'MP-7K4P-2QX8',
-  'MP-9L3M-A1B2',
-  'MP-C8D4-E5F6',
-  'MP-G7H8-J9K0',
-  'MP-L1N2-P3Q4',
-  'MP-R5S6-T7V8',
-  'MP-W9X0-Y1Z2',
-  'MP-A3B4-C5D6',
-] as const;
+// The secret and the recovery codes used to be hard-coded here. They come from the API now — a
+// fixed secret would have been the same second factor for every account on the platform.
 
 export const MFA_TRIGGERS = [
   {

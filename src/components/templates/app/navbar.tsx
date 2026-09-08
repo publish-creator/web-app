@@ -6,22 +6,27 @@ import { AppLayout, Navbar } from '@heroui-pro/react';
 import { Avatar, Button } from '@heroui/react';
 
 import { IconButton } from '@/components/base/icon-button';
-import { formatCurrency } from '@/utils/format-currency';
-import { useSession } from '@/providers/session-provider';
 import { AppBreadcrumbs } from '@/components/widgets/shared';
+import { useSession } from '@/providers/session-provider';
+import { formatCurrency } from '@/utils/format-currency';
 
 export interface DashboardNavbarProps {
-  /** Title rendered in the navbar. Falls back to the home-page greeting. */
+  /** Title rendered in the navbar. Falls back to greeting whoever is signed in. */
   title?: string;
 }
 
-export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavbarProps) {
+export function DashboardNavbar({ title }: DashboardNavbarProps) {
   const { user } = useSession();
   return (
     <Navbar maxWidth="full">
       <Navbar.Header className="px-8">
         <AppLayout.MenuToggle aria-label="Open navigation" />
         <AppBreadcrumbs labels={{ dashboard: 'Dashboard' }} />
+        {/* The prop was declared and never rendered, so the navbar showed a hard-coded name for
+            everyone. It now greets whoever is actually signed in. */}
+        <span className="text-muted ml-2 hidden text-sm md:inline">
+          {title ?? (user ? `Olá, ${user.name}` : '')}
+        </span>
 
         <Navbar.Spacer />
         <div className="flex items-center gap-2">
@@ -41,7 +46,7 @@ export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavba
             color="accent"
             size="sm"
           >
-            {user?.avatar ? <Avatar.Image alt={user.name} src={user.avatar} /> : null}
+            {/* The v2 API carries no avatar, so the initial is what there is to show. */}
             <Avatar.Fallback>{user?.name?.charAt(0) ?? 'U'}</Avatar.Fallback>
           </Avatar>
         </div>

@@ -1,9 +1,10 @@
 'use client';
 
 import { Check } from '@gravity-ui/icons';
+
 import { ProgressBar } from '@heroui/react';
 
-import { getSignupProgress, SIGN_UP_STEPPER_GROUPS } from './auth-sign-up.constants';
+import { SIGN_UP_STEPPER_GROUPS, getSignupProgress } from './auth-sign-up.constants';
 
 export function AuthSignUpMobileProgress({ step }: { step: number }) {
   const progress = getSignupProgress(step);
@@ -36,15 +37,13 @@ export function AuthSignUpStepper({ step }: { step: number }) {
         const isCompleted = step > group.completedAfter;
         const isActive = group.steps.includes(step);
         const previousGroup = index > 0 ? SIGN_UP_STEPPER_GROUPS[index - 1] : undefined;
-        const isLineBeforeCompleted = Boolean(
-          previousGroup && step > previousGroup.completedAfter,
-        );
+        const isLineBeforeCompleted = Boolean(previousGroup && step > previousGroup.completedAfter);
 
         return (
           <div
-            key={group.key}
             aria-current={isActive ? 'step' : undefined}
             className="flex w-full gap-3 text-left"
+            key={group.key}
           >
             <div className="flex w-8 shrink-0 flex-col items-center">
               <div

@@ -1,4 +1,4 @@
-export const SIGN_UP_TOTAL_STEPS = 8;
+export const SIGN_UP_TOTAL_STEPS = 4;
 export const OTP_LENGTH = 6;
 export const RESEND_COOLDOWN = 60;
 export const DEFAULT_COUNTRY = 'br';
@@ -10,21 +10,28 @@ export const SIGN_UP_STEPPER_GROUPS: ReadonlyArray<{
   steps: readonly number[];
   subtitle: string;
 }> = [
-  { completedAfter: 3, key: 'information', label: 'Informações', steps: [3], subtitle: 'Dados do seu negócio' },
-  { completedAfter: 4, key: 'country', label: 'País', steps: [4], subtitle: 'Defina a localização' },
-  { completedAfter: 6, key: 'phone', label: 'Celular', steps: [5, 6], subtitle: 'Verificação de contato' },
-  { completedAfter: 7, key: 'password', label: 'Senha', steps: [7], subtitle: 'Defina uma senha' },
+  { completedAfter: 1, key: 'invite', label: 'Convite', steps: [1], subtitle: 'Código de acesso' },
+  {
+    completedAfter: 2,
+    key: 'information',
+    label: 'Informações',
+    steps: [2],
+    subtitle: 'Dados do seu negócio',
+  },
+  {
+    completedAfter: 3,
+    key: 'email',
+    label: 'E-mail',
+    steps: [3],
+    subtitle: 'Onde falamos com você',
+  },
 ];
 
 export const SIGN_UP_STEP_MAX_WIDTH: Record<number, string> = {
   1: 'max-w-[450px]',
-  2: 'max-w-[404px]',
-  3: 'max-w-[500px]',
+  2: 'max-w-[500px]',
+  3: 'max-w-[450px]',
   4: 'max-w-[500px]',
-  5: 'max-w-[500px]',
-  6: 'max-w-[404px]',
-  7: 'max-w-[500px]',
-  8: 'max-w-[500px]',
 };
 
 export const COUNTRIES = [

@@ -2,16 +2,16 @@
 
 import { Link } from '@heroui/react';
 
-import { useAuthSignUp } from './auth-sign-up-context';
 import { AuthSignUpContent } from './auth-sign-up-content';
+import { useAuthSignUp } from './auth-sign-up-context';
 import { AuthSignUpHeader } from './auth-sign-up-header';
 import { AuthSignUpIllustration } from './auth-sign-up-illustration';
 import { AuthSignUpMobileProgress, AuthSignUpStepper } from './auth-sign-up-stepper';
-import { SIGN_UP_STEP_MAX_WIDTH } from './auth-sign-up.constants';
+import { SIGN_UP_STEP_MAX_WIDTH, SIGN_UP_TOTAL_STEPS } from './auth-sign-up.constants';
 
 export function AuthSignUpShell() {
   const { step } = useAuthSignUp();
-  const showStepper = step > 2 && step < 8;
+  const showStepper = step < SIGN_UP_TOTAL_STEPS;
   const maxWidth = SIGN_UP_STEP_MAX_WIDTH[step] ?? SIGN_UP_STEP_MAX_WIDTH[1];
 
   return (
@@ -36,7 +36,9 @@ export function AuthSignUpShell() {
         </div>
 
         <footer className="hidden flex-col items-center justify-center gap-1 py-4 text-center md:flex">
-          <p className="text-muted text-xs">Você precisa ter 18 anos ou mais para criar uma conta.</p>
+          <p className="text-muted text-xs">
+            Você precisa ter 18 anos ou mais para criar uma conta.
+          </p>
           <p className="text-muted text-xs">
             © 2026 - Todos os direitos reservados |{' '}
             <Link className="text-muted text-xs no-underline" href="#">

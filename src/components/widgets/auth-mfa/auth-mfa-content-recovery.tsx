@@ -4,13 +4,14 @@ import { useState } from 'react';
 
 import { Button, Card } from '@heroui/react';
 
-import { MFA_RECOVERY_CODES } from './auth-mfa.constants';
+import { useAuthMfa } from './auth-mfa-context';
 
 export function AuthMfaContentRecovery() {
+  const { recoveryCodes } = useAuthMfa();
   const [copied, setCopied] = useState(false);
 
   const copyCodes = async () => {
-    await navigator.clipboard.writeText(MFA_RECOVERY_CODES.join('\n'));
+    await navigator.clipboard.writeText(recoveryCodes.join('\n'));
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
   };
@@ -23,15 +24,16 @@ export function AuthMfaContentRecovery() {
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Códigos de recuperação</h1>
         <p className="text-muted max-w-2xl text-sm leading-relaxed">
-          Após confirmar, você receberá códigos de recuperação de uso único. Guarde-os em um local
-          seguro. Cada código funciona uma única vez se você perder o acesso ao autenticador.
+          Estes códigos aparecem uma única vez. Guarde-os agora, em um local seguro: cada um
+          funciona uma vez e é o que devolve o acesso à sua conta se você perder o autenticador.
+          Nada consegue exibi-los de novo.
         </p>
       </div>
 
       <Card>
         <Card.Content className="flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {MFA_RECOVERY_CODES.map((recoveryCode) => (
+            {recoveryCodes.map((recoveryCode) => (
               <code
                 className="bg-surface-secondary rounded-xl px-3 py-2 text-center text-sm tracking-wide"
                 key={recoveryCode}
@@ -40,7 +42,11 @@ export function AuthMfaContentRecovery() {
               </code>
             ))}
           </div>
-          <Button variant="secondary" onPress={() => void copyCodes()}>
+          <Button
+            isDisabled={recoveryCodes.length === 0}
+            onPress={() => void copyCodes()}
+            variant="secondary"
+          >
             {copied ? 'Códigos copiados' : 'Copiar códigos'}
           </Button>
         </Card.Content>

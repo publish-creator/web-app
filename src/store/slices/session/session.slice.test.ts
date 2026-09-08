@@ -2,11 +2,11 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { authApi } from '../../services/auth/auth.api';
-import type { User } from '../../services/users/users.types';
-import { resetUser, sessionReducer, sessionSelectors, setSession } from '../session.slice';
-import type { SessionState } from '../session.slice';
+import type { Session } from '../../services/auth/auth.types';
+import { resetUser, sessionReducer, sessionSelectors, setSession } from './session.slice';
+import type { SessionState } from './session.slice';
 
-vi.mock('../services/auth/auth.api', () => ({
+vi.mock('../../services/auth/auth.api', () => ({
   authApi: {
     endpoints: {
       getSession: {
@@ -17,58 +17,88 @@ vi.mock('../services/auth/auth.api', () => ({
 }));
 
 describe('sessionSlice Reducer & Selectors', () => {
-  const dummyUser = { id: 'usr-123', name: 'Gustavo', email: 'dev@agenus.com' } as unknown as User;
-  const initialState: SessionState = { user: null };
+  const dummyUser: Session['user'] = {
+    id: 'usr-123',
+    name: 'Gustavo',
+    email: 'dev@agenus.com',
+    status: 'ACTIVE',
+    role: 'USER',
+    platformRole: 'AFFILIATE',
+    phone: null,
+  };
+
+  const dummySession: Session = {
+    user: dummyUser,
+    emailVerified: true,
+    phoneVerified: false,
+    mfa: { enabled: true },
+    terms: { accepted: true, version: '1.0' },
+    pending: [],
+  };
+
+  const initialState: SessionState = {
+    user: null,
+    pending: [],
+    mfaEnabled: false,
+    emailVerified: false,
+    phoneVerified: false,
+    termsAccepted: false,
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('should initialize with an empty user session', () => {
-    const result = sessionReducer(undefined, { type: '@@INIT' });
-
-    expect(result).toEqual(initialState);
+    expect(sessionReducer(undefined, { type: '@@INIT' })).toEqual(initialState);
   });
 
   it('should apply the authenticated user inside setSession without storing a token', () => {
-    const nextState = sessionReducer(initialState, setSession({ user: dummyUser }));
+    const nextState = sessionReducer(initialState, setSession(dummySession));
 
-    expect(nextState.user).toBe(dummyUser);
+    expect(nextState.user).toEqual(dummyUser);
+    expect(JSON.stringify(nextState)).not.toContain('token');
   });
 
   it('should clear the user when resetUser is dispatched', () => {
-    const authenticated: SessionState = { user: dummyUser };
+    const authenticated = sessionReducer(initialState, setSession(dummySession));
 
-    const nextState = sessionReducer(authenticated, resetUser());
-
-    expect(nextState).toEqual(initialState);
+    expect(sessionReducer(authenticated, resetUser())).toEqual(initialState);
   });
 
   it('should hydrate the user when getSession fulfills', () => {
-    const mockSuccessAction = {
-      type: 'auth/getSession/fulfilled',
-      payload: { user: dummyUser },
-    };
-
     vi.mocked(authApi.endpoints.getSession.matchFulfilled).mockReturnValue(
       true as unknown as ReturnType<typeof authApi.endpoints.getSession.matchFulfilled>,
     );
 
-    const nextState = sessionReducer(
-      initialState,
-      mockSuccessAction as unknown as PayloadAction<SessionState>,
-    );
+    const nextState = sessionReducer(initialState, {
+      type: 'auth/getSession/fulfilled',
+      payload: dummySession,
+    } as unknown as PayloadAction<Session>);
 
-    expect(nextState.user).toBe(dummyUser);
+    expect(nextState.user).toEqual(dummyUser);
   });
 
   it('should correctly filter and return user details context via selectSession selector', () => {
-    const globalState = {
-      session: { user: dummyUser },
-    };
+    const state = { session: sessionReducer(initialState, setSession(dummySession)) };
 
-    const selectedUser = sessionSelectors.selectSession(globalState);
+    expect(sessionSelectors.selectSession(state)).toEqual(dummyUser);
+  });
 
-    expect(selectedUser).toBe(dummyUser);
+  // The routing reads this. If a pending step were dropped on the way into the store, the front
+  // would send somebody straight to the dashboard and every call they made there would be refused.
+  it('keeps the pending list the server sent, in order', () => {
+    const owing: Session = { ...dummySession, pending: ['ENABLE_MFA', 'ACCEPT_TERMS'] };
+
+    const state = { session: sessionReducer(initialState, setSession(owing)) };
+
+    expect(sessionSelectors.selectPending(state)).toEqual(['ENABLE_MFA', 'ACCEPT_TERMS']);
+    expect(sessionSelectors.selectOnboardingComplete(state)).toBe(false);
+  });
+
+  it('reports onboarding complete only when nothing is owed', () => {
+    const state = { session: sessionReducer(initialState, setSession(dummySession)) };
+
+    expect(sessionSelectors.selectOnboardingComplete(state)).toBe(true);
   });
 });

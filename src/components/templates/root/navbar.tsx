@@ -10,7 +10,6 @@ import { useSession } from '@/providers/session-provider';
 import { formatCurrency } from '@/utils/format-currency';
 
 export interface DashboardNavbarProps {
-  /** Title rendered in the navbar. Falls back to greeting whoever is signed in. */
   title?: string;
 }
 
@@ -20,7 +19,6 @@ export function DashboardNavbar({ title }: DashboardNavbarProps) {
     <Navbar maxWidth="full">
       <Navbar.Header>
         <AppLayout.MenuToggle aria-label="Open navigation" />
-        {/* The prop was declared and never rendered. It now greets whoever is actually signed in. */}
         <span className="text-muted ml-2 hidden text-sm md:inline">
           {title ?? (user ? `Olá, ${user.name}` : '')}
         </span>
@@ -45,7 +43,6 @@ export function DashboardNavbar({ title }: DashboardNavbarProps) {
             color="accent"
             size="sm"
           >
-            {/* The v2 API carries no avatar, so the initial is what there is to show. */}
             <Avatar.Fallback>{user?.name?.charAt(0) ?? 'U'}</Avatar.Fallback>
           </Avatar>
         </div>

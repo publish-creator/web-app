@@ -78,11 +78,6 @@ export function AuthAcceptTerms() {
               <Spinner className="size-6" />
             </div>
           ) : terms ? (
-            /**
-             * The text is served by the API, not bundled with the front. Rendering it in an iframe
-             * keeps whatever it contains from executing as part of this page — and a version whose
-             * markup could run scripts here would be a very expensive way to lose a session.
-             */
             <iframe
               className="h-full w-full border-0"
               sandbox=""

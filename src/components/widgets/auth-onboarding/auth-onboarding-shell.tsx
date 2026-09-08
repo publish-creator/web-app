@@ -8,10 +8,6 @@ import { Link } from '@heroui/react';
 
 import { AuthFlowHeader } from '@/widgets/auth';
 
-/**
- * The frame every onboarding step shares, so the person crossing four of them in a row sees one
- * screen changing rather than four different pages.
- */
 export function AuthOnboardingShell({
   children,
   action,

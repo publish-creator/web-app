@@ -85,8 +85,6 @@ describe('sessionSlice Reducer & Selectors', () => {
     expect(sessionSelectors.selectSession(state)).toEqual(dummyUser);
   });
 
-  // The routing reads this. If a pending step were dropped on the way into the store, the front
-  // would send somebody straight to the dashboard and every call they made there would be refused.
   it('keeps the pending list the server sent, in order', () => {
     const owing: Session = { ...dummySession, pending: ['ENABLE_MFA', 'ACCEPT_TERMS'] };
 

@@ -39,11 +39,6 @@ export default function SignInPage() {
     try {
       const result = await signIn(data).unwrap();
 
-      /**
-       * A correct password against an account with a second factor buys a five-minute challenge and
-       * nothing else — there is no session yet, so asking for one here would 401 and bounce the
-       * person back to this screen. The challenge screen finishes the sign-in.
-       */
       if (result.mfaRequired) {
         router.push('/auth/mfa-challenge');
 
@@ -54,10 +49,6 @@ export default function SignInPage() {
 
       router.push(nextRouteFor(session));
     } catch (cause) {
-      /**
-       * Whatever the API said, verbatim. It answers a wrong password and an unknown email
-       * identically on purpose, and rewording it here could reintroduce the difference.
-       */
       setError(messageFromError(cause));
     }
   };

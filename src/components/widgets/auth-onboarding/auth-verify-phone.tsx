@@ -19,17 +19,11 @@ import { RESEND_COOLDOWN } from '@/widgets/auth-sign-up/auth-sign-up.constants';
 
 import { AuthOnboardingShell } from './auth-onboarding-shell';
 
-/**
- * The API takes E.164 and nothing else — accepting other formats would mean storing three spellings
- * of one number and never being able to tell two rows apart. The field is normalised here rather
- * than letting the person discover the rule from a rejection.
- */
 function toE164(input: string): string {
   const digits = input.replace(/\D/g, '');
 
   if (!digits) return '';
 
-  /** A Brazilian number typed without a country code is the common case; assume +55 for it. */
   if (!input.trim().startsWith('+') && (digits.length === 10 || digits.length === 11)) {
     return `+55${digits}`;
   }

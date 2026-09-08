@@ -13,7 +13,6 @@ describe('messageFromError', () => {
     expect(messageFromError({ status: 'FETCH_ERROR', error: 'TypeError' })).toContain('conexão');
   });
 
-  // Anything unrecognised still has to render something. A blank error message reads as success.
   it('never answers an empty string', () => {
     for (const value of [
       null,

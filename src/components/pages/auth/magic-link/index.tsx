@@ -11,10 +11,6 @@ import { nextRouteFor } from '@/lib/auth/pending-route';
 import { useLazyGetSessionQuery, useMagicLinkConsumeMutation } from '@/store/services/auth';
 import { AuthOnboardingShell } from '@/widgets/auth-onboarding';
 
-/**
- * Where the emailed link lands. The token is spent here, once — the API refuses it a second time —
- * so this must not fire twice, which React's development double-invoke would otherwise do.
- */
 export default function MagicLinkPage() {
   const router = useRouter();
   const params = useSearchParams();
@@ -26,7 +22,6 @@ export default function MagicLinkPage() {
   const [loadSession] = useLazyGetSessionQuery();
 
   useEffect(() => {
-    /** No token is knowable at render time, so it is rendered from `token` rather than stored. */
     if (!token) return;
 
     if (consumed.current) return;
@@ -36,7 +31,6 @@ export default function MagicLinkPage() {
     consume({ token })
       .unwrap()
       .then(async (result) => {
-        /** An account with a second factor gets a challenge here too, not a session. */
         if (result.mfaRequired) {
           router.push('/auth/mfa-challenge');
 

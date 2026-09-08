@@ -1,6 +1,3 @@
-// The secret and the recovery codes used to be hard-coded here. They come from the API now — a
-// fixed secret would have been the same second factor for every account on the platform.
-
 export const MFA_TRIGGERS = [
   {
     description: 'Confirma que é realmente você.',

@@ -12,11 +12,6 @@ import { useAuthSignUp } from './auth-sign-up-context';
 import { signUpInviteSchema } from './auth-sign-up.schemas';
 import type { SignUpInviteInput } from './auth-sign-up.schemas';
 
-/**
- * First, because registration is invite-only and every other question is wasted without one. The
- * code is only checked when the account is created — the API deliberately has no "is this code
- * valid" endpoint, since that would let anyone grind through codes without leaving a trace.
- */
 export function AuthSignUpContentInvite() {
   const { data, goToStep } = useAuthSignUp();
   const form = useForm<SignUpInviteInput>({

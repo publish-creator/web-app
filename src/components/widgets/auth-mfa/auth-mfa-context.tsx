@@ -19,10 +19,10 @@ type AuthMfaContextValue = {
   step: MfaStep;
   code: string;
   error: string;
-  /** The otpauth URL the QR code is drawn from. Null until the setup call answers. */
+
   otpauthUrl: string | null;
   secret: string | null;
-  /** Shown exactly once, on the step after confirming. Nothing can produce them again. */
+
   recoveryCodes: string[];
   isPreparing: boolean;
   isActivating: boolean;
@@ -47,10 +47,6 @@ export function AuthMfaProvider({ children }: { children: ReactNode }) {
   const [mfaConfirm, { isLoading: isActivating }] = useMfaConfirmMutation();
   const [loadSession] = useLazyGetSessionQuery();
 
-  /**
-   * The secret is asked for once, when the screen opens. Calling setup again replaces it on the
-   * server, which would silently invalidate the entry the person may have already scanned.
-   */
   useEffect(() => {
     let cancelled = false;
 
@@ -69,7 +65,7 @@ export function AuthMfaProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately once per mount, see above
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per mount: calling setup again replaces the secret
   }, []);
 
   const activate = useCallback(() => {
@@ -92,10 +88,6 @@ export function AuthMfaProvider({ children }: { children: ReactNode }) {
       });
   }, [code, mfaConfirm]);
 
-  /**
-   * Only after the codes have been shown. Where they go next comes from the server's pending list,
-   * not from an assumption that MFA was the last thing owed.
-   */
   const finish = useCallback(() => {
     loadSession()
       .unwrap()

@@ -5,7 +5,6 @@ import { createRef } from 'react';
 
 import { useTermsEvidence } from './use-terms-evidence';
 
-/** A stand-in for the scrolling box, so the maths can be driven directly. */
 function boxRef({ scrollHeight, clientHeight }: { scrollHeight: number; clientHeight: number }) {
   const ref = createRef<HTMLElement>();
 
@@ -29,8 +28,6 @@ describe('useTermsEvidence', () => {
     expect(result.current.collect().events[0]).toMatchObject({ kind: 'OPENED' });
   });
 
-  // Text that fits without scrolling was read in full the moment it appeared. Calling that 0% would
-  // leave the accept button disabled forever on a short document.
   it('treats content that does not scroll as read to the end', () => {
     const ref = boxRef({ scrollHeight: 300, clientHeight: 400 });
 
@@ -86,9 +83,6 @@ describe('useTermsEvidence', () => {
     expect(ends).toHaveLength(1);
   });
 
-  // The API refuses more than 60 events. One per scroll tick would blow through that during a single
-  // flick of the wheel and the whole acceptance would be rejected — with the evidence intact but
-  // unsendable, which is the worst of both.
   it('stays well under the cap the API enforces, however much scrolling happens', () => {
     const ref = boxRef({ scrollHeight: 1400, clientHeight: 400 });
 
@@ -111,8 +105,6 @@ describe('useTermsEvidence', () => {
 
     const evidence = result.current.collect();
 
-    // Finite and in range, not merely present: the API rejects the whole acceptance if any of these
-    // falls outside 0..100000, and losing the acceptance over a stray NaN would be a poor trade.
     for (const value of [
       evidence.viewportWidth,
       evidence.viewportHeight,

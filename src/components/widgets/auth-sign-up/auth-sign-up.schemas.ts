@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 import { OTP_LENGTH, getPhoneDialCode, isValidPhoneNumber } from './auth-sign-up.constants';
 
-/** The API's floor is six characters; anything shorter is refused there anyway. */
 export const signUpInviteSchema = z.object({
   code: z
     .string()

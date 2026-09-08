@@ -1,9 +1,3 @@
-/**
- * The API answers every failure the same way: `{ codeIntern, message }`, already translated to the
- * language the request asked for. This pulls that message out, and falls back to something readable
- * when the failure never reached the API at all — a dropped connection has no body.
- */
-
 const FALLBACK = 'Não foi possível concluir. Tente novamente.';
 
 type ApiErrorBody = { codeIntern?: string; message?: string };
@@ -22,7 +16,6 @@ export function messageFromError(error: unknown): string {
     if (typeof message === 'string' && message.length > 0) return message;
   }
 
-  /** RTK Query's own shapes for "never got an answer" and "the answer was not JSON". */
   if (status === 'FETCH_ERROR') return 'Sem conexão com o servidor. Verifique sua internet.';
   if (status === 'PARSING_ERROR' || status === 'CUSTOM_ERROR') return FALLBACK;
 

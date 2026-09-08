@@ -13,8 +13,6 @@ describe('nextRouteFor', () => {
     );
   });
 
-  // If a step were ever added on the API side without a screen here, this would hand back undefined
-  // and the router would push nothing — the person would sit on a page that never moves.
   it('has a route for every step it claims to handle', () => {
     for (const route of Object.values(PENDING_ROUTE)) {
       expect(route).toMatch(/^\//);

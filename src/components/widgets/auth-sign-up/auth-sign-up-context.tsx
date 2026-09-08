@@ -24,7 +24,7 @@ type SignUpContextValue = {
   error: string;
   isSubmitting: boolean;
   goToStep: (nextStep: number, updates?: Partial<SignUpFormData>) => void;
-  /** Creates the account and, on success, moves to the "check your inbox" step. */
+
   submit: (updates?: Partial<SignUpFormData>) => void;
 };
 
@@ -33,10 +33,6 @@ const INITIAL_DATA: SignUpFormData = {
   email: '',
 };
 
-/**
- * The name the account is created with. A company registers under its company name; a person under
- * their full name. The API stores one `name`, so this is where the two shapes collapse into one.
- */
 function nameFrom(data: SignUpFormData): string {
   if (data.businessType === 'COMPANY') return (data.businessName ?? '').trim();
 
@@ -73,12 +69,6 @@ export function AuthSignUpProvider({ children }: { children: ReactNode }) {
           setStep(SIGN_UP_TOTAL_STEPS);
         })
         .catch((cause: unknown) => {
-          /**
-           * A bad invite is only discovered here, on the last step, because that is the only place
-           * the API checks it. The message says which — an invite that does not exist, one already
-           * spent, one issued for a different address, or an account that already exists — so the
-           * person is not sent back to guess.
-           */
           setError(messageFromError(cause));
         });
     },

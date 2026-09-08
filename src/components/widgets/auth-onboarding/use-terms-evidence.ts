@@ -5,10 +5,8 @@ import type { RefObject } from 'react';
 
 import type { TermsEvent, TermsEventKind } from '@/store/services/auth';
 
-/** The API caps the list at 60. Below that, so a long read still leaves room for the final ACCEPTED. */
 const MAX_EVENTS = 55;
 
-/** One event per 10% crossed, rather than one per scroll tick, which would fill the cap in seconds. */
 const SCROLL_BUCKET = 10;
 
 type Evidence = {
@@ -25,14 +23,6 @@ type Evidence = {
   events: TermsEvent[];
 };
 
-/**
- * Records what can be shown later about how this person read the text: how far down they got, when
- * they opened it, whether they left the tab, and what they were reading it on. An acceptance nobody
- * can describe afterwards is worth very little in the moment it matters.
- *
- * It only observes. Nothing here decides whether the button is enabled — that is the screen's call,
- * and the server's.
- */
 export function useTermsEvidence(scrollRef: RefObject<HTMLElement | null>) {
   const openedAt = useRef(new Date().toISOString());
   const events = useRef<TermsEvent[]>([]);
@@ -68,10 +58,6 @@ export function useTermsEvidence(scrollRef: RefObject<HTMLElement | null>) {
 
     const scrollable = element.scrollHeight - element.clientHeight;
 
-    /**
-     * Text shorter than the box never scrolls, so there is no depth to measure. Calling that 0%
-     * would make a fully-read page look unread; it is 100% because all of it was on screen.
-     */
     const percent =
       scrollable <= 0 ? 100 : Math.min(100, Math.round((element.scrollTop / scrollable) * 100));
 
@@ -95,7 +81,6 @@ export function useTermsEvidence(scrollRef: RefObject<HTMLElement | null>) {
     }
   }, [record, scrollRef]);
 
-  /** Runs once on mount too: content that fits without scrolling has already been read to the end. */
   useEffect(() => {
     onScroll();
   }, [onScroll]);

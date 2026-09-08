@@ -20,12 +20,6 @@ import type { SignUpPasswordInput } from '@/widgets/auth-sign-up/auth-sign-up.sc
 
 import { AuthOnboardingShell } from './auth-onboarding-shell';
 
-/**
- * Setting the first password needs a session, and the only session that exists at this point came
- * from the emailed link — which is why this screen is reached after that link, never during
- * registration. The API also closes a window on it, so somebody who leaves this page open for a long
- * time is asked to request a new link rather than being let through.
- */
 export function AuthSetPassword() {
   const router = useRouter();
   const [error, setError] = useState('');

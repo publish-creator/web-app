@@ -19,11 +19,6 @@ import { AuthFlowHeader } from '@/widgets/auth';
 
 type Mode = 'code' | 'recovery';
 
-/**
- * The second half of signing in. Reaching this screen means the password was accepted and a
- * five-minute challenge cookie was set; nothing here is authenticated, and no session exists until
- * one of these two calls succeeds.
- */
 export default function MfaChallengePage() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>('code');
@@ -52,11 +47,6 @@ export default function MfaChallengePage() {
 
       await goOn();
     } catch (cause) {
-      /**
-       * The API answers a wrong code, an expired challenge and a locked account differently on
-       * purpose — a person who waited too long needs to be told to sign in again, not to keep typing
-       * codes at a challenge that no longer exists.
-       */
       setError(messageFromError(cause));
       setCode('');
     }

@@ -65,10 +65,6 @@ export function AuthVerifyEmail() {
 
       router.push(nextRouteFor(next));
     } catch (cause) {
-      /**
-       * The API answers a wrong code, an expired one and too many attempts identically — telling
-       * them apart would say whether a guess was close. So does this.
-       */
       setError(messageFromError(cause));
       setCode('');
     }

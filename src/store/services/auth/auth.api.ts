@@ -28,10 +28,6 @@ const SESSION_TAG = { type: 'Auth' as const, id: 'SESSION' };
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    /**
-     * Who is signed in and what they still owe. Every mutation that can change one of those answers
-     * invalidates this, so the routing never runs on a stale list.
-     */
     getSession: builder.query<Session, void>({
       query: () => ({ url: '/auth/me', method: 'GET' }),
       providesTags: [SESSION_TAG],
@@ -45,21 +41,13 @@ export const authApi = api.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
 
-          /**
-           * `mfaRequired` means no session exists yet — only a challenge cookie. Fetching the
-           * session here would 401 and send the caller back to sign-in, undoing the half of the
-           * login that just succeeded. The MFA screen takes it from here.
-           */
           if (data.mfaRequired) return;
 
           AuthRefreshManager.reset();
-        } catch {
-          // The rejected mutation already carries the error; the caller renders it.
-        }
+        } catch {}
       },
     }),
 
-    /** Registration is invite-only: `code` is the invite, and the API refuses without a usable one. */
     signUp: builder.mutation<{ success: boolean }, SignUpDto>({
       query: (body) => ({ url: '/users', method: 'POST', body }),
       extraOptions: { skipAuth: true },
@@ -115,22 +103,15 @@ export const authApi = api.injectEndpoints({
       invalidatesTags: [SESSION_TAG],
     }),
 
-    /** Hands back the secret and the otpauth URL the QR code is drawn from. Enrolling needs a session. */
     mfaSetup: builder.mutation<MfaSetupResponse, void>({
       query: () => ({ url: '/auth/mfa/setup', method: 'POST' }),
     }),
 
-    /** The recovery codes come back exactly once, here. Nothing can show them again. */
     mfaConfirm: builder.mutation<MfaConfirmResponse, MfaConfirmDto>({
       query: (body) => ({ url: '/auth/mfa/confirm', method: 'POST', body }),
       invalidatesTags: [SESSION_TAG],
     }),
 
-    /**
-     * The second half of signing in. There is no session yet — the challenge cookie set by
-     * `/auth/login` is the credential — so this skips the refresh-on-401 path, which would be
-     * refreshing a session that does not exist.
-     */
     mfaVerify: builder.mutation<{ verified: boolean; user: AuthUser | null }, MfaVerifyDto>({
       query: (body) => ({ url: '/auth/mfa/verify', method: 'POST', body }),
       extraOptions: { skipAuth: true },
@@ -182,7 +163,6 @@ export const authApi = api.injectEndpoints({
       invalidatesTags: [{ type: 'Auth', id: 'DEVICES' }],
     }),
 
-    /** Ends every session everywhere by bumping the credential version, this one included. */
     devicesRevokeAll: builder.mutation<{ revoked: number }, void>({
       query: () => ({ url: '/auth/sessions', method: 'DELETE' }),
       invalidatesTags: [SESSION_TAG, { type: 'Auth', id: 'DEVICES' }],

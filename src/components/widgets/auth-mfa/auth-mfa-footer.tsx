@@ -38,11 +38,6 @@ export function AuthMfaFooter() {
             <ArrowRight className="size-4" />
           </Button>
         )}
-        {/* <p className="text-muted text-center text-xs leading-relaxed">
-          {isSetup
-            ? 'Após confirmar, você receberá códigos de recuperação de uso único.'
-            : 'Guarde os códigos em um local seguro antes de continuar.'}
-        </p> */}
       </div>
     </footer>
   );

@@ -55,7 +55,6 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
     try {
       await authSignOut().unwrap();
     } catch {
-      // Cookie may already be expired; continue with the local reset.
     } finally {
       AuthRefreshManager.reset();
       resetAppState(dispatch);
@@ -63,11 +62,6 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
     }
   };
 
-  /**
-   * Somebody who still owes a step belongs on that step's screen. This is presentation only — the
-   * API refuses every call behind those steps regardless — but without it a half-finished account
-   * lands on a dashboard where nothing works and nothing explains why.
-   */
   useEffect(() => {
     if (!user || hasPublicRoutes || pending.length === 0) return;
 
@@ -80,7 +74,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
     if (isError && !hasPublicRoutes) {
       void onSignOut();
     }
-    // Same contract as Astron: react to session error, not to onSignOut identity.
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 

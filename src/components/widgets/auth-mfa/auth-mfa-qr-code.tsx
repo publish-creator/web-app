@@ -4,21 +4,12 @@ import QRCode from 'qrcode';
 
 import { useEffect, useState } from 'react';
 
-/**
- * A real QR code, drawn from the otpauth URL the API hands back. It used to be a pattern generated
- * by hashing the secret, which looked like a QR code and could not be scanned by anything — the only
- * way to enrol was to type the secret by hand.
- */
 export function AuthMfaQrCode({ otpauthUrl }: { otpauthUrl: string }) {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    /**
-     * Rendered in the browser rather than fetched: the otpauth URL carries the TOTP secret, and
-     * sending it to an image service would hand the second factor to a third party.
-     */
     QRCode.toDataURL(otpauthUrl, { errorCorrectionLevel: 'M', margin: 1, width: 352 })
       .then((url) => {
         if (!cancelled) setDataUrl(url);

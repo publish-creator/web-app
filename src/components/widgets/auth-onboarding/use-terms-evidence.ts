@@ -9,6 +9,8 @@ const MAX_EVENTS = 55;
 
 const SCROLL_BUCKET = 10;
 
+const ONCE = new Set<TermsEventKind>(['OPENED', 'REACHED_END', 'ACCEPTED']);
+
 type Evidence = {
   openedAt: string;
   reachedEndAt: string | null;
@@ -27,11 +29,20 @@ export function useTermsEvidence(scrollRef: RefObject<HTMLElement | null>) {
   const openedAt = useRef(new Date().toISOString());
   const events = useRef<TermsEvent[]>([]);
   const lastBucket = useRef(-1);
+  const reachedEnd = useRef<string | null>(null);
   const [scrollDepthPercent, setScrollDepthPercent] = useState(0);
   const [reachedEndAt, setReachedEndAt] = useState<string | null>(null);
 
+  const recordedOnce = useRef(new Set<TermsEventKind>());
+
   const record = useCallback((kind: TermsEventKind, atPercent: number | null) => {
     if (events.current.length >= MAX_EVENTS) return;
+
+    if (ONCE.has(kind)) {
+      if (recordedOnce.current.has(kind)) return;
+
+      recordedOnce.current.add(kind);
+    }
 
     events.current.push({ kind, atPercent, occurredAt: new Date().toISOString() });
   }, []);
@@ -70,14 +81,10 @@ export function useTermsEvidence(scrollRef: RefObject<HTMLElement | null>) {
       record('SCROLLED', percent);
     }
 
-    if (percent >= 99) {
-      setReachedEndAt((current) => {
-        if (current) return current;
-
-        record('REACHED_END', 100);
-
-        return new Date().toISOString();
-      });
+    if (percent >= 99 && !reachedEnd.current) {
+      reachedEnd.current = new Date().toISOString();
+      record('REACHED_END', 100);
+      setReachedEndAt(reachedEnd.current);
     }
   }, [record, scrollRef]);
 

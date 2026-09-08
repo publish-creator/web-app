@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { createRef } from 'react';
+import { StrictMode, createRef } from 'react';
 
 import { useTermsEvidence } from './use-terms-evidence';
 
@@ -129,5 +129,42 @@ describe('useTermsEvidence', () => {
     const { events } = result.current.collect();
 
     expect(events.at(-1)).toMatchObject({ kind: 'ACCEPTED' });
+  });
+
+  it('records OPENED once under StrictMode, which invokes every effect twice', () => {
+    const ref = boxRef({ scrollHeight: 2000, clientHeight: 400 });
+
+    const { result } = renderHook(() => useTermsEvidence(ref), { wrapper: StrictMode });
+
+    const opened = result.current.collect().events.filter((event) => event.kind === 'OPENED');
+
+    expect(opened).toHaveLength(1);
+  });
+
+  it('records REACHED_END once under StrictMode', () => {
+    const ref = boxRef({ scrollHeight: 1400, clientHeight: 400 });
+
+    const { result } = renderHook(() => useTermsEvidence(ref), { wrapper: StrictMode });
+
+    act(() => {
+      scrollTo(ref, 1000);
+      result.current.onScroll();
+    });
+
+    const ends = result.current.collect().events.filter((event) => event.kind === 'REACHED_END');
+
+    expect(ends).toHaveLength(1);
+  });
+
+  it('records ACCEPTED once even if the button is pressed twice', () => {
+    const ref = boxRef({ scrollHeight: 300, clientHeight: 400 });
+
+    const { result } = renderHook(() => useTermsEvidence(ref));
+
+    result.current.collect();
+
+    const accepted = result.current.collect().events.filter((event) => event.kind === 'ACCEPTED');
+
+    expect(accepted).toHaveLength(1);
   });
 });

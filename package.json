@@ -24,7 +24,8 @@
     "audit": "pnpm audit --audit-level=high --prod",
     "commit": "cz",
     "prepare": "husky",
-    "clean": "rm -rf .next node_modules .turbo dist"
+    "clean": "rm -rf .next node_modules .turbo dist",
+    "dev:local": "next dev --turbopack --port 3000"
   },
   "exports": {
     "./src/*": "./src/*.tsx",

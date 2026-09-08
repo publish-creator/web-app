@@ -31,6 +31,7 @@ export type {
   PlatformRole,
   Role,
   Session,
+  SetPasswordResponse,
   SignInDto,
   SignInResponse,
   SignUpDto,

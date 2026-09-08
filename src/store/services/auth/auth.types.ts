@@ -78,8 +78,15 @@ export type MfaSetupResponse = {
 export type MfaConfirmDto = { code: string };
 
 export type MfaConfirmResponse = {
+  confirmed: boolean;
   /** Shown once and never again — the only copy is the one the person writes down. */
   recoveryCodes: string[];
+};
+
+/** Setting a password revokes the sessions opened before it; the replacement arrives as a cookie. */
+export type SetPasswordResponse = {
+  expiresIn: number;
+  revokedSessions: number;
 };
 
 export type MfaVerifyDto = { code: string };

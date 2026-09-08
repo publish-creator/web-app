@@ -2,6 +2,7 @@ import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
 
 import { api } from '../api/base-api';
 import type {
+  AuthUser,
   DeviceSession,
   MagicLinkConsumeDto,
   MfaConfirmDto,
@@ -11,6 +12,7 @@ import type {
   MfaVerifyDto,
   Session,
   SetPasswordDto,
+  SetPasswordResponse,
   SignInDto,
   SignInResponse,
   SignUpDto,
@@ -104,7 +106,7 @@ export const authApi = api.injectEndpoints({
       invalidatesTags: [SESSION_TAG],
     }),
 
-    setPassword: builder.mutation<{ success: boolean }, SetPasswordDto>({
+    setPassword: builder.mutation<SetPasswordResponse, SetPasswordDto>({
       query: ({ password, currentPassword }) => ({
         url: '/auth/password',
         method: 'POST',
@@ -129,7 +131,7 @@ export const authApi = api.injectEndpoints({
      * `/auth/login` is the credential — so this skips the refresh-on-401 path, which would be
      * refreshing a session that does not exist.
      */
-    mfaVerify: builder.mutation<{ verified: boolean }, MfaVerifyDto>({
+    mfaVerify: builder.mutation<{ verified: boolean; user: AuthUser | null }, MfaVerifyDto>({
       query: (body) => ({ url: '/auth/mfa/verify', method: 'POST', body }),
       extraOptions: { skipAuth: true },
       invalidatesTags: [SESSION_TAG],

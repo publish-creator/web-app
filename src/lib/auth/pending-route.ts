@@ -2,8 +2,8 @@ import type { PendingStep, Session } from '@/store/services/auth/auth.types';
 
 export const PENDING_ROUTE: Record<PendingStep, string> = {
   VERIFY_EMAIL: '/auth/verify-email',
-  SET_PASSWORD: '/auth/set-password',
   VERIFY_PHONE: '/auth/verify-phone',
+  SET_PASSWORD: '/auth/set-password',
   ENABLE_MFA: '/mfa',
   ACCEPT_TERMS: '/auth/terms',
 };

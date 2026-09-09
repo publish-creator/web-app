@@ -16,8 +16,8 @@ export type AuthUser = {
 
 export type PendingStep =
   | 'VERIFY_EMAIL'
-  | 'SET_PASSWORD'
   | 'VERIFY_PHONE'
+  | 'SET_PASSWORD'
   | 'ENABLE_MFA'
   | 'ACCEPT_TERMS';
 

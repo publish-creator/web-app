@@ -6,8 +6,8 @@ import { HOME_ROUTE, PENDING_ROUTE, nextRouteFor } from './pending-route';
 
 const EVERY_STEP: PendingStep[] = [
   'VERIFY_EMAIL',
-  'SET_PASSWORD',
   'VERIFY_PHONE',
+  'SET_PASSWORD',
   'ENABLE_MFA',
   'ACCEPT_TERMS',
 ];

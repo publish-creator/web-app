@@ -10,6 +10,7 @@ import {
 } from '@solar-icons/react/bold';
 import { HomeIcon } from '@solar-icons/react/bold/home';
 import { SettingsIcon } from '@solar-icons/react/linear';
+
 import type { ComponentType } from 'react';
 
 export type NavItem = {
@@ -25,6 +26,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/offers', icon: CartLarge4Icon, label: 'Offers' },
   { href: '/creators', icon: UsersGroupRoundedIcon, label: 'Creators' },
   { href: '/creators/profile', icon: UsersGroupRoundedIcon, label: 'Creators Profile' },
+  { href: '/social-profiles', icon: UsersGroupRoundedIcon, label: 'Social Profiles' },
   { href: '/creative-library', icon: VideoFrame2Icon, label: 'Creative Library' },
   { href: '/tools', icon: WidgetAddIcon, label: 'Tools' },
   { href: '/master-classes', icon: SquareAcademicCap2Icon, label: 'Master Classes' },

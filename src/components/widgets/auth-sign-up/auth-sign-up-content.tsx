@@ -1,5 +1,6 @@
 'use client';
 
+import { AuthSignUpContentCountry } from './auth-sign-up-content-country';
 import { AuthSignUpContentEmail } from './auth-sign-up-content-email';
 import { AuthSignUpContentInvite } from './auth-sign-up-content-invite';
 import { AuthSignUpContentPersonal } from './auth-sign-up-content-personal';
@@ -15,8 +16,10 @@ export function AuthSignUpContent() {
     case 2:
       return <AuthSignUpContentPersonal />;
     case 3:
-      return <AuthSignUpContentEmail />;
+      return <AuthSignUpContentCountry />;
     case 4:
+      return <AuthSignUpContentEmail />;
+    case 5:
       return <AuthSignUpContentSuccess />;
     default:
       return <AuthSignUpContentInvite />;

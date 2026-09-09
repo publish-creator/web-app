@@ -1,4 +1,4 @@
-export const SIGN_UP_TOTAL_STEPS = 4;
+export const SIGN_UP_TOTAL_STEPS = 5;
 export const OTP_LENGTH = 6;
 export const RESEND_COOLDOWN = 60;
 export const DEFAULT_COUNTRY = 'br';
@@ -20,18 +20,29 @@ export const SIGN_UP_STEPPER_GROUPS: ReadonlyArray<{
   },
   {
     completedAfter: 3,
+    key: 'country',
+    label: 'País',
+    steps: [3],
+    subtitle: 'Onde você atua',
+  },
+  {
+    completedAfter: 4,
     key: 'email',
     label: 'E-mail',
-    steps: [3],
+    steps: [4],
     subtitle: 'Onde falamos com você',
   },
 ];
 
+const NARROW_STEP = 'max-w-[450px]';
+const WIDE_STEP = 'max-w-[500px]';
+
 export const SIGN_UP_STEP_MAX_WIDTH: Record<number, string> = {
-  1: 'max-w-[450px]',
-  2: 'max-w-[500px]',
-  3: 'max-w-[450px]',
-  4: 'max-w-[500px]',
+  1: NARROW_STEP,
+  2: WIDE_STEP,
+  3: NARROW_STEP,
+  4: NARROW_STEP,
+  5: WIDE_STEP,
 };
 
 export const COUNTRIES = [

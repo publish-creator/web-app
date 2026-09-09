@@ -24,6 +24,7 @@ describe('sessionSlice Reducer & Selectors', () => {
     status: 'ACTIVE',
     role: 'USER',
     platformRole: 'AFFILIATE',
+    country: 'BR',
     phone: null,
   };
 

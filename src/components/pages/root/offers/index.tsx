@@ -2,7 +2,7 @@
 
 import { Pagination } from '@/components/composites/pagination/pagination';
 import { RootOffersFilters } from '@/components/widgets/root-offers/root-offers-filters';
-import { RootOffersTable } from '@/components/widgets/root-offers/root-offers-table';
+import { RootOffersGrid } from '@/components/widgets/root-offers/root-offers-grid';
 import { statusParam } from '@/components/widgets/root-offers/root-offers.constants';
 import { usePaginationFilter } from '@/hooks/query/filters/use-pagination-filter';
 import { useSearchFilter } from '@/hooks/query/filters/use-search-filter';
@@ -36,7 +36,7 @@ export default function RootOffersPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="container-wrapper">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Ofertas</h1>
         <p className="text-muted text-sm">
@@ -51,7 +51,7 @@ export default function RootOffersPage() {
         tab={tab ?? 'all'}
       />
 
-      <RootOffersTable
+      <RootOffersGrid
         data={offers.data}
         hasFilters={hasFilters}
         isError={offers.isError}

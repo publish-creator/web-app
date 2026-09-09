@@ -3,6 +3,7 @@
 import { InfoCircleIcon } from '@solar-icons/react/linear';
 
 import { useLayoutEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import { Button, Card } from '@heroui/react';
 
@@ -12,6 +13,7 @@ import { formatCommission } from '@/utils/format-commission';
 interface OfferListCardProps {
   data: Offer;
   onPress: () => void;
+  action?: ReactNode;
 }
 
 const VISIBLE_COUNTRIES = 3;
@@ -60,7 +62,7 @@ function buildOfferImageMask(width: number, height: number, notchWidth: number):
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}") center / 100% 100% no-repeat`;
 }
 
-export const OfferListCard = ({ data, onPress }: OfferListCardProps) => {
+export const OfferListCard = ({ data, onPress, action }: OfferListCardProps) => {
   const mediaRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLSpanElement>(null);
   const [mask, setMask] = useState(() => buildOfferImageMask(488, 244, 179));
@@ -136,9 +138,11 @@ export const OfferListCard = ({ data, onPress }: OfferListCardProps) => {
         </Button>
       </div>
       <div className="absolute top-3 right-3 z-10">
-        <Button size="sm" variant="tertiary">
-          Apply
-        </Button>
+        {action ?? (
+          <Button size="sm" variant="tertiary">
+            Apply
+          </Button>
+        )}
       </div>
 
       <div className="mt-auto flex items-center justify-between px-1">

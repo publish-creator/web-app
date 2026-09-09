@@ -74,3 +74,32 @@ export type OffersListParams = PaginationParams & {
 };
 
 export type OffersListResponse = PaginatedResponse<Offer>;
+
+export type OfferUpdateBody = {
+  title: string;
+  description: string | null;
+  imageUrl: string | null;
+  status: OfferStatus;
+  categoryId: string;
+  nicheId: string | null;
+  structureId: string | null;
+  angle: string | null;
+  currency: string | null;
+  paymentPlatform: PaymentPlatform;
+  countries: string[];
+  countryGroupIds: string[];
+  pvUrl: string | null;
+  isAvailableForAllUsers: boolean;
+  allowedPlatformRoles: OfferPlatformRole[];
+  allowedUserIds: string[];
+  tags: { name: string; active: boolean; userTagIds: string[] }[];
+  commissionMode: CommissionMode;
+  frontCommissionType: CommissionType;
+  frontCommissionValue: number;
+  backCommissionType: CommissionType;
+  backCommissionValue: number;
+  recurrenceCommissionType: CommissionType;
+  recurrenceCommissionValue: number;
+};
+
+export type OfferUpdateArgs = { id: string; body: OfferUpdateBody };

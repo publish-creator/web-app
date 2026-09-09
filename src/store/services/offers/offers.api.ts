@@ -6,7 +6,7 @@ import type {
   OfferCreativesResponse,
   OfferSubListParams,
 } from './offer-details.types';
-import type { Offer, OffersListParams, OffersListResponse } from './offers.types';
+import type { Offer, OfferUpdateArgs, OffersListParams, OffersListResponse } from './offers.types';
 
 export const offersApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -31,6 +31,14 @@ export const offersApi = api.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: 'Offers', id }],
     }),
 
+    updateOffer: builder.mutation<{ id: string }, OfferUpdateArgs>({
+      query: ({ id, body }) => ({ url: `/offers/${id}`, method: 'PUT', body }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'Offers', id },
+        { type: 'Offers', id: 'LIST' },
+      ],
+    }),
+
     getOfferBuyLinks: builder.query<BuyLinksResponse, string>({
       query: (offerId) => ({ url: `/offers/${offerId}/buy-links` }),
       providesTags: (_result, _error, offerId) => [{ type: 'Offers', id: `${offerId}:buy-links` }],
@@ -53,6 +61,7 @@ export const offersApi = api.injectEndpoints({
 export const {
   useGetOffersQuery,
   useGetOfferQuery,
+  useUpdateOfferMutation,
   useGetOfferBuyLinksQuery,
   useGetOfferCreativesQuery,
 } = offersApi;

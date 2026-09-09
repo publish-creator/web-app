@@ -94,7 +94,7 @@ export const RootOffersGrid = ({
           }
           data={offer}
           key={offer.id}
-          onPress={() => push(`/offers/${offer.id}`)}
+          onPress={() => push(`/root/offers/${offer.id}`)}
         />
       ))}
     </div>

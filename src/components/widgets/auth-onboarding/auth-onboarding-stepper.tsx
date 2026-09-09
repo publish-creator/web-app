@@ -8,18 +8,26 @@ import { ProgressBar } from '@heroui/react';
 
 import { useGetSessionQuery } from '@/store/services/auth';
 
-import { ONBOARDING_STEPS, onboardingProgress, stepStates } from './auth-onboarding-steps';
+import {
+  ONBOARDING_STEPS,
+  onboardingProgress,
+  stepForPath,
+  stepStates,
+} from './auth-onboarding-steps';
 
 function useStates() {
-  const pathname = usePathname();
-  const { data: session } = useGetSessionQuery();
+  const pathname = usePathname() ?? '';
+  const isStep = Boolean(stepForPath(pathname));
+  const { data: session } = useGetSessionQuery(undefined, { skip: !isStep });
 
-  return stepStates(session?.pending, pathname ?? '');
+  return { isStep, states: stepStates(session?.pending, pathname) };
 }
 
 export function AuthOnboardingProgress({ className }: { className?: string } = {}) {
-  const states = useStates();
+  const { isStep, states } = useStates();
   const progress = onboardingProgress(states);
+
+  if (!isStep) return null;
 
   return (
     <div className={className ?? 'mx-auto mb-4 w-full max-w-[550px] px-8 lg:hidden'}>
@@ -42,7 +50,9 @@ export function AuthOnboardingProgress({ className }: { className?: string } = {
 }
 
 export function AuthOnboardingStepper() {
-  const states = useStates();
+  const { isStep, states } = useStates();
+
+  if (!isStep) return null;
 
   return (
     <nav

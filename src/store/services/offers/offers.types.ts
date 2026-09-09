@@ -68,6 +68,7 @@ export type OfferOrderBy = 'createdAt' | 'updatedAt' | 'title' | 'status';
 
 export type OffersListParams = PaginationParams & {
   filter?: string;
+  status?: OfferStatus;
   orderBy?: OfferOrderBy;
   order?: 'asc' | 'desc';
 };

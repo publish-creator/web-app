@@ -4,6 +4,7 @@ import type { Offer, OfferUpdateBody } from '@/store/services/offers/offers.type
 
 const OFFER_STATUS = ['DRAFT', 'PUBLISHED', 'INACTIVE'] as const;
 const COMMISSION_TYPE = ['CPA', 'REV_SHARE'] as const;
+const PAYMENT_PLATFORM = ['SPARK', 'BUY_GOODS'] as const;
 const MAX_COMMISSION = 9_999_999_999;
 
 const optionalText = (max: number) =>
@@ -27,6 +28,7 @@ export const offerFormSchema = z
     structureId: z.string().uuid().nullable(),
     angle: optionalText(2000),
     currency: optionalText(10),
+    paymentPlatform: z.enum(PAYMENT_PLATFORM),
     pvUrl: optionalText(2000),
 
     frontCommissionType: z.enum(COMMISSION_TYPE),
@@ -40,8 +42,8 @@ export const offerFormSchema = z
     if (data.status === 'PUBLISHED' && !data.pvUrl) {
       context.addIssue({
         code: 'custom',
-        message: 'Publicar exige o link da página de vendas',
-        path: ['pvUrl'],
+        message: 'Publicar exige a página de vendas, que fica em Buy-Links',
+        path: ['status'],
       });
     }
   });
@@ -60,6 +62,7 @@ export function formValuesFrom(offer: Offer): OfferFormInput {
     structureId: offer.structure?.id ?? null,
     angle: offer.angle ?? '',
     currency: offer.currency ?? '',
+    paymentPlatform: offer.paymentPlatform,
     pvUrl: offer.pvUrl ?? '',
     frontCommissionType: offer.frontCommissionType,
     frontCommissionValue: Number(offer.frontCommissionValue),
@@ -73,7 +76,6 @@ export function formValuesFrom(offer: Offer): OfferFormInput {
 export function updateBodyFrom(offer: Offer, values: OfferFormValues): OfferUpdateBody {
   return {
     ...values,
-    paymentPlatform: offer.paymentPlatform,
     countries: offer.countries,
     countryGroupIds: offer.countryGroupIds,
     isAvailableForAllUsers: offer.isAvailableForAllUsers,

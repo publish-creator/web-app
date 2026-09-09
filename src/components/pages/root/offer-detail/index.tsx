@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 import { useParams, useRouter } from 'next/navigation';
 
-import { Button, ErrorMessage, Tabs } from '@heroui/react';
+import { Button, ErrorMessage, Skeleton, Tabs } from '@heroui/react';
 
 import { RootOfferCommissionTab } from '@/components/widgets/root-offer/root-offer-commission-tab';
 import { RootOfferDetailsTab } from '@/components/widgets/root-offer/root-offer-details-tab';
@@ -52,8 +52,9 @@ export default function RootOfferDetailPage() {
   if (isLoading) {
     return (
       <div className="container-wrapper">
-        <div aria-hidden className="bg-surface-secondary h-10 w-72 animate-pulse rounded-xl" />
-        <div aria-hidden className="bg-surface-secondary h-96 animate-pulse rounded-2xl" />
+        <Skeleton className="h-10 w-72 rounded-xl" />
+        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-96 w-full rounded-2xl" />
       </div>
     );
   }

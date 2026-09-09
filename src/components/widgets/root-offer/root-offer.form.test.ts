@@ -66,7 +66,7 @@ describe('publishing needs a sales link', () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0]?.path).toEqual(['pvUrl']);
+    expect(result.error?.issues[0]?.path).toEqual(['status']);
   });
 
   it('accepts PUBLISHED once the link is there', () => {
@@ -121,6 +121,16 @@ describe('updateBodyFrom carries what the screen does not edit', () => {
     expect(body.frontCommissionValue).toBe(40);
     expect(body.commissionMode).toBe('STANDARD');
     expect(body.paymentPlatform).toBe('SPARK');
+  });
+
+  it('sends the payment platform the form chose, not the one the offer had', () => {
+    const offer = buildOffer();
+    const body = updateBodyFrom(
+      offer,
+      offerFormSchema.parse({ ...formValuesFrom(offer), paymentPlatform: 'BUY_GOODS' }),
+    );
+
+    expect(body.paymentPlatform).toBe('BUY_GOODS');
   });
 
   it('turns an emptied text field into null, not into an empty string', () => {

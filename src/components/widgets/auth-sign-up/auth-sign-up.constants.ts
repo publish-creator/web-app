@@ -34,6 +34,14 @@ export const SIGN_UP_STEPPER_GROUPS: ReadonlyArray<{
   },
 ];
 
+export const SIGN_UP_STEP_ILLUSTRATION: Record<number, { alt: string; src: string }> = {
+  1: { alt: 'Código de convite', src: '/images/auth/02-email-otp.svg' },
+  2: { alt: 'Informações do negócio', src: '/images/auth/03-business-information.svg' },
+  3: { alt: 'Localização do negócio', src: '/images/auth/04-business-location.svg' },
+  4: { alt: 'E-mail comercial', src: '/images/auth/01-business-email.svg' },
+  5: { alt: 'Conta criada', src: '/images/auth/08-account-created.svg' },
+};
+
 const NARROW_STEP = 'max-w-[450px]';
 const WIDE_STEP = 'max-w-[500px]';
 

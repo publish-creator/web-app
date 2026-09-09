@@ -1,9 +1,12 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
   COUNTRIES,
   DEFAULT_COUNTRY,
   SIGN_UP_STEPPER_GROUPS,
+  SIGN_UP_STEP_ILLUSTRATION,
   SIGN_UP_STEP_MAX_WIDTH,
   SIGN_UP_TOTAL_STEPS,
   getSignupProgress,
@@ -32,6 +35,26 @@ describe('SIGN_UP_STEPPER_GROUPS', () => {
     for (let step = 1; step <= SIGN_UP_TOTAL_STEPS; step += 1) {
       expect(SIGN_UP_STEP_MAX_WIDTH[step]).toBeTruthy();
     }
+  });
+});
+
+describe('SIGN_UP_STEP_ILLUSTRATION', () => {
+  it('has art for every step the flow can reach', () => {
+    for (let step = 1; step <= SIGN_UP_TOTAL_STEPS; step += 1) {
+      expect(SIGN_UP_STEP_ILLUSTRATION[step]).toBeTruthy();
+    }
+  });
+
+  it('points at files that are actually in public/, so none renders broken', () => {
+    for (const illustration of Object.values(SIGN_UP_STEP_ILLUSTRATION)) {
+      expect(existsSync(join(process.cwd(), 'public', illustration.src))).toBe(true);
+    }
+  });
+
+  it('names no step twice, which is how the art drifts out of the flow', () => {
+    const steps = Object.keys(SIGN_UP_STEP_ILLUSTRATION).map(Number);
+
+    expect(steps).toEqual([1, 2, 3, 4, 5]);
   });
 });
 

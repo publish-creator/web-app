@@ -10,14 +10,16 @@ import { useGetOffersQuery } from '@/store/services/offers/offers.api';
 
 const RECENT_COUNT = 7;
 
-export const OffersPage = () => {
-  /**
-   * The page lives in the URL, so coming back to a shared link or hitting reload lands on the same
-   * page instead of silently jumping to the first.
-   */
-  const { page, limit, setPage } = usePaginationFilter({ limit: 12 });
+const DEFAULT_PAGE_SIZE = 12;
 
-  const offers = useGetOffersQuery({ page, pageSize: limit, orderBy: 'createdAt', order: 'desc' });
+const MAX_PAGE_SIZE = 100;
+
+export const OffersPage = () => {
+  const { page, limit, setPage } = usePaginationFilter({ limit: DEFAULT_PAGE_SIZE });
+
+  const pageSize = Math.min(limit, MAX_PAGE_SIZE);
+
+  const offers = useGetOffersQuery({ page, pageSize, orderBy: 'createdAt', order: 'desc' });
   const recent = useGetOffersQuery({
     page: 1,
     pageSize: RECENT_COUNT,

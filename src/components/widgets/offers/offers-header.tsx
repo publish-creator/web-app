@@ -1,15 +1,9 @@
 import { Card } from '@heroui/react';
 
 interface OffersHeaderProps {
-  /** Undefined while the listing is still loading. */
   total: number | undefined;
 }
 
-/**
- * The counters used to be literals — "309 offers", "11 categories" — and the My/Favorites/Waiting
- * buttons had no endpoint behind them. Only the offer total exists in the API today, so it is the
- * only number here.
- */
 export const OffersHeader = ({ total }: OffersHeaderProps) => {
   return (
     <div className="flex flex-col items-center gap-6 pb-8">

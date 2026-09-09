@@ -25,7 +25,7 @@ export const OfferInformation = () => {
 
   return (
     <div className="flex items-center gap-4">
-      {/* eslint-disable-next-line @next/next/no-img-element -- the cover is an arbitrary host an admin pastes; next/image would need every one allowlisted */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- arbitrary host */}
       <img
         alt={offer.title}
         className="aspect-video max-h-[140px] max-w-[280px] rounded-md object-cover"
@@ -54,10 +54,6 @@ export const OfferInformation = () => {
               {offer.niche.name}
             </Chip>
           ) : null}
-          {/*
-            The old chip read "Approved Required", which nothing in the API decides. What the offer
-            does carry is whether it is open to everyone, so that is what the chip says now.
-          */}
           {offer.isAvailableForAllUsers ? null : (
             <Chip color="warning" variant="secondary">
               Acesso restrito

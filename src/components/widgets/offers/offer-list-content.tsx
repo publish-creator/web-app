@@ -13,6 +13,7 @@ interface OffersListContentProps {
   isLoading: boolean;
   isError: boolean;
   onRetry: () => void;
+  onBackToFirstPage: () => void;
 }
 
 const SKELETON_COUNT = 6;
@@ -24,6 +25,7 @@ export const OffersListContent = ({
   isLoading,
   isError,
   onRetry,
+  onBackToFirstPage,
 }: OffersListContentProps) => {
   const { push } = useRouter();
 
@@ -41,10 +43,6 @@ export const OffersListContent = ({
     );
   }
 
-  /**
-   * A rejected query already raises a toast from the store middleware, so this only has to give the
-   * page something other than a blank grid — and a way out that does not mean reloading by hand.
-   */
   if (isError) {
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center">
@@ -60,12 +58,23 @@ export const OffersListContent = ({
   }
 
   if (!data || data.data.length === 0) {
+    const isPastTheEnd = Boolean(data && data.meta.total > 0);
+
     return (
-      <div className="flex flex-col items-center gap-2 py-16 text-center">
-        <p className="text-sm font-medium">Nenhuma oferta por aqui ainda.</p>
-        <p className="text-muted max-w-80 text-sm">
-          Você verá as ofertas publicadas que estiverem disponíveis para o seu perfil.
+      <div className="flex flex-col items-center gap-3 py-16 text-center">
+        <p className="text-sm font-medium">
+          {isPastTheEnd ? 'Esta página não tem ofertas.' : 'Nenhuma oferta por aqui ainda.'}
         </p>
+        <p className="text-muted max-w-80 text-sm">
+          {isPastTheEnd
+            ? `São ${data?.meta.total} ofertas no total. Volte para a primeira página.`
+            : 'Você verá as ofertas publicadas que estiverem disponíveis para o seu perfil.'}
+        </p>
+        {isPastTheEnd ? (
+          <Button onPress={onBackToFirstPage} variant="secondary">
+            Ir para a primeira página
+          </Button>
+        ) : null}
       </div>
     );
   }

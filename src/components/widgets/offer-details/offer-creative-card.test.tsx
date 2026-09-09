@@ -41,8 +41,6 @@ describe('OfferCreativeCard', () => {
     );
   });
 
-  // A video in an <img> renders nothing at all, and the API distinguishes the two kinds precisely so
-  // the front does not have to guess from the mime type.
   it('renders a video creative as a video, not as an image', () => {
     const { container } = render(<OfferCreativeCard creative={buildCreative({ kind: 'VIDEO' })} />);
 

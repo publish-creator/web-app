@@ -48,10 +48,6 @@ export const OfferHeader = () => {
             </Tabs.List>
           </Tabs.ListContainer>
         </Tabs>
-        {/*
-          The favourite button that sat here is gone: favouriting is not modelled anywhere in the
-          API. Sharing is just the page URL, which does exist.
-        */}
         <Button onPress={() => void share()} variant="tertiary">
           <ShareIcon />
           {copied ? 'Link copiado' : 'Compartilhar'}

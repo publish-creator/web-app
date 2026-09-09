@@ -50,12 +50,6 @@ function buildOffer(overrides: Partial<Offer> = {}): Offer {
   };
 }
 
-/**
- * The card used to read five fields that do not exist in the v2 API — `category.title`,
- * `commissionValue`, `country`, `file` and `isFavorite` — so it rendered a card with almost
- * everything blank. `Offer` is hand-written here and can drift from the API again; these assertions
- * are what fails when it does.
- */
 describe('OfferListCard', () => {
   it('renders the category name, which the API calls `name` and not `title`', () => {
     render(<OfferListCard data={buildOffer()} onPress={() => {}} />);

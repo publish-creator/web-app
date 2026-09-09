@@ -26,11 +26,6 @@ export const offersApi = api.injectEndpoints({
           : [{ type: 'Offers', id: 'LIST' }],
     }),
 
-    /**
-     * The same shape as an item of the listing. An offer the caller may not see answers 404, never
-     * 403 — a 403 on something that exists and a 404 on something that does not would tell an
-     * outsider which ids are real.
-     */
     getOffer: builder.query<Offer, string>({
       query: (id) => ({ url: `/offers/${id}` }),
       providesTags: (_result, _error, id) => [{ type: 'Offers', id }],

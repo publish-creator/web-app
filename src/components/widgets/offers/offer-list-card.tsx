@@ -23,7 +23,6 @@ const BEVEL = 15;
 const INFO_BUTTON_RESERVE = 52;
 const MIN_NOTCH_WIDTH = 48;
 
-/** The API stores ISO-3166 alpha-2 in uppercase; the flag service serves them lowercase. */
 function getCircleFlagUrl(country: string): string {
   return `https://hatscripts.github.io/circle-flags/flags/${country.trim().toLowerCase()}.svg`;
 }

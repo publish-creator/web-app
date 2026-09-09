@@ -11,11 +11,6 @@ export const OfferDetailsPage = () => {
   const router = useRouter();
   const { isError, isLoading } = useOffer();
 
-  /**
-   * The API answers 404 both for an offer that does not exist and for one this caller may not see —
-   * a draft, or one outside their reach. Telling those apart would say which ids are real, so the
-   * screen says the same thing for both.
-   */
   if (isError && !isLoading) {
     return (
       <div className="flex flex-col items-center gap-3 py-24 text-center">

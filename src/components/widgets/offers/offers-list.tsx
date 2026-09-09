@@ -24,8 +24,14 @@ export const OffersList = ({
   return (
     <div className="space-y-4">
       <OffersListHeader total={meta?.total} />
-      <OffersListContent data={data} isError={isError} isLoading={isLoading} onRetry={onRetry} />
-      {meta && meta.totalPages > 1 ? (
+      <OffersListContent
+        data={data}
+        isError={isError}
+        isLoading={isLoading}
+        onBackToFirstPage={() => onPageChange(1)}
+        onRetry={onRetry}
+      />
+      {meta && (meta.totalPages > 1 || meta.page > 1) ? (
         <Pagination
           onPageChange={onPageChange}
           page={meta.page}

@@ -37,7 +37,6 @@ const toggleClass =
   'rounded-full bg-transparent text-muted data-[selected=true]:bg-surface-secondary data-[selected=true]:text-muted';
 
 interface OffersListHeaderProps {
-  /** Undefined while the listing is still loading. */
   total: number | undefined;
 }
 

@@ -9,10 +9,6 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-/**
- * Its own card rather than the one from the creative library, which takes no props and is used by
- * another screen — repurposing it would have changed that screen too.
- */
 export function OfferCreativeCard({ creative }: { creative: OfferCreative }) {
   return (
     <a

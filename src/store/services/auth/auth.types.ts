@@ -11,6 +11,7 @@ export type AuthUser = {
   status: UserStatus;
   role: Role;
   platformRole: PlatformRole;
+  country: string | null;
   phone: string | null;
 };
 
@@ -44,6 +45,7 @@ export type SignUpDto = {
   code: string;
   name: string;
   email: string;
+  country: string;
 };
 
 export type VerifyEmailRequestDto = { email: string };

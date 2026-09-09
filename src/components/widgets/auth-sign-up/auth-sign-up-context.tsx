@@ -6,12 +6,13 @@ import type { ReactNode } from 'react';
 import { messageFromError } from '@/lib/api/error-message';
 import { useSignUpMutation } from '@/store/services/auth';
 
-import { SIGN_UP_TOTAL_STEPS } from './auth-sign-up.constants';
+import { DEFAULT_COUNTRY, SIGN_UP_TOTAL_STEPS } from './auth-sign-up.constants';
 import type { SignUpBusinessType } from './auth-sign-up.schemas';
 
 export type SignUpFormData = {
   code: string;
   email: string;
+  country: string;
   businessType?: SignUpBusinessType;
   firstName?: string;
   lastName?: string;
@@ -31,6 +32,7 @@ type SignUpContextValue = {
 const INITIAL_DATA: SignUpFormData = {
   code: '',
   email: '',
+  country: DEFAULT_COUNTRY,
 };
 
 function nameFrom(data: SignUpFormData): string {
@@ -63,7 +65,12 @@ export function AuthSignUpProvider({ children }: { children: ReactNode }) {
       setData(next);
       setError('');
 
-      signUp({ code: next.code, name: nameFrom(next), email: next.email })
+      signUp({
+        code: next.code,
+        name: nameFrom(next),
+        email: next.email,
+        country: next.country.toUpperCase(),
+      })
         .unwrap()
         .then(() => {
           setStep(SIGN_UP_TOTAL_STEPS);

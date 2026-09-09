@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
+import type { PendingStep } from '@/store/services/auth/auth.types';
+
 import { HOME_ROUTE, PENDING_ROUTE, nextRouteFor } from './pending-route';
+
+const EVERY_STEP: PendingStep[] = [
+  'VERIFY_EMAIL',
+  'SET_PASSWORD',
+  'VERIFY_PHONE',
+  'ENABLE_MFA',
+  'ACCEPT_TERMS',
+];
 
 describe('nextRouteFor', () => {
   it('sends someone with nothing owed home', () => {
@@ -13,9 +23,15 @@ describe('nextRouteFor', () => {
     );
   });
 
-  it('has a route for every step it claims to handle', () => {
-    for (const route of Object.values(PENDING_ROUTE)) {
-      expect(route).toMatch(/^\//);
+  it('routes the phone step to its screen', () => {
+    expect(nextRouteFor({ pending: ['VERIFY_PHONE', 'ENABLE_MFA'] })).toBe('/auth/verify-phone');
+  });
+
+  it('has a screen for every step the API can send, so none of them dead-ends', () => {
+    for (const step of EVERY_STEP) {
+      expect(PENDING_ROUTE[step]).toMatch(/^\//);
     }
+
+    expect(Object.keys(PENDING_ROUTE).sort()).toEqual([...EVERY_STEP].sort());
   });
 });

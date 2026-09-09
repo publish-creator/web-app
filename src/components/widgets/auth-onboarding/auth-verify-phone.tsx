@@ -8,7 +8,7 @@ import { Button, ErrorMessage } from '@heroui/react';
 
 import { TextField } from '@/components/composites';
 import { messageFromError } from '@/lib/api/error-message';
-import { HOME_ROUTE } from '@/lib/auth/pending-route';
+import { nextRouteFor } from '@/lib/auth/pending-route';
 import {
   useLazyGetSessionQuery,
   useVerifyPhoneConfirmMutation,
@@ -76,9 +76,10 @@ export function AuthVerifyPhone() {
 
     try {
       await confirmCode({ code: value }).unwrap();
-      await loadSession().unwrap();
 
-      router.push(HOME_ROUTE);
+      const session = await loadSession().unwrap();
+
+      router.push(nextRouteFor(session));
     } catch (cause) {
       setError(messageFromError(cause));
       setCode('');

@@ -14,7 +14,12 @@ export type AuthUser = {
   phone: string | null;
 };
 
-export type PendingStep = 'VERIFY_EMAIL' | 'SET_PASSWORD' | 'ENABLE_MFA' | 'ACCEPT_TERMS';
+export type PendingStep =
+  | 'VERIFY_EMAIL'
+  | 'SET_PASSWORD'
+  | 'VERIFY_PHONE'
+  | 'ENABLE_MFA'
+  | 'ACCEPT_TERMS';
 
 export type Session = {
   user: AuthUser;

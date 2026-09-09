@@ -1,2 +1,9 @@
-export { usersApi, useGetUsersQuery, useLazyGetUsersQuery } from './users.api';
-export type { User, UsersListParams, UsersListResponse } from './users.types';
+export { usersApi, useGetUsersQuery, useLazyGetUsersQuery, useSearchUsersQuery } from './users.api';
+export type {
+  User,
+  UserRow,
+  UserSearchParams,
+  UserSearchResponse,
+  UsersListParams,
+  UsersListResponse,
+} from './users.types';

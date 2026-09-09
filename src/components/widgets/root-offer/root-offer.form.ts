@@ -38,6 +38,9 @@ export const offerFormSchema = z
     countries: z.array(z.string().trim().length(2).toUpperCase()).max(300, 'No máximo 300 países'),
     countryGroupIds: z.array(z.string().uuid()).max(50, 'No máximo 50 grupos'),
     tags: z.array(offerTag).max(50, 'No máximo 50 tags'),
+    isAvailableForAllUsers: z.boolean(),
+    allowedUserIds: z.array(z.string().uuid()).max(500, 'No máximo 500 usuários'),
+    allowsAutomaticAffiliation: z.boolean(),
     pvUrl: optionalText(2000),
 
     frontCommissionType: z.enum(COMMISSION_TYPE),
@@ -91,6 +94,9 @@ export function formValuesFrom(offer: Offer): OfferFormInput {
       active: tag.active,
       userTagIds: tag.userTagIds,
     })),
+    isAvailableForAllUsers: offer.isAvailableForAllUsers,
+    allowedUserIds: offer.allowedUserIds,
+    allowsAutomaticAffiliation: offer.allowsAutomaticAffiliation,
     pvUrl: offer.pvUrl ?? '',
     frontCommissionType: offer.frontCommissionType,
     frontCommissionValue: Number(offer.frontCommissionValue),
@@ -104,9 +110,7 @@ export function formValuesFrom(offer: Offer): OfferFormInput {
 export function updateBodyFrom(offer: Offer, values: OfferFormValues): OfferUpdateBody {
   return {
     ...values,
-    isAvailableForAllUsers: offer.isAvailableForAllUsers,
     allowedPlatformRoles: offer.allowedPlatformRoles,
-    allowedUserIds: offer.allowedUserIds,
     commissionMode: offer.commissionMode,
   };
 }

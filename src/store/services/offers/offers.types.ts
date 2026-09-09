@@ -47,6 +47,7 @@ export type Offer = {
   pvUrl: string | null;
   isAvailableForAllUsers: boolean;
   allowedPlatformRoles: OfferPlatformRole[];
+  allowsAutomaticAffiliation: boolean;
   allowedUserIds: string[];
   tags: OfferTag[];
   category: TaxonomyRef | null;
@@ -91,6 +92,7 @@ export type OfferUpdateBody = {
   pvUrl: string | null;
   isAvailableForAllUsers: boolean;
   allowedPlatformRoles: OfferPlatformRole[];
+  allowsAutomaticAffiliation: boolean;
   allowedUserIds: string[];
   tags: { name: string; active: boolean; userTagIds: string[] }[];
   commissionMode: CommissionMode;

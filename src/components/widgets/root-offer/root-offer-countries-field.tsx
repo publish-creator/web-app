@@ -1,6 +1,6 @@
 'use client';
 
-import { Description } from '@heroui/react';
+import { Description, Tag, TagGroup } from '@heroui/react';
 
 import {
   COUNTRIES,
@@ -15,14 +15,13 @@ const GROUPS_PAGE = { page: 1, pageSize: 100 } as const;
 const KNOWN = COUNTRIES.map((country) => ({
   id: country.id.toUpperCase(),
   name: country.name,
-  icon: getCircleFlagUrl(country.id),
 }));
 
 function optionsFor(selected: string[]) {
   const known = new Set(KNOWN.map((country) => country.id));
   const extra = selected
     .filter((code) => !known.has(code))
-    .map((code) => ({ id: code, name: code, icon: getCircleFlagUrl(code.toLowerCase()) }));
+    .map((code) => ({ id: code, name: code }));
 
   return [...KNOWN, ...extra];
 }
@@ -42,6 +41,8 @@ export const RootOfferCountriesField = ({
 }: RootOfferCountriesFieldProps) => {
   const { data: groups } = useGetCountryGroupsQuery(GROUPS_PAGE);
 
+  const options = optionsFor(countries);
+
   return (
     <div className="flex flex-col gap-4">
       <RootOfferMultiSelect
@@ -53,37 +54,46 @@ export const RootOfferCountriesField = ({
       />
 
       <div className="flex flex-col gap-2">
-        <RootOfferMultiSelect
-          label="Países permitidos"
-          onChange={(codes) => onCountriesChange(codes.map((code) => code.toUpperCase()))}
-          options={optionsFor(countries)}
-          placeholder="Nenhum país"
-          value={countries}
-        />
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-muted text-xs font-medium">Países permitidos</span>
+          <span className="text-muted text-xs tabular-nums">
+            {countries.length === 0
+              ? 'Nenhum país'
+              : `${countries.length} ${countries.length === 1 ? 'país' : 'países'}`}
+          </span>
+        </div>
 
-        {countries.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5">
-            {countries.map((code) => (
-              <span
-                className="bg-surface-secondary flex items-center gap-1.5 rounded-full px-2 py-1 text-xs"
-                key={code}
+        <TagGroup
+          aria-label="Países permitidos"
+          onSelectionChange={(keys) => onCountriesChange([...keys].map(String))}
+          selectedKeys={countries}
+          selectionMode="multiple"
+          variant="surface"
+        >
+          <TagGroup.List className="flex flex-wrap gap-1.5">
+            {options.map((country) => (
+              <Tag
+                className="data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground flex items-center gap-1.5"
+                id={country.id}
+                key={country.id}
+                textValue={country.name}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- bandeiras vêm de um CDN externo; next/image exigiria allowlist */}
                 <img
                   alt=""
-                  className="size-3.5 rounded-full"
-                  src={getCircleFlagUrl(code.toLowerCase())}
+                  className="size-4 shrink-0 rounded-full"
+                  src={getCircleFlagUrl(country.id.toLowerCase())}
                 />
-                {code}
-              </span>
+                {country.name}
+              </Tag>
             ))}
-          </div>
-        ) : null}
+          </TagGroup.List>
+        </TagGroup>
       </div>
 
       <Description className="text-xs">
-        Ao salvar, o servidor soma os países dos grupos escolhidos a esta lista. Tirar daqui um país
-        que um grupo selecionado contém não tem efeito: ele volta na mesma resposta.
+        Ao salvar, o servidor soma os países dos grupos escolhidos aos marcados aqui. Desmarcar um
+        país que um grupo selecionado contém não tem efeito: ele volta na mesma resposta.
       </Description>
     </div>
   );

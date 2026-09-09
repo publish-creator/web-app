@@ -9,9 +9,9 @@ import { TextField } from '@/components/composites';
 import { useGetOffersCategoriesQuery } from '@/store/services/offers-category/offers-category.api';
 import { useGetNichesQuery, useGetStructuresQuery } from '@/store/services/taxonomies';
 
+import { RootOfferAccessPanel } from './root-offer-access-panel';
 import { RootOfferCountriesField } from './root-offer-countries-field';
 import { RootOfferCoverField } from './root-offer-cover-field';
-import { RootOfferTagsField } from './root-offer-tags-field';
 import { RootOfferTaxonomySelect } from './root-offer-taxonomy-select';
 import type { OfferFormInput } from './root-offer.form';
 
@@ -22,6 +22,15 @@ const STATUS_OPTIONS = [
   { id: 'PUBLISHED', name: 'Publicada' },
   { id: 'INACTIVE', name: 'Inativa' },
 ];
+
+const CURRENCY_CODES = ['BRL', 'USD', 'EUR', 'GBP', 'MXN', 'ARS', 'COP', 'CLP', 'PEN'];
+
+function currencyOptions(current: string | null | undefined) {
+  const codes =
+    current && !CURRENCY_CODES.includes(current) ? [current, ...CURRENCY_CODES] : CURRENCY_CODES;
+
+  return codes.map((code) => ({ id: code, name: code }));
+}
 
 const PAYMENT_PLATFORMS = [
   { id: 'SPARK', name: 'Spark' },
@@ -54,6 +63,7 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
   const { data: structures } = useGetStructuresQuery(TAXONOMY_PAGE);
 
   const countries = useWatch({ control, name: 'countries' }) ?? [];
+  const currency = useWatch({ control, name: 'currency' });
   const countryGroupIds = useWatch({ control, name: 'countryGroupIds' }) ?? [];
 
   const options = (rows: { id: string; name: string }[] | undefined) => rows ?? [];
@@ -64,7 +74,7 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
         description="A capa, o texto e a classificação que o afiliado vê antes de decidir."
         title="Informações básicas"
       >
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
+        <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
           <Controller
             control={control}
             name="imageUrl"
@@ -199,12 +209,12 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
             control={control}
             name="currency"
             render={({ field }) => (
-              <TextField
-                {...field}
+              <RootOfferTaxonomySelect
+                allowEmpty
                 label="Moeda"
-                placeholder="BRL"
-                value={field.value ?? ''}
-                variant="secondary"
+                onChange={field.onChange}
+                options={currencyOptions(currency)}
+                value={field.value ?? null}
               />
             )}
           />
@@ -249,12 +259,9 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
             )}
           />
         </div>
-
-        <div className="border-border flex flex-col gap-3 border-t pt-5">
-          <span className={FIELD_LABEL}>Tags</span>
-          <RootOfferTagsField control={control} />
-        </div>
       </Panel>
+
+      <RootOfferAccessPanel control={control} />
     </div>
   );
 };

@@ -25,6 +25,7 @@ function buildOffer(overrides: Partial<Offer> = {}): Offer {
     countryGroupIds: [COUNTRY_GROUP],
     pvUrl: null,
     isAvailableForAllUsers: false,
+    allowsAutomaticAffiliation: false,
     allowedPlatformRoles: ['AFFILIATE'],
     allowedUserIds: [ALLOWED_USER],
     tags: [{ id: 'tag-1', name: 'BF', active: true, userTagIds: [USER_TAG] }],

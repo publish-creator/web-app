@@ -1,6 +1,7 @@
 'use client';
 
 import { AuthFlowHeader } from '@/widgets/auth';
+import { AuthOnboardingProgress } from '@/widgets/auth-onboarding';
 
 import { AuthMfaContentRecovery } from './auth-mfa-content-recovery';
 import { AuthMfaContentSetup } from './auth-mfa-content-setup';
@@ -14,6 +15,7 @@ export function AuthMfaShell() {
   return (
     <div className="auth-mfa-bg bg-background text-foreground flex h-dvh w-full flex-col overflow-hidden">
       <AuthFlowHeader className="shrink-0" />
+      <AuthOnboardingProgress className="mx-auto w-full max-w-360 shrink-0 px-20 pt-4" />
 
       <div className="flex min-h-0 flex-1">
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">

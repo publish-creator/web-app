@@ -6,7 +6,7 @@ import type {
 } from '@reduxjs/toolkit/query';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { REDIRECT_SIGN_OUT_ROUTE } from '@/config/public-routes';
+import { REDIRECT_SIGN_OUT_ROUTE, isPublicRoute } from '@/config/public-routes';
 import { env } from '@/env';
 import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
 import { RequestMutex } from '@/lib/auth/request-mutex';
@@ -76,7 +76,7 @@ async function retryAfterRefresh(
 
   resetAppState(api.dispatch);
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && !isPublicRoute(window.location.pathname)) {
     window.location.href = REDIRECT_SIGN_OUT_ROUTE;
   }
 

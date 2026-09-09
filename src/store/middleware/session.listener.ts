@@ -1,6 +1,6 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
 
-import { REDIRECT_SIGN_OUT_ROUTE } from '@/config/public-routes';
+import { REDIRECT_SIGN_OUT_ROUTE, isPublicRoute } from '@/config/public-routes';
 import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
 
 import { resetStateAction } from '../root-reducer';
@@ -31,7 +31,11 @@ sessionListenerMiddleware.startListening({
         const { resetAppState } = await import('../reset-app-state');
 
         resetAppState(listenerApi.dispatch);
-        window.location.href = REDIRECT_SIGN_OUT_ROUTE;
+
+        if (!isPublicRoute(window.location.pathname)) {
+          window.location.href = REDIRECT_SIGN_OUT_ROUTE;
+        }
+
         break;
       }
     }

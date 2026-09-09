@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 
 import { Button, ErrorMessage } from '@heroui/react';
 
-import { TextField } from '@/components/composites';
 import { messageFromError } from '@/lib/api/error-message';
 import { nextRouteFor } from '@/lib/auth/pending-route';
 import {
@@ -14,26 +13,29 @@ import {
   useVerifyPhoneConfirmMutation,
   useVerifyPhoneRequestMutation,
 } from '@/store/services/auth';
+import { AuthSignUpDialSelect } from '@/widgets/auth-sign-up/auth-sign-up-dial-select';
 import { AuthSignUpOtpField } from '@/widgets/auth-sign-up/auth-sign-up-otp-field';
-import { RESEND_COOLDOWN } from '@/widgets/auth-sign-up/auth-sign-up.constants';
+import {
+  DEFAULT_COUNTRY,
+  RESEND_COOLDOWN,
+  getPhoneDialCode,
+  isValidPhoneNumber,
+} from '@/widgets/auth-sign-up/auth-sign-up.constants';
 
 import { AuthOnboardingShell } from './auth-onboarding-shell';
 
-function toE164(input: string): string {
-  const digits = input.replace(/\D/g, '');
+function toE164(dialCode: string, national: string): string {
+  const digits = national.replace(/\D/g, '');
 
   if (!digits) return '';
 
-  if (!input.trim().startsWith('+') && (digits.length === 10 || digits.length === 11)) {
-    return `+55${digits}`;
-  }
-
-  return `+${digits}`;
+  return `${dialCode}${digits}`;
 }
 
 export function AuthVerifyPhone() {
   const router = useRouter();
   const [phone, setPhone] = useState('');
+  const [dialCountry, setDialCountry] = useState(DEFAULT_COUNTRY);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
@@ -52,13 +54,15 @@ export function AuthVerifyPhone() {
   }, [cooldown]);
 
   const send = async () => {
-    const normalised = toE164(phone);
+    const { dialCode } = getPhoneDialCode(dialCountry);
 
-    if (!normalised) {
-      setError('Informe o número com DDD');
+    if (!isValidPhoneNumber(phone, dialCode)) {
+      setError('Informe um número de celular válido, com DDD');
 
       return;
     }
+
+    const normalised = toE164(dialCode, phone);
 
     setError('');
 
@@ -109,17 +113,36 @@ export function AuthVerifyPhone() {
             value={code}
           />
         ) : (
-          <TextField
-            aria-label="Celular"
-            onChange={(value: string) => {
-              setPhone(value);
-              setError('');
-            }}
-            placeholder="(11) 99999-9999"
-            type="tel"
-            value={phone}
-            variant="secondary"
-          />
+          <div className="flex w-full flex-col gap-2">
+            <div
+              className={`bg-surface-secondary flex h-14 items-center overflow-hidden rounded-xl ${
+                error ? 'border-danger border' : ''
+              }`}
+            >
+              <AuthSignUpDialSelect
+                onChange={(code) => {
+                  setDialCountry(code);
+                  setPhone('');
+                  setError('');
+                }}
+                value={dialCountry}
+              />
+              <div className="bg-border h-6 w-px shrink-0" />
+              <input
+                aria-label="Número de celular"
+                className="placeholder:text-muted min-w-0 flex-1 bg-transparent px-4 text-base outline-none"
+                inputMode="tel"
+                onChange={(event) => {
+                  setPhone(event.target.value.replace(/\D/g, ''));
+                  setError('');
+                }}
+                placeholder="11999999999"
+                type="tel"
+                value={phone}
+              />
+            </div>
+            <p className="text-muted text-xs">Enviaremos um código de verificação via SMS</p>
+          </div>
         )}
 
         {error ? <ErrorMessage>{error}</ErrorMessage> : null}

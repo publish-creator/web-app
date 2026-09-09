@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { REDIRECT_SIGN_OUT_ROUTE, publicRoutes } from '@/config/public-routes';
 import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
-import { nextRouteFor } from '@/lib/auth/pending-route';
+import { redirectTargetFor } from '@/lib/auth/pending-route';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { resetAppState } from '@/store/reset-app-state';
 import { useLazyGetSessionQuery, useSignOutMutation } from '@/store/services';
@@ -63,11 +63,11 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!user || hasPublicRoutes || pending.length === 0) return;
+    if (!user || hasPublicRoutes) return;
 
-    const target = nextRouteFor({ pending });
+    const target = redirectTargetFor(pathname, pending);
 
-    if (pathname !== target) router.replace(target);
+    if (target) router.replace(target);
   }, [hasPublicRoutes, pathname, pending, router, user]);
 
   useEffect(() => {

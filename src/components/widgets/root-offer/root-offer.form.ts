@@ -17,6 +17,12 @@ const optionalText = (max: number) =>
 
 const commission = () => z.coerce.number().min(0, 'Não pode ser negativo').max(MAX_COMMISSION);
 
+const offerTag = z.object({
+  name: z.string().trim().min(1, 'Dê um nome à tag').max(80),
+  active: z.boolean(),
+  userTagIds: z.array(z.string().uuid()).max(50),
+});
+
 export const offerFormSchema = z
   .object({
     title: z.string().trim().min(2, 'Mínimo de 2 caracteres').max(180),
@@ -29,6 +35,9 @@ export const offerFormSchema = z
     angle: optionalText(2000),
     currency: optionalText(10),
     paymentPlatform: z.enum(PAYMENT_PLATFORM),
+    countries: z.array(z.string().trim().length(2).toUpperCase()).max(300, 'No máximo 300 países'),
+    countryGroupIds: z.array(z.string().uuid()).max(50, 'No máximo 50 grupos'),
+    tags: z.array(offerTag).max(50, 'No máximo 50 tags'),
     pvUrl: optionalText(2000),
 
     frontCommissionType: z.enum(COMMISSION_TYPE),
@@ -39,6 +48,18 @@ export const offerFormSchema = z
     recurrenceCommissionValue: commission(),
   })
   .superRefine((data, context) => {
+    const names = data.tags.map((tag) => tag.name.toLowerCase());
+
+    data.tags.forEach((tag, index) => {
+      if (names.indexOf(tag.name.toLowerCase()) !== index) {
+        context.addIssue({
+          code: 'custom',
+          message: 'Já existe uma tag com esse nome nesta oferta',
+          path: ['tags', index, 'name'],
+        });
+      }
+    });
+
     if (data.status === 'PUBLISHED' && !data.pvUrl) {
       context.addIssue({
         code: 'custom',
@@ -63,6 +84,13 @@ export function formValuesFrom(offer: Offer): OfferFormInput {
     angle: offer.angle ?? '',
     currency: offer.currency ?? '',
     paymentPlatform: offer.paymentPlatform,
+    countries: offer.countries,
+    countryGroupIds: offer.countryGroupIds,
+    tags: offer.tags.map((tag) => ({
+      name: tag.name,
+      active: tag.active,
+      userTagIds: tag.userTagIds,
+    })),
     pvUrl: offer.pvUrl ?? '',
     frontCommissionType: offer.frontCommissionType,
     frontCommissionValue: Number(offer.frontCommissionValue),
@@ -76,16 +104,9 @@ export function formValuesFrom(offer: Offer): OfferFormInput {
 export function updateBodyFrom(offer: Offer, values: OfferFormValues): OfferUpdateBody {
   return {
     ...values,
-    countries: offer.countries,
-    countryGroupIds: offer.countryGroupIds,
     isAvailableForAllUsers: offer.isAvailableForAllUsers,
     allowedPlatformRoles: offer.allowedPlatformRoles,
     allowedUserIds: offer.allowedUserIds,
-    tags: offer.tags.map((tag) => ({
-      name: tag.name,
-      active: tag.active,
-      userTagIds: tag.userTagIds,
-    })),
     commissionMode: offer.commissionMode,
   };
 }

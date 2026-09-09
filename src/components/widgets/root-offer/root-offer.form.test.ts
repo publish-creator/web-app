@@ -8,6 +8,7 @@ import { DEFAULT_TAB, offerTabFrom } from './root-offer.tabs';
 const CATEGORY = '11111111-1111-4111-8111-111111111111';
 const USER_TAG = '22222222-2222-4222-8222-222222222222';
 const ALLOWED_USER = '33333333-3333-4333-8333-333333333333';
+const COUNTRY_GROUP = '44444444-4444-4444-8444-444444444444';
 
 function buildOffer(overrides: Partial<Offer> = {}): Offer {
   return {
@@ -21,7 +22,7 @@ function buildOffer(overrides: Partial<Offer> = {}): Offer {
     currency: 'BRL',
     paymentPlatform: 'SPARK',
     countries: ['BR', 'PT'],
-    countryGroupIds: ['grupo-latam'],
+    countryGroupIds: [COUNTRY_GROUP],
     pvUrl: null,
     isAvailableForAllUsers: false,
     allowedPlatformRoles: ['AFFILIATE'],
@@ -99,7 +100,7 @@ describe('updateBodyFrom carries what the screen does not edit', () => {
     const body = updateBodyFrom(offer, parse(offer));
 
     expect(body.countries).toEqual(['BR', 'PT']);
-    expect(body.countryGroupIds).toEqual(['grupo-latam']);
+    expect(body.countryGroupIds).toEqual([COUNTRY_GROUP]);
     expect(body.allowedUserIds).toEqual([ALLOWED_USER]);
     expect(body.allowedPlatformRoles).toEqual(['AFFILIATE']);
     expect(body.isAvailableForAllUsers).toBe(false);
@@ -110,6 +111,42 @@ describe('updateBodyFrom carries what the screen does not edit', () => {
     const body = updateBodyFrom(offer, parse(offer));
 
     expect(body.tags).toEqual([{ name: 'BF', active: true, userTagIds: [USER_TAG] }]);
+  });
+
+  it('sends the countries the form chose, not the ones the offer had', () => {
+    const offer = buildOffer();
+    const body = updateBodyFrom(
+      offer,
+      offerFormSchema.parse({ ...formValuesFrom(offer), countries: ['us', 'ar'] }),
+    );
+
+    expect(body.countries).toEqual(['US', 'AR']);
+  });
+
+  it('sends a tag the form turned off, so the door closes on save', () => {
+    const offer = buildOffer();
+    const body = updateBodyFrom(
+      offer,
+      offerFormSchema.parse({
+        ...formValuesFrom(offer),
+        tags: [{ name: 'BF', active: false, userTagIds: [USER_TAG] }],
+      }),
+    );
+
+    expect(body.tags).toEqual([{ name: 'BF', active: false, userTagIds: [USER_TAG] }]);
+  });
+
+  it('refuses two tags with the same name ignoring case, as the API does', () => {
+    const result = offerFormSchema.safeParse({
+      ...formValuesFrom(buildOffer()),
+      tags: [
+        { name: 'BF', active: true, userTagIds: [] },
+        { name: 'bf', active: true, userTagIds: [] },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.path).toEqual(['tags', 1, 'name']);
   });
 
   it('survives a round trip with nothing changed', () => {

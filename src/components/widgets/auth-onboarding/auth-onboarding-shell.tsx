@@ -8,6 +8,8 @@ import { Link } from '@heroui/react';
 
 import { AuthFlowHeader } from '@/widgets/auth';
 
+import { AuthOnboardingProgress, AuthOnboardingStepper } from './auth-onboarding-stepper';
+
 export function AuthOnboardingShell({
   children,
   action,
@@ -31,6 +33,8 @@ export function AuthOnboardingShell({
         />
 
         <div className="relative flex flex-1 grow flex-col justify-center pt-6 md:pt-10">
+          <AuthOnboardingProgress />
+          <AuthOnboardingStepper />
           <div className="flex w-full flex-1 justify-center overflow-x-hidden px-8 pb-10">
             <div className={`flex w-full ${width} flex-col items-center gap-6`}>
               <Image alt="Logo" height={104} src="/images/markepublish-icone.svg" width={104} />

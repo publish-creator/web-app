@@ -1,6 +1,13 @@
-export type PlatformRole = 'AFFILIATE' | 'PRODUCER' | 'COPRODUCER';
+export type PlatformRole =
+  | 'AFFILIATE'
+  | 'CO_PRODUCER'
+  | 'PARTNER'
+  | 'ROOT'
+  | 'FINANCE'
+  | 'ONBOARDING'
+  | 'COMMERCIAL';
 
-export type Role = 'USER' | 'ADMIN' | 'ROOT';
+export type Role = 'USER' | 'ADMIN';
 
 export type UserStatus = 'PENDING' | 'ACTIVE' | 'BLOCKED';
 

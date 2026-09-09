@@ -5,13 +5,26 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
+import { Spinner } from '@heroui/react';
+
 import { REDIRECT_SIGN_OUT_ROUTE, publicRoutes } from '@/config/public-routes';
+import { accessRuleFor } from '@/config/route-access';
 import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
 import { redirectTargetFor } from '@/lib/auth/pending-route';
+import { accessDecision } from '@/lib/auth/route-access';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { resetAppState } from '@/store/reset-app-state';
 import { useLazyGetSessionQuery, useSignOutMutation } from '@/store/services';
 import type { AuthUser } from '@/store/services/auth';
+
+function RouteAccessPending() {
+  return (
+    <div className="flex min-h-screen w-full flex-col items-center justify-center gap-3">
+      <Spinner className="size-6" />
+      <p className="text-muted text-sm">Verificando seu acesso…</p>
+    </div>
+  );
+}
 
 interface SessionProviderProps {
   children: React.ReactNode;
@@ -40,7 +53,11 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
 
   const hasPublicRoutes = publicRoutes.find((item) => pathname.startsWith(item.path));
 
-  const [getSession, { isError, isLoading: getSessionLoading }] = useLazyGetSessionQuery();
+  const [getSession, { isError, isSuccess, isLoading: getSessionLoading }] =
+    useLazyGetSessionQuery();
+
+  const accessRule = accessRuleFor(pathname ?? '');
+  const access = accessDecision(accessRule, user, isSuccess);
 
   useEffect(() => {
     if (hasPublicRoutes && !user?.id) return;
@@ -78,6 +95,10 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
+  useEffect(() => {
+    if (access === 'redirect' && accessRule) router.replace(accessRule.fallback);
+  }, [access, accessRule, router]);
+
   return (
     <SessionContext.Provider
       value={{
@@ -86,7 +107,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
         user,
       }}
     >
-      {children}
+      {access === 'loading' || access === 'redirect' ? <RouteAccessPending /> : children}
     </SessionContext.Provider>
   );
 };

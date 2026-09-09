@@ -1,22 +1,30 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LetterIcon } from '@solar-icons/react/linear';
 import { Controller, useForm } from 'react-hook-form';
 
-import { Button, Checkbox, Link, Spinner } from '@heroui/react';
-import { LetterIcon } from '@solar-icons/react/linear';
+import { useState } from 'react';
+
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+import { Button, Checkbox, ErrorMessage, Link, Spinner } from '@heroui/react';
 
 import { PasswordField, TextField } from '@/components/composites';
-import { useSignInMutation } from '@/store/services/auth';
+import { messageFromError } from '@/lib/api/error-message';
+import { nextRouteFor } from '@/lib/auth/pending-route';
+import { useLazyGetSessionQuery, useSignInMutation } from '@/store/services/auth';
 import { AlternativeSign, AuthFlowHeader } from '@/widgets/auth';
 
 import { signInSchema } from './sign-in.schema';
-
 import type { SignInSchemaInput } from './sign-in.schema';
-import Image from 'next/image';
 
 export default function SignInPage() {
+  const router = useRouter();
   const [signIn, { isLoading }] = useSignInMutation();
+  const [loadSession] = useLazyGetSessionQuery();
+  const [error, setError] = useState('');
   const form = useForm<SignInSchemaInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -24,8 +32,25 @@ export default function SignInPage() {
       password: '',
     },
   });
-  const onSubmit = (data: SignInSchemaInput) => {
-    void signIn(data);
+
+  const onSubmit = async (data: SignInSchemaInput) => {
+    setError('');
+
+    try {
+      const result = await signIn(data).unwrap();
+
+      if (result.mfaRequired) {
+        router.push('/auth/mfa-challenge');
+
+        return;
+      }
+
+      const session = await loadSession().unwrap();
+
+      router.push(nextRouteFor(session));
+    } catch (cause) {
+      setError(messageFromError(cause));
+    }
   };
 
   return (
@@ -49,7 +74,10 @@ export default function SignInPage() {
             <div className="flex w-full max-w-[450px] flex-col items-center gap-6">
               <Image alt="Logo" height={104} src="/images/markepublish-icone.svg" width={104} />
 
-              <form className="flex w-full flex-col gap-8" onSubmit={form.handleSubmit(onSubmit)}>
+              <form
+                className="flex w-full flex-col gap-8"
+                onSubmit={form.handleSubmit((data) => void onSubmit(data))}
+              >
                 <div className="flex flex-col items-center gap-2 text-center">
                   <h1 className="text-2xl font-semibold tracking-tight">Entrar</h1>
                   <p className="text-muted max-w-101 text-sm leading-relaxed">
@@ -93,11 +121,13 @@ export default function SignInPage() {
                       </Checkbox.Control>
                       <Checkbox.Content className="text-sm">Lembrar-me</Checkbox.Content>
                     </Checkbox>
-                    <Link className="text-muted text-sm no-underline" href="/forgot-password">
+                    <Link className="text-muted text-sm no-underline" href="/auth/forgot-password">
                       Esqueceu sua senha?
                     </Link>
                   </div>
                 </fieldset>
+
+                {error ? <ErrorMessage>{error}</ErrorMessage> : null}
 
                 <Button fullWidth isPending={isLoading} size="lg" type="submit">
                   {isLoading ? <Spinner className="size-4" color="current" /> : 'Entrar'}

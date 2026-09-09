@@ -1,7 +1,12 @@
 import { stableQueryKey } from '@/hooks/query/shared/stable-query-key';
 
 import { api } from '../api/base-api';
-import type { OffersListParams, OffersListResponse } from './offers.types';
+import type {
+  BuyLinksResponse,
+  OfferCreativesResponse,
+  OfferSubListParams,
+} from './offer-details.types';
+import type { Offer, OffersListParams, OffersListResponse } from './offers.types';
 
 export const offersApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -20,8 +25,34 @@ export const offersApi = api.injectEndpoints({
             ]
           : [{ type: 'Offers', id: 'LIST' }],
     }),
+
+    getOffer: builder.query<Offer, string>({
+      query: (id) => ({ url: `/offers/${id}` }),
+      providesTags: (_result, _error, id) => [{ type: 'Offers', id }],
+    }),
+
+    getOfferBuyLinks: builder.query<BuyLinksResponse, string>({
+      query: (offerId) => ({ url: `/offers/${offerId}/buy-links` }),
+      providesTags: (_result, _error, offerId) => [{ type: 'Offers', id: `${offerId}:buy-links` }],
+    }),
+
+    getOfferCreatives: builder.query<
+      OfferCreativesResponse,
+      { offerId: string } & OfferSubListParams
+    >({
+      query: ({ offerId, ...params }) => ({ url: `/offers/${offerId}/creatives`, params }),
+      serializeQueryArgs: ({ queryArgs }) => stableQueryKey(queryArgs as Record<string, unknown>),
+      providesTags: (_result, _error, { offerId }) => [
+        { type: 'Offers', id: `${offerId}:creatives` },
+      ],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetOffersQuery } = offersApi;
+export const {
+  useGetOffersQuery,
+  useGetOfferQuery,
+  useGetOfferBuyLinksQuery,
+  useGetOfferCreativesQuery,
+} = offersApi;

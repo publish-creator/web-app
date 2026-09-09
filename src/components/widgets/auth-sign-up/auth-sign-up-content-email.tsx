@@ -1,25 +1,26 @@
 'use client';
 
-import { TextField } from '@/components/composites';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Link } from '@heroui/react';
 import { LetterIcon } from '@solar-icons/react/linear';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Button, ErrorMessage, Link } from '@heroui/react';
+
+import { TextField } from '@/components/composites';
+
 import { useAuthSignUp } from './auth-sign-up-context';
 import { signUpEmailSchema } from './auth-sign-up.schemas';
-
 import type { SignUpEmailInput } from './auth-sign-up.schemas';
 
 export function AuthSignUpContentEmail() {
-  const { data, goToStep } = useAuthSignUp();
+  const { data, error, isSubmitting, submit } = useAuthSignUp();
   const form = useForm<SignUpEmailInput>({
     resolver: zodResolver(signUpEmailSchema),
     defaultValues: { email: data.email },
   });
 
   const onSubmit = (values: SignUpEmailInput) => {
-    goToStep(2, { email: values.email.trim() });
+    submit({ email: values.email.trim() });
   };
 
   return (
@@ -27,7 +28,7 @@ export function AuthSignUpContentEmail() {
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Qual é o seu e-mail comercial?</h1>
         <p className="text-muted max-w-101 text-sm leading-relaxed">
-          Enviaremos um código de verificação e usaremos este e-mail para comunicações da sua conta.
+          Enviaremos um link de acesso para este endereço, e é por ele que falaremos com você.
         </p>
       </div>
 
@@ -47,9 +48,11 @@ export function AuthSignUpContentEmail() {
         )}
       />
 
+      {error ? <ErrorMessage>{error}</ErrorMessage> : null}
+
       <div className="flex flex-col gap-3">
-        <Button fullWidth size="lg" type="submit">
-          Avançar
+        <Button fullWidth isPending={isSubmitting} size="lg" type="submit">
+          Criar conta
         </Button>
         <p className="text-muted text-center text-xs leading-relaxed">
           Ao continuar, você confirma que leu e compreendeu a{' '}

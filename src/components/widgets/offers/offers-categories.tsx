@@ -1,5 +1,6 @@
-import type { OffersCategoryListResponse } from '@/store/services/offers-category/offers-category.types';
 import { Card } from '@heroui/react';
+
+import type { OffersCategoryListResponse } from '@/store/services/offers-category/offers-category.types';
 
 interface OffersCategoriesProps {
   data: OffersCategoryListResponse | undefined;
@@ -20,14 +21,14 @@ export const OffersCategories = ({ data }: OffersCategoriesProps) => {
             key={category.id}
           >
             <div>
-              <p className="text-[15px] font-bold">{category.title}</p>
-              <p className="text-muted text-xs">{category._count.offers} offers</p>
+              <p className="text-[15px] font-bold">{category.name}</p>
+              {category.description ? (
+                <p className="text-muted line-clamp-1 text-xs">{category.description}</p>
+              ) : null}
             </div>
             <div className="-mr-4 -mb-4 size-[78px] min-h-[78px] min-w-[78px] rounded-lg">
-              <img
-                alt={category.title}
-                src={category?.image?.url ?? 'https://placehold.co/78x78'}
-              />
+              {/* eslint-disable-next-line @next/next/no-img-element -- offer covers, flags and category icons come from arbitrary hosts an admin pastes; next/image would need every one allowlisted */}
+              <img alt={category.name} src={category.icon ?? 'https://placehold.co/78x78'} />
             </div>
           </Card>
         ))}

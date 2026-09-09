@@ -1,25 +1,27 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Clock } from '@gravity-ui/icons';
 import { CopyBoldIcon } from '@solar-icons/react';
 import { ShareIcon } from '@solar-icons/react/bold';
 import { InfoCircleIcon } from '@solar-icons/react/linear';
+
+import { useState } from 'react';
+
 import { Card, Chip, ErrorMessage, InputOTP, Link } from '@heroui/react';
 
 import { IconButton } from '@/components/base/icon-button';
 
 import { useAuthMfa } from './auth-mfa-context';
 import { AuthMfaQrCode } from './auth-mfa-qr-code';
-import { MFA_SECRET } from './auth-mfa.constants';
 
 export function AuthMfaContentSetup() {
-  const { code, error, setCode } = useAuthMfa();
+  const { code, error, isPreparing, otpauthUrl, secret, setCode } = useAuthMfa();
   const [copied, setCopied] = useState(false);
 
   const copySecret = async () => {
-    await navigator.clipboard.writeText(MFA_SECRET);
+    if (!secret) return;
+
+    await navigator.clipboard.writeText(secret);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
   };
@@ -53,18 +55,27 @@ export function AuthMfaContentSetup() {
           </Card.Description>
         </Card.Header>
         <Card.Content className="flex flex-col gap-4 md:flex-row md:items-start">
-          <AuthMfaQrCode secret={MFA_SECRET} />
+          {otpauthUrl ? (
+            <AuthMfaQrCode otpauthUrl={otpauthUrl} />
+          ) : (
+            <div
+              aria-label={isPreparing ? 'Gerando QR Code' : 'QR Code indisponível'}
+              className="size-44 shrink-0 animate-pulse rounded-xl bg-white/10"
+              role="img"
+            />
+          )}
           <div className="flex flex-1 flex-col gap-3">
             <p className="text-sm font-medium">
               Não consegue escanear? Insira esta chave manualmente
             </p>
             <div className="bg-surface-secondary flex items-center justify-between gap-2 rounded-xl px-3 py-2">
-              <code className="text-sm tracking-wide">{MFA_SECRET}</code>
+              <code className="text-sm tracking-wide">{secret ?? '••••••••••••••••'}</code>
               <IconButton
+                isDisabled={!secret}
                 label={copied ? 'Chave copiada' : 'Copiar chave'}
+                onPress={() => void copySecret()}
                 size="sm"
                 variant="tertiary"
-                onPress={() => void copySecret()}
               >
                 <CopyBoldIcon className="size-4" />
               </IconButton>
@@ -72,7 +83,10 @@ export function AuthMfaContentSetup() {
             <p className="text-muted text-xs">
               Tipo: baseado em tempo (TOTP) - 6 dígitos - 30 segundos
             </p>
-            <Link className="text-accent inline-flex items-center gap-1 text-sm no-underline" href="#">
+            <Link
+              className="text-accent inline-flex items-center gap-1 text-sm no-underline"
+              href="#"
+            >
               Como configurar no meu aplicativo?
               <ShareIcon className="size-3.5" />
             </Link>
@@ -89,9 +103,9 @@ export function AuthMfaContentSetup() {
           <InputOTP
             aria-label="Código do autenticador"
             maxLength={6}
+            onChange={setCode}
             value={code}
             variant="secondary"
-            onChange={setCode}
           >
             <InputOTP.Group className="justify-start gap-2">
               {Array.from({ length: 6 }, (_, index) => (
@@ -101,8 +115,7 @@ export function AuthMfaContentSetup() {
           </InputOTP>
           {error ? <ErrorMessage>{error}</ErrorMessage> : null}
           <p className="text-muted flex items-center gap-2 text-xs">
-            <Clock className="size-4" />
-            O código é atualizado a cada 30 segundos
+            <Clock className="size-4" />O código é atualizado a cada 30 segundos
           </p>
         </Card.Content>
       </Card>

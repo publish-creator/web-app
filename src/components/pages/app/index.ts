@@ -6,3 +6,4 @@ export { CreativePage } from './creative';
 export { OffersPage } from './offers';
 export { OfferDetailsPage } from './offer-details';
 export { MfaSetupPage } from './mfa';
+export { SocialProfilesPage } from './social-profiles';

@@ -21,8 +21,6 @@ export function AuthSignUpOtpField({
         aria-label="Código de verificação"
         className="w-full"
         maxLength={OTP_LENGTH}
-        value={value}
-        variant="secondary"
         onChange={(nextValue) => {
           onChange(nextValue);
 
@@ -30,6 +28,8 @@ export function AuthSignUpOtpField({
             onComplete?.(nextValue);
           }
         }}
+        value={value}
+        variant="secondary"
       >
         <InputOTP.Group className="w-full justify-between">
           {Array.from({ length: OTP_LENGTH }, (_, index) => (

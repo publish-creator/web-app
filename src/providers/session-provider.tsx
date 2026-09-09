@@ -3,14 +3,15 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { publicRoutes, REDIRECT_SIGN_OUT_ROUTE } from '@/config/public-routes';
+import { REDIRECT_SIGN_OUT_ROUTE, publicRoutes } from '@/config/public-routes';
 import { AuthRefreshManager } from '@/lib/auth/auth-refresh';
+import { nextRouteFor } from '@/lib/auth/pending-route';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { resetAppState } from '@/store/reset-app-state';
 import { useLazyGetSessionQuery, useSignOutMutation } from '@/store/services';
-import type { User } from '@/store/services';
+import type { AuthUser } from '@/store/services/auth';
 
 interface SessionProviderProps {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ interface SessionProviderProps {
 type SessionContextType = {
   onSignOut: () => void;
   isLoading: boolean;
-  user: User | null;
+  user: AuthUser | null;
 };
 
 export const SessionContext = createContext<SessionContextType>({
@@ -30,11 +31,12 @@ export const SessionContext = createContext<SessionContextType>({
 
 const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   const pathname = usePathname();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [authSignOut] = useSignOutMutation();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const { user } = useAppSelector((state) => state.session);
+  const { user, pending } = useAppSelector((state) => state.session);
 
   const hasPublicRoutes = publicRoutes.find((item) => pathname.startsWith(item.path));
 
@@ -53,7 +55,6 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
     try {
       await authSignOut().unwrap();
     } catch {
-      // Cookie may already be expired; continue with the local reset.
     } finally {
       AuthRefreshManager.reset();
       resetAppState(dispatch);
@@ -62,10 +63,18 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!user || hasPublicRoutes || pending.length === 0) return;
+
+    const target = nextRouteFor({ pending });
+
+    if (pathname !== target) router.replace(target);
+  }, [hasPublicRoutes, pathname, pending, router, user]);
+
+  useEffect(() => {
     if (isError && !hasPublicRoutes) {
       void onSignOut();
     }
-    // Same contract as Astron: react to session error, not to onSignOut identity.
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 

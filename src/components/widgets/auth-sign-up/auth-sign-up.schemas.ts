@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
-import { getPhoneDialCode, isValidPhoneNumber, OTP_LENGTH } from './auth-sign-up.constants';
+import { OTP_LENGTH, getPhoneDialCode, isValidPhoneNumber } from './auth-sign-up.constants';
+
+export const signUpInviteSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(6, { message: 'O código de convite tem no mínimo 6 caracteres' })
+    .max(64, { message: 'Código de convite inválido' }),
+});
 
 export const signUpEmailSchema = z.object({
   email: z.email({ message: 'Informe um e-mail válido' }),
@@ -86,6 +94,7 @@ export const signUpPasswordSchema = z
     path: ['verifyPassword'],
   });
 
+export type SignUpInviteInput = z.input<typeof signUpInviteSchema>;
 export type SignUpEmailInput = z.input<typeof signUpEmailSchema>;
 export type SignUpOtpInput = z.input<typeof signUpOtpSchema>;
 export type SignUpPersonalInput = z.input<typeof signUpPersonalSchema>;

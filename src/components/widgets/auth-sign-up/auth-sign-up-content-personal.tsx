@@ -1,17 +1,19 @@
 'use client';
 
-import { TextField } from '@/components/composites';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@heroui/react';
 import { BuildingsIcon, UserIcon } from '@solar-icons/react/bold';
 import { Controller, useForm, useWatch } from 'react-hook-form';
+
+import type { ReactNode } from 'react';
+
+import { Button } from '@heroui/react';
+
+import { TextField } from '@/components/composites';
 
 import { useAuthSignUp } from './auth-sign-up-context';
 import { AuthSignUpSelectableOption } from './auth-sign-up-selectable-option';
 import { signUpPersonalSchema } from './auth-sign-up.schemas';
-
 import type { SignUpBusinessType, SignUpPersonalInput } from './auth-sign-up.schemas';
-import type { ReactNode } from 'react';
 
 const OPTIONS = [
   {
@@ -43,7 +45,7 @@ export function AuthSignUpContentPersonal() {
   const businessType = useWatch({ control: form.control, name: 'businessType' });
 
   const onSubmit = (values: SignUpPersonalInput) => {
-    goToStep(4, {
+    goToStep(3, {
       businessType: values.businessType,
       firstName: values.firstName,
       lastName: values.lastName,

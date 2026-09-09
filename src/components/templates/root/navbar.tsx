@@ -6,20 +6,22 @@ import { AppLayout, Navbar } from '@heroui-pro/react';
 import { Avatar, Button } from '@heroui/react';
 
 import { IconButton } from '@/components/base/icon-button';
-import { formatCurrency } from '@/utils/format-currency';
 import { useSession } from '@/providers/session-provider';
+import { formatCurrency } from '@/utils/format-currency';
 
 export interface DashboardNavbarProps {
-  /** Title rendered in the navbar. Falls back to the home-page greeting. */
   title?: string;
 }
 
-export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavbarProps) {
+export function DashboardNavbar({ title }: DashboardNavbarProps) {
   const { user } = useSession();
   return (
     <Navbar maxWidth="full">
       <Navbar.Header>
         <AppLayout.MenuToggle aria-label="Open navigation" />
+        <span className="text-muted ml-2 hidden text-sm md:inline">
+          {title ?? (user ? `Olá, ${user.name}` : '')}
+        </span>
         {/* <Navbar.Brand>
           <Image alt="Logo" height={100} src="/logo.svg" width={100} />
         </Navbar.Brand> */}
@@ -41,7 +43,6 @@ export function DashboardNavbar({ title = 'Good morning, Kate' }: DashboardNavba
             color="accent"
             size="sm"
           >
-            {user?.avatar ? <Avatar.Image alt={user.name} src={user.avatar} /> : null}
             <Avatar.Fallback>{user?.name?.charAt(0) ?? 'U'}</Avatar.Fallback>
           </Avatar>
         </div>

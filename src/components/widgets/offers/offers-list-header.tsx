@@ -1,7 +1,9 @@
-import { Button, Tag, TagGroup, ToggleButton, ToggleButtonGroup } from '@heroui/react';
 import { Widget4Icon } from '@solar-icons/react/bold';
 import { CheckCircleIcon, SliderMinimalisticHorizontalIcon } from '@solar-icons/react/bold-duotone';
+
 import { useState } from 'react';
+
+import { Button, Tag, TagGroup, ToggleButton, ToggleButtonGroup } from '@heroui/react';
 
 const COUNTRIES = [
   {
@@ -34,14 +36,20 @@ const COUNTRIES = [
 const toggleClass =
   'rounded-full bg-transparent text-muted data-[selected=true]:bg-surface-secondary data-[selected=true]:text-muted';
 
-export const OffersListHeader = () => {
+interface OffersListHeaderProps {
+  total: number | undefined;
+}
+
+export const OffersListHeader = ({ total }: OffersListHeaderProps) => {
   const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xl font-semibold">All Offers</p>
-          <p className="text-muted mt-0.5 text-sm">309 offers</p>
+          <p className="text-muted mt-0.5 text-sm tabular-nums">
+            {total === undefined ? ' ' : `${total} ${total === 1 ? 'oferta' : 'ofertas'}`}
+          </p>
         </div>
         <div className="flex items-center gap-1">
           <Button className="text-xs" variant="tertiary">
@@ -77,6 +85,7 @@ export const OffersListHeader = () => {
               id={country.id}
               key={country.id}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element -- offer covers, flags and category icons come from arbitrary hosts an admin pastes; next/image would need every one allowlisted */}
               <img alt="" className="size-4 shrink-0 rounded-full" src={country.icon} />
               {country.name}
               {selectedCountry.includes(country.id) && <CheckCircleIcon size="16px" />}

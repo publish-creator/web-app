@@ -8,7 +8,7 @@ export const offersCategoryApi = api.injectEndpoints({
     getOffersCategories: builder.query<OffersCategoryListResponse, OffersCategoryListParams | void>(
       {
         query: (params) => ({
-          url: '/labs/category',
+          url: '/settings/categories',
           params: params ?? {},
         }),
         serializeQueryArgs: ({ queryArgs }) =>

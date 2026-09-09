@@ -1,14 +1,12 @@
 import { OfferAbout } from './offer-about';
 import { OfferCreative } from './offer-creative';
 import { OfferInformation } from './offer-information';
-import { OfferTerms } from './offer-terms';
 
 export const OfferContentLeft = () => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <OfferInformation />
       <OfferAbout />
-      <OfferTerms />
       <OfferCreative />
     </div>
   );

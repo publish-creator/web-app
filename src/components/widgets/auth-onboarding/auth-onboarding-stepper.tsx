@@ -47,7 +47,7 @@ export function AuthOnboardingStepper() {
   return (
     <nav
       aria-label="Etapas para criar sua conta"
-      className="absolute top-0 left-0 z-10 hidden h-full w-[268px] flex-col justify-center pl-8 lg:flex"
+      className="absolute top-0 left-0 z-10 hidden h-full w-[268px] flex-col pt-10 pl-8 lg:flex"
     >
       {ONBOARDING_STEPS.map((step, index) => {
         const state = states[step.id];

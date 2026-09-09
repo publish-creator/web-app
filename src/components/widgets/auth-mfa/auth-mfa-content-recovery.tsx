@@ -1,19 +1,44 @@
 'use client';
 
+import { ArrowDownToLine, Copy } from '@gravity-ui/icons';
+
 import { useState } from 'react';
 
-import { Button, Card } from '@heroui/react';
+import { Button, Card, ErrorMessage } from '@heroui/react';
 
 import { useAuthMfa } from './auth-mfa-context';
+import { RECOVERY_FILE_NAME, recoveryCodesFile } from './auth-mfa-recovery-file';
 
 export function AuthMfaContentRecovery() {
   const { recoveryCodes } = useAuthMfa();
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState('');
+  const hasCodes = recoveryCodes.length > 0;
 
   const copyCodes = async () => {
-    await navigator.clipboard.writeText(recoveryCodes.join('\n'));
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(recoveryCodes.join('\n'));
+      setCopyError('');
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopyError('Não foi possível copiar. Baixe o arquivo ou anote os códigos.');
+    }
+  };
+
+  const downloadCodes = () => {
+    const blob = new Blob([recoveryCodesFile(recoveryCodes, new Date())], {
+      type: 'text/plain;charset=utf-8',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = RECOVERY_FILE_NAME;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
   };
 
   return (
@@ -24,9 +49,9 @@ export function AuthMfaContentRecovery() {
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">Códigos de recuperação</h1>
         <p className="text-muted max-w-2xl text-sm leading-relaxed">
-          Estes códigos aparecem uma única vez. Guarde-os agora, em um local seguro: cada um
-          funciona uma vez e é o que devolve o acesso à sua conta se você perder o autenticador.
-          Nada consegue exibi-los de novo.
+          Estes códigos aparecem uma única vez. Baixe ou copie agora e guarde em um local seguro:
+          cada um funciona uma vez e é o que devolve o acesso à sua conta se você perder o
+          autenticador. Nada consegue exibi-los de novo.
         </p>
       </div>
 
@@ -42,13 +67,29 @@ export function AuthMfaContentRecovery() {
               </code>
             ))}
           </div>
-          <Button
-            isDisabled={recoveryCodes.length === 0}
-            onPress={() => void copyCodes()}
-            variant="secondary"
-          >
-            {copied ? 'Códigos copiados' : 'Copiar códigos'}
-          </Button>
+
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              className="flex-1"
+              isDisabled={!hasCodes}
+              onPress={downloadCodes}
+              variant="secondary"
+            >
+              <ArrowDownToLine className="size-4" />
+              Baixar arquivo
+            </Button>
+            <Button
+              className="flex-1"
+              isDisabled={!hasCodes}
+              onPress={() => void copyCodes()}
+              variant="secondary"
+            >
+              <Copy className="size-4" />
+              {copied ? 'Códigos copiados' : 'Copiar códigos'}
+            </Button>
+          </div>
+
+          {copyError ? <ErrorMessage>{copyError}</ErrorMessage> : null}
         </Card.Content>
       </Card>
     </div>

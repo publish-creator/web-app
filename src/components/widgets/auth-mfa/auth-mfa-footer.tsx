@@ -34,7 +34,7 @@ export function AuthMfaFooter() {
           </Button>
         ) : (
           <Button onPress={finish} size="lg">
-            Continuar
+            Guardei meus códigos, continuar
             <ArrowRight className="size-4" />
           </Button>
         )}

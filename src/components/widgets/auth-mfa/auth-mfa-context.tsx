@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -47,25 +47,23 @@ export function AuthMfaProvider({ children }: { children: ReactNode }) {
   const [mfaConfirm, { isLoading: isActivating }] = useMfaConfirmMutation();
   const [loadSession] = useLazyGetSessionQuery();
 
+  const requested = useRef(false);
+
   useEffect(() => {
-    let cancelled = false;
+    if (requested.current) return;
+
+    requested.current = true;
 
     mfaSetup()
       .unwrap()
       .then((data) => {
-        if (cancelled) return;
-
         setOtpauthUrl(data.otpauthUrl);
         setSecret(data.secret);
       })
       .catch((cause: unknown) => {
-        if (!cancelled) setError(messageFromError(cause));
+        setError(messageFromError(cause));
       });
-
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per mount: calling setup again replaces the secret
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per mount, guarded by the ref against StrictMode's double invoke
   }, []);
 
   const activate = useCallback(() => {

@@ -10,7 +10,9 @@ export const OfferApply = () => {
             O pedido de afiliação ainda não está disponível nesta versão.
           </p>
         </div>
-        <Button className="w-full">Solicitar acesso</Button>
+        <Button className="w-full" isDisabled>
+          Solicitar acesso
+        </Button>
       </Card.Content>
     </Card>
   );

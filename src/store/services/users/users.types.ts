@@ -20,6 +20,25 @@ export type User = {
   updatedAt: string;
 };
 
+export type UserRow = {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  role: 'USER' | 'ADMIN';
+  platformRole: string;
+  country: string | null;
+  createdAt: string;
+  tags: { id: string; name: string }[];
+};
+
+export type UserSearchParams = PaginationParams & {
+  filter?: string;
+  userTagId?: string;
+};
+
+export type UserSearchResponse = PaginatedResponse<UserRow>;
+
 export type UsersListParams = PaginationParams & {
   filter?: string;
   /** Mapped from URL `status` (e.g. active, inactive). */

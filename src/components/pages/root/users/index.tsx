@@ -1,9 +1,11 @@
 'use client';
 
-import { QuerySearchField } from '@/components/composites/search-field';
-import { Button } from '@heroui/react';
 import { AddBoldIcon } from '@solar-icons/react';
 import { FilterIcon } from '@solar-icons/react/bold';
+
+import { Button } from '@heroui/react';
+
+import { QuerySearchField } from '@/components/composites/search-field';
 
 export default function UsersRootPage() {
   return (

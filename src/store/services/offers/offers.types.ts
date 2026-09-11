@@ -47,6 +47,7 @@ export type Offer = {
   pvUrl: string | null;
   isAvailableForAllUsers: boolean;
   allowedPlatformRoles: OfferPlatformRole[];
+  allowsAutomaticAffiliation: boolean;
   allowedUserIds: string[];
   tags: OfferTag[];
   category: TaxonomyRef | null;
@@ -68,8 +69,39 @@ export type OfferOrderBy = 'createdAt' | 'updatedAt' | 'title' | 'status';
 
 export type OffersListParams = PaginationParams & {
   filter?: string;
+  status?: OfferStatus;
   orderBy?: OfferOrderBy;
   order?: 'asc' | 'desc';
 };
 
 export type OffersListResponse = PaginatedResponse<Offer>;
+
+export type OfferUpdateBody = {
+  title: string;
+  description: string | null;
+  imageUrl: string | null;
+  status: OfferStatus;
+  categoryId: string;
+  nicheId: string | null;
+  structureId: string | null;
+  angle: string | null;
+  currency: string | null;
+  paymentPlatform: PaymentPlatform;
+  countries: string[];
+  countryGroupIds: string[];
+  pvUrl: string | null;
+  isAvailableForAllUsers: boolean;
+  allowedPlatformRoles: OfferPlatformRole[];
+  allowsAutomaticAffiliation: boolean;
+  allowedUserIds: string[];
+  tags: { name: string; active: boolean; userTagIds: string[] }[];
+  commissionMode: CommissionMode;
+  frontCommissionType: CommissionType;
+  frontCommissionValue: number;
+  backCommissionType: CommissionType;
+  backCommissionValue: number;
+  recurrenceCommissionType: CommissionType;
+  recurrenceCommissionValue: number;
+};
+
+export type OfferUpdateArgs = { id: string; body: OfferUpdateBody };

@@ -14,7 +14,14 @@ export function makeStore() {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
-          ignoredActions: ['api/executeQuery/pending', 'api/executeQuery/fulfilled'],
+          ignoredActions: [
+            'api/executeQuery/pending',
+            'api/executeQuery/fulfilled',
+            'api/executeMutation/pending',
+            'api/executeMutation/fulfilled',
+            'api/executeMutation/rejected',
+          ],
+          ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload'],
         },
       })
         .prepend(sessionListenerMiddleware.middleware)

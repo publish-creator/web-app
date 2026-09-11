@@ -31,6 +31,7 @@ function buildOffer(overrides: Partial<Offer> = {}): Offer {
     countryGroupIds: [],
     pvUrl: null,
     isAvailableForAllUsers: true,
+    allowsAutomaticAffiliation: false,
     allowedPlatformRoles: [],
     allowedUserIds: [],
     tags: [],
@@ -110,5 +111,20 @@ describe('OfferListCard', () => {
     render(<OfferListCard data={buildOffer({ countries: [] })} onPress={() => {}} />);
 
     expect(screen.queryByText(/^\+/)).not.toBeInTheDocument();
+  });
+});
+
+describe('the action slot', () => {
+  it('keeps Apply when nobody passes one, so the affiliate screen is untouched', () => {
+    render(<OfferListCard data={buildOffer()} onPress={() => {}} />);
+
+    expect(screen.getByText('Apply')).toBeInTheDocument();
+  });
+
+  it('lets a caller put something else there, which is how root shows the status', () => {
+    render(<OfferListCard action={<span>Rascunho</span>} data={buildOffer()} onPress={() => {}} />);
+
+    expect(screen.getByText('Rascunho')).toBeInTheDocument();
+    expect(screen.queryByText('Apply')).not.toBeInTheDocument();
   });
 });

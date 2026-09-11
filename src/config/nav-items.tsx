@@ -35,10 +35,12 @@ export const NAV_ITEMS: readonly NavItem[] = [
 export const NAV_ITEMS_ROOT: readonly NavItem[] = [
   { href: '/root', label: 'Dashboard', icon: HomeIcon },
   { href: '/root/offers', label: 'Offers', icon: CartLarge4Icon },
+  { href: '/root/affiliations', label: 'Afiliados', icon: UsersGroupRoundedIcon },
   { href: '/root/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/root/subscriptions', label: 'Subscriptions', icon: Timeline },
   { href: '/root/transactions', label: 'Transactions', icon: Card2BoldIcon },
   { href: '/root/users', label: 'Users', icon: UsersGroupRoundedIcon },
+  { href: '/root/invites', label: 'Convites', icon: WidgetAddIcon },
   { href: '/root/settings', label: 'Settings', icon: SettingsIcon },
 ] as const;
 

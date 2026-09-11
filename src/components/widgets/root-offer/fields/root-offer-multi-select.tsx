@@ -9,6 +9,8 @@ interface RootOfferMultiSelectProps {
   options: { id: string; name: string; icon?: string }[];
   value: string[];
   onChange: (ids: string[]) => void;
+  className?: string;
+  labelPlacement?: 'above' | 'inline';
 }
 
 export const RootOfferMultiSelect = ({
@@ -17,17 +19,21 @@ export const RootOfferMultiSelect = ({
   options,
   value,
   onChange,
+  className,
+  labelPlacement = 'above',
 }: RootOfferMultiSelectProps) => {
   const { contains } = useFilter({ sensitivity: 'base' });
+  const inline = labelPlacement === 'inline';
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="text-muted text-xs font-medium">{label}</span>
+    <div className={inline ? className : `flex flex-col gap-1.5 ${className ?? ''}`}>
+      {inline ? null : <span className="text-muted text-xs font-medium">{label}</span>}
       <Autocomplete
         aria-label={label}
         className="w-full"
         onChange={(key: Key | Key[] | null) => {
           if (Array.isArray(key)) onChange(key.map(String));
+          else if (key == null) onChange([]);
         }}
         placeholder={placeholder}
         selectionMode="multiple"
@@ -35,6 +41,7 @@ export const RootOfferMultiSelect = ({
         variant="secondary"
       >
         <Autocomplete.Trigger>
+          {inline ? <span className="text-muted text-sm">{label}</span> : null}
           <Autocomplete.Value />
           <Autocomplete.Indicator />
         </Autocomplete.Trigger>

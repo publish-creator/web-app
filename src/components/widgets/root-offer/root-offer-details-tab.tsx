@@ -3,16 +3,19 @@
 import { Controller, useWatch } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 
-import { Card, Description, TextArea } from '@heroui/react';
+import { Description, TextArea } from '@heroui/react';
 
 import { TextField } from '@/components/composites';
 import { useGetOffersCategoriesQuery } from '@/store/services/offers-category/offers-category.api';
 import { useGetNichesQuery, useGetStructuresQuery } from '@/store/services/taxonomies';
 
-import { RootOfferAccessPanel } from './root-offer-access-panel';
-import { RootOfferCountriesField } from './root-offer-countries-field';
-import { RootOfferCoverField } from './root-offer-cover-field';
-import { RootOfferTaxonomySelect } from './root-offer-taxonomy-select';
+import {
+  RootOfferAccessPanel,
+  RootOfferCountriesField,
+  RootOfferCoverField,
+  RootOfferPanel,
+  RootOfferTaxonomySelect,
+} from './fields';
 import type { OfferFormInput } from './root-offer.form';
 
 const TAXONOMY_PAGE = { page: 1, pageSize: 100 } as const;
@@ -39,24 +42,6 @@ const PAYMENT_PLATFORMS = [
 
 const FIELD_LABEL = 'text-muted text-xs font-medium';
 
-const Panel = ({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) => (
-  <Card>
-    <Card.Header>
-      <Card.Title className="text-base">{title}</Card.Title>
-      <Card.Description>{description}</Card.Description>
-    </Card.Header>
-    <Card.Content className="flex flex-col gap-5">{children}</Card.Content>
-  </Card>
-);
-
 export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInput> }) => {
   const { data: categories } = useGetOffersCategoriesQuery(TAXONOMY_PAGE);
   const { data: niches } = useGetNichesQuery(TAXONOMY_PAGE);
@@ -70,10 +55,7 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
 
   return (
     <div className="flex flex-col gap-4">
-      <Panel
-        description="A capa, o texto e a classificação que o afiliado vê antes de decidir."
-        title="Informações básicas"
-      >
+      <RootOfferPanel description="O que o afiliado vê antes de pedir acesso." title="Oferta">
         <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
           <Controller
             control={control}
@@ -180,17 +162,13 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
             </div>
 
             <Description className="text-xs">
-              Rascunho fica só com quem administra. Publicada aparece para os afiliados que alcançam
-              a oferta. Inativa sai da listagem, e quem já se afiliou continua.
+              Rascunho só para admin. Publicada para quem alcança. Inativa some da lista.
             </Description>
           </div>
         </div>
-      </Panel>
+      </RootOfferPanel>
 
-      <Panel
-        description="Como a oferta cobra, com que discurso ela vai, e quem consegue alcançá-la."
-        title="Comercial"
-      >
+      <RootOfferPanel description="Pagamento, moeda e países." title="Comercial">
         <div className="grid gap-5 sm:grid-cols-2">
           <Controller
             control={control}
@@ -233,7 +211,7 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
                 variant="secondary"
               />
               <Description className="text-xs">
-                O enquadramento da comunicação. Texto livre.
+                Discurso da comunicação, em texto livre.
               </Description>
             </div>
           )}
@@ -259,7 +237,7 @@ export const RootOfferDetailsTab = ({ control }: { control: Control<OfferFormInp
             )}
           />
         </div>
-      </Panel>
+      </RootOfferPanel>
 
       <RootOfferAccessPanel control={control} />
     </div>

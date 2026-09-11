@@ -4,7 +4,7 @@ import { Xmark } from '@gravity-ui/icons';
 
 import { useMemo, useState } from 'react';
 
-import { Button, Description, SearchField, Spinner } from '@heroui/react';
+import { Button, SearchField, Spinner } from '@heroui/react';
 
 import { useSearchUsersQuery } from '@/store/services/users';
 import type { UserRow } from '@/store/services/users';
@@ -35,34 +35,37 @@ export const RootOfferUsersField = ({ value, onChange }: RootOfferUsersFieldProp
   const results = (found?.data ?? []).filter((row) => !value.includes(row.id));
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       <SearchField
-        aria-label="Buscar usuário por nome ou e-mail"
+        aria-label="Pesquisar por nome ou e-mail"
         onChange={setTerm}
         value={term}
         variant="secondary"
       >
         <SearchField.Group>
           <SearchField.SearchIcon />
-          <SearchField.Input placeholder="Buscar por nome ou e-mail" />
+          <SearchField.Input placeholder="Pesquise por nome ou e-mail" />
           <SearchField.ClearButton />
         </SearchField.Group>
       </SearchField>
 
       {term.length >= 2 ? (
-        <div className="border-border max-h-56 overflow-y-auto rounded-xl border">
+        <div className="border-border max-h-48 overflow-y-auto rounded-xl border">
           {isFetching ? (
-            <div className="flex items-center justify-center p-4">
+            <div className="flex items-center justify-center p-3">
               <Spinner size="sm" />
             </div>
           ) : results.length === 0 ? (
-            <p className="text-muted p-4 text-sm">Ninguém com esse nome ou e-mail.</p>
+            <p className="text-muted p-3 text-sm">Ninguém com esse nome ou e-mail.</p>
           ) : (
             results.map((row) => (
               <button
                 className="hover:bg-surface-secondary flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left"
                 key={row.id}
-                onClick={() => onChange([...value, row.id])}
+                onClick={() => {
+                  onChange([...value, row.id]);
+                  setTerm('');
+                }}
                 type="button"
               >
                 <span className="text-sm font-medium">{row.name}</span>
@@ -73,41 +76,36 @@ export const RootOfferUsersField = ({ value, onChange }: RootOfferUsersFieldProp
         </div>
       ) : null}
 
-      {value.length === 0 ? (
-        <Description className="text-xs">
-          Nenhum usuário escolhido. Busque por nome ou e-mail para liberar a oferta para alguém
-          específico.
-        </Description>
-      ) : (
-        <div className="flex flex-wrap gap-1.5">
-          {value.map((id) => {
-            const row = byId.get(id);
+      {value.length > 0 ? (
+        <div className="border-border flex flex-col gap-2 rounded-xl border px-3 py-2.5">
+          <span className="text-muted text-xs">
+            {value.length} {value.length === 1 ? 'usuário selecionado' : 'usuários selecionados'}
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {value.map((id) => {
+              const row = byId.get(id);
 
-            return (
-              <span
-                className="bg-surface-secondary flex items-center gap-2 rounded-full py-1 pr-1 pl-3 text-xs"
-                key={id}
-              >
-                <span className="flex flex-col leading-tight">
-                  <span className="font-medium">
-                    {row?.name ?? 'Usuário fora da primeira página'}
-                  </span>
-                  <span className="text-muted">{row?.email ?? id}</span>
-                </span>
-                <Button
-                  aria-label={`Remover ${row?.name ?? id}`}
-                  isIconOnly
-                  onPress={() => onChange(value.filter((entry) => entry !== id))}
-                  size="sm"
-                  variant="tertiary"
+              return (
+                <span
+                  className="bg-accent/10 text-accent flex items-center gap-1 rounded-full py-1 pr-1 pl-2.5 text-xs"
+                  key={id}
                 >
-                  <Xmark className="size-3.5" />
-                </Button>
-              </span>
-            );
-          })}
+                  {row?.name ?? row?.email ?? id}
+                  <Button
+                    aria-label={`Remover ${row?.name ?? id}`}
+                    isIconOnly
+                    onPress={() => onChange(value.filter((entry) => entry !== id))}
+                    size="sm"
+                    variant="tertiary"
+                  >
+                    <Xmark className="size-3.5" />
+                  </Button>
+                </span>
+              );
+            })}
+          </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

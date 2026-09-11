@@ -1,4 +1,4 @@
-import RootOffersPage from '@/components/pages/root/offers';
+import { RootOffersPage } from '@/pages/root/offers';
 
 export default function Page() {
   return <RootOffersPage />;

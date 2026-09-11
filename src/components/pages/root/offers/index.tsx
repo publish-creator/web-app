@@ -1,17 +1,15 @@
 'use client';
 
 import { Pagination } from '@/components/composites/pagination/pagination';
-import { RootOffersFilters } from '@/components/widgets/root-offers/root-offers-filters';
-import { RootOffersGrid } from '@/components/widgets/root-offers/root-offers-grid';
-import { statusParam } from '@/components/widgets/root-offers/root-offers.constants';
 import { usePaginationFilter } from '@/hooks/query/filters/use-pagination-filter';
 import { useSearchFilter } from '@/hooks/query/filters/use-search-filter';
 import { useTabFilter } from '@/hooks/query/filters/use-tab-filter';
 import { useGetOffersQuery } from '@/store/services/offers/offers.api';
+import { RootOffersFilters, RootOffersGrid, statusParam } from '@/widgets/root-offers';
 
 const DEFAULT_PAGE_SIZE = 20;
 
-export default function RootOffersPage() {
+export function RootOffersPage() {
   const { page, limit, setPage } = usePaginationFilter({ limit: DEFAULT_PAGE_SIZE });
   const { search, inputValue, onInputChange, clearSearch } = useSearchFilter();
   const { tab, setTab } = useTabFilter({ defaultTab: 'all', resetPageOnChange: true });

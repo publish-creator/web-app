@@ -2,7 +2,8 @@ export const OFFER_TABS = [
   { id: 'detalhes', label: 'Detalhes' },
   { id: 'comissao', label: 'Comissão' },
   { id: 'buy-links', label: 'Buy-Links' },
-  { id: 'afiliados', label: 'Afiliados' },
+  { id: 'auditoria', label: 'Auditoria' },
+  { id: 'afiliacao-automatica', label: 'Afiliação automática' },
   { id: 'arquivos', label: 'Arquivos' },
   { id: 'coprodutores', label: 'Coprodutores' },
 ] as const;

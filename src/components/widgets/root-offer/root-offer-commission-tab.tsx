@@ -7,6 +7,7 @@ import { ToggleButton, ToggleButtonGroup } from '@heroui/react';
 
 import { TextField } from '@/components/composites';
 
+import { RootOfferPanel } from './fields';
 import type { OfferFormInput } from './root-offer.form';
 
 const TYPES = [
@@ -15,43 +16,41 @@ const TYPES = [
 ] as const;
 
 const ROWS = [
-  { key: 'front', label: 'Front', hint: 'A venda principal' },
-  { key: 'back', label: 'Back', hint: 'O upsell depois da compra' },
-  { key: 'recurrence', label: 'Recorrência', hint: 'Cada cobrança seguinte' },
+  { key: 'front', label: 'Front', hint: 'Venda principal' },
+  { key: 'back', label: 'Back', hint: 'Upsell' },
+  { key: 'recurrence', label: 'Recorrência', hint: 'Cobranças seguintes' },
 ] as const;
 
 const toggleClass =
-  'rounded-full bg-transparent text-muted data-[selected=true]:bg-surface-secondary data-[selected=true]:text-foreground';
+  'h-9 min-w-20 justify-center rounded-lg bg-transparent text-muted data-[selected=true]:bg-surface-secondary data-[selected=true]:text-foreground';
 
 export const RootOfferCommissionTab = ({ control }: { control: Control<OfferFormInput> }) => (
-  <div className="flex flex-col gap-6">
-    <div className="flex flex-col gap-1">
-      <h2 className="text-sm font-semibold">Comissão padrão da oferta</h2>
-      <p className="text-muted text-sm">
-        É o que um afiliado recebe ao entrar. Depois de afiliado, ajustar o valor dele não muda esta
-        aqui.
-      </p>
-    </div>
+  <RootOfferPanel
+    description="Vale para quem entra agora. Afiliado já aprovado não muda."
+    title="Comissão padrão"
+  >
+    <div className="border-border flex flex-col divide-y">
+      {ROWS.map((row) => {
+        const typeName = `${row.key}CommissionType` as const;
+        const valueName = `${row.key}CommissionValue` as const;
 
-    {ROWS.map((row) => {
-      const typeName = `${row.key}CommissionType` as const;
-      const valueName = `${row.key}CommissionValue` as const;
+        return (
+          <div
+            className="grid items-center gap-3 py-3 first:pt-0 last:pb-0 md:grid-cols-[8.5rem_1fr_9rem]"
+            key={row.key}
+          >
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">{row.label}</span>
+              <span className="text-muted text-xs">{row.hint}</span>
+            </div>
 
-      return (
-        <section className="flex flex-col gap-3" key={row.key}>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-sm font-medium">{row.label}</span>
-            <span className="text-muted text-xs">{row.hint}</span>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-2">
             <Controller
               control={control}
               name={typeName}
               render={({ field }) => (
                 <ToggleButtonGroup
                   aria-label={`Tipo da comissão ${row.label}`}
-                  className="flex gap-1"
+                  className="flex w-fit gap-1"
                   onSelectionChange={(keys) => {
                     const [first] = [...keys];
 
@@ -94,13 +93,8 @@ export const RootOfferCommissionTab = ({ control }: { control: Control<OfferForm
               )}
             />
           </div>
-        </section>
-      );
-    })}
-
-    <p className="text-muted text-xs">
-      A soma não é validada: ninguém decidiu ainda sobre o que o percentual incide, e um teto
-      chutado recusaria termo legítimo.
-    </p>
-  </div>
+        );
+      })}
+    </div>
+  </RootOfferPanel>
 );

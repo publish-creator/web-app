@@ -1,4 +1,14 @@
-export { usersApi, useGetUsersQuery, useLazyGetUsersQuery, useSearchUsersQuery } from './users.api';
+export {
+  usersApi,
+  useGetUsersQuery,
+  useLazyGetUsersQuery,
+  useSearchUsersQuery,
+  useGetInviteCodesQuery,
+  useGetInviteCodeQuery,
+  useCreateInviteCodeMutation,
+  useUpdateInviteCodeMutation,
+  useRevokeInviteCodeMutation,
+} from './users.api';
 export type {
   User,
   UserRow,

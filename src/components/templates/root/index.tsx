@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { AppLayout } from '@heroui-pro/react';
 
-import { FOOTER_ITEMS, NAV_ITEMS } from '@/config/nav-items';
+import { FOOTER_ITEMS, NAV_ITEMS_ROOT } from '@/config/nav-items';
 
 import { DashboardNavbar } from './navbar';
 import { DashboardSidebar } from './sidebar';
@@ -17,7 +17,7 @@ const HOME_GREETING = 'Good morning, Kate';
 // Combined lookup so every registered route maps to its label in O(1).
 // Hoisted per `server-hoist-static-io` — computed once at module load.
 const ROUTE_LABELS = new Map<string, string>(
-  [...NAV_ITEMS, ...FOOTER_ITEMS].map((item) => [item.href, item.label]),
+  [...NAV_ITEMS_ROOT, ...FOOTER_ITEMS].map((item) => [item.href, item.label]),
 );
 
 export interface AppShellProps {

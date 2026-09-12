@@ -6,7 +6,7 @@ import type {
 export const AUDIT_ENTITY_LABEL: Record<OfferAuditEntity, string> = {
   OFFER: 'Oferta',
   BUY_LINK: 'Buy-link',
-  OFFER_COPRODUCER: 'Coprodutor',
+  COPRODUCER: 'Coprodutor',
   AUTOMATIC_AFFILIATION: 'Afiliação automática',
   AFFILIATION: 'Afiliação',
   OFFER_CREATIVE: 'Criativo',

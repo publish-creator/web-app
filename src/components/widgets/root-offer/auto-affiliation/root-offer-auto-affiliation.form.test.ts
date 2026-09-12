@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { offerTabFrom } from '../root-offer.tabs';
 import {
+  APPLY_TO_OPTIONS,
   autoAffiliationFormSchema,
   createBodyFrom,
   formValuesFromRule,
@@ -13,6 +14,7 @@ const TAG = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const valid = {
   userTagIds: [TAG],
   applyTo: 'NEW_USERS' as const,
+  enabled: true,
   sameAsFront: false,
   frontCommissionType: 'CPA' as const,
   frontCommissionValue: 5,
@@ -21,6 +23,16 @@ const valid = {
   recurrenceCommissionType: 'CPA' as const,
   recurrenceCommissionValue: 0,
 };
+
+describe('APPLY_TO_OPTIONS', () => {
+  it('describes the HW timing, not the old request-click story', () => {
+    expect(APPLY_TO_OPTIONS.map((option) => [option.id, option.hint])).toEqual([
+      ['NEW_USERS', 'Só no cadastro com etiqueta, ou no botão Afiliar'],
+      ['OLD_USERS', 'Quem já tem a etiqueta entra ao salvar'],
+      ['ALL_USERS', 'Quem já existe e quem entrar depois'],
+    ]);
+  });
+});
 
 describe('offerTabFrom', () => {
   it('accepts the automatic affiliation tab', () => {
@@ -49,6 +61,7 @@ describe('autoAffiliationFormSchema', () => {
 describe('createBodyFrom', () => {
   it('sends userTagIds, not free-text names, which is what the next API should persist', () => {
     expect(createBodyFrom(valid).userTagIds).toEqual([TAG]);
+    expect(createBodyFrom(valid).enabled).toBe(true);
   });
 
   it('copies front onto back and recurrence when the toggle is on', () => {
@@ -79,6 +92,7 @@ describe('formValuesFromRule', () => {
     const rule: AutomaticAffiliationRule = {
       ...valid,
       id: 'rule-1',
+      jobStatus: 'PENDING',
       updatedAt: '2026-09-10T00:00:00.000Z',
       sameAsFront: false,
       backCommissionValue: 5,
@@ -86,5 +100,6 @@ describe('formValuesFromRule', () => {
     };
 
     expect(formValuesFromRule(rule).sameAsFront).toBe(true);
+    expect(formValuesFromRule(rule).enabled).toBe(true);
   });
 });

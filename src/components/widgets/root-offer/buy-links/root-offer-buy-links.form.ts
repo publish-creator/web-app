@@ -44,8 +44,6 @@ export const formValuesFromLink = (link: BuyLink): BuyLinkFormValues => ({
   allowedUserIds: link.allowedUserIds,
 });
 
-const httpUrl = (value: string | null) => (value && /^https?:\/\//i.test(value) ? value : null);
-
 export const writeBodyFrom = (values: BuyLinkFormValues): BuyLinkWriteBody => {
   const parsed = buyLinkFormSchema.parse(values);
 
@@ -53,7 +51,6 @@ export const writeBodyFrom = (values: BuyLinkFormValues): BuyLinkWriteBody => {
     title: parsed.title,
     description: parsed.description || null,
     imageUploadId: parsed.imageUploadId,
-    imageUrl: parsed.imageUploadId ? null : httpUrl(parsed.imageUrl),
     url: parsed.url,
     value: parsed.value,
     cpa: parsed.cpa,

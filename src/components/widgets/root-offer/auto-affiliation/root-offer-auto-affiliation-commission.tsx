@@ -1,13 +1,20 @@
 'use client';
 
 import { Controller } from 'react-hook-form';
-import type { Control } from 'react-hook-form';
+import type { Control, Path } from 'react-hook-form';
 
 import { ToggleButton, ToggleButtonGroup } from '@heroui/react';
 
 import { TextField } from '@/components/composites';
 
-import type { AutoAffiliationFormValues } from './root-offer-auto-affiliation.form';
+type CommissionForm = {
+  frontCommissionType: 'CPA' | 'REV_SHARE';
+  frontCommissionValue: number;
+  backCommissionType: 'CPA' | 'REV_SHARE';
+  backCommissionValue: number;
+  recurrenceCommissionType: 'CPA' | 'REV_SHARE';
+  recurrenceCommissionValue: number;
+};
 
 const TYPES = [
   { id: 'CPA', label: 'CPA' },
@@ -24,14 +31,14 @@ type CommissionValueName =
   | 'backCommissionValue'
   | 'recurrenceCommissionValue';
 
-export const RootOfferAutoAffiliationCommissionRow = ({
+export const RootOfferAutoAffiliationCommissionRow = <T extends CommissionForm>({
   control,
   label,
   hint,
   typeName,
   valueName,
 }: {
-  control: Control<AutoAffiliationFormValues>;
+  control: Control<T>;
   label: string;
   hint: string;
   typeName: CommissionTypeName;
@@ -45,7 +52,7 @@ export const RootOfferAutoAffiliationCommissionRow = ({
     <div className="grid gap-2 sm:grid-cols-[1fr_7.5rem]">
       <Controller
         control={control}
-        name={typeName}
+        name={typeName as Path<T>}
         render={({ field }) => (
           <ToggleButtonGroup
             aria-label={`Tipo da comissão ${label}`}
@@ -68,11 +75,11 @@ export const RootOfferAutoAffiliationCommissionRow = ({
       />
       <Controller
         control={control}
-        name={valueName}
+        name={valueName as Path<T>}
         render={({ field, fieldState }) => (
           <Controller
             control={control}
-            name={typeName}
+            name={typeName as Path<T>}
             render={({ field: typeField }) => (
               <TextField
                 errorMessage={fieldState.error?.message}

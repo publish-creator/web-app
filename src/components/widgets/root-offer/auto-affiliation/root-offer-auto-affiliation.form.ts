@@ -1,33 +1,40 @@
 import { z } from 'zod';
 
+import type {
+  ApplyTo,
+  AutomaticAffiliation,
+  AutomaticAffiliationJobStatus,
+  AutomaticAffiliationWriteBody,
+} from '@/store/services/offers/offer-details.types';
 import type { CommissionType } from '@/store/services/offers/offers.types';
 
 export const APPLY_TO = ['NEW_USERS', 'OLD_USERS', 'ALL_USERS'] as const;
 
-export type ApplyTo = (typeof APPLY_TO)[number];
+export type { ApplyTo };
 
 export const APPLY_TO_OPTIONS = [
   {
     id: 'NEW_USERS',
     label: 'Novos usuários',
-    hint: 'Apenas cadastros futuros',
-    detail:
-      'No pedido de afiliação: se o usuário tiver uma das tags, entra aprovado com estes termos.',
+    hint: 'Só no cadastro com etiqueta, ou no botão Afiliar',
   },
   {
     id: 'OLD_USERS',
     label: 'Usuários antigos',
-    hint: 'Apenas usuários já existentes',
-    detail:
-      'Guardada para um lote futuro. Quem pedir afiliação agora não é aprovado só por esta regra.',
+    hint: 'Quem já tem a etiqueta entra ao salvar',
   },
   {
     id: 'ALL_USERS',
     label: 'Todos os usuários',
-    hint: 'Existentes + futuros',
-    detail: 'No pedido: mesma avaliação que novos usuários. Quem já existe continua sem lote.',
+    hint: 'Quem já existe e quem entrar depois',
   },
 ] as const;
+
+export const JOB_STATUS_LABEL: Record<AutomaticAffiliationJobStatus, string> = {
+  PENDING: 'Lote pendente',
+  IN_PROGRESS: 'Afiliando',
+  COMPLETED: 'Lote concluído',
+};
 
 export const MAX_RULES_PER_OFFER = 20;
 export const MAX_TAGS_PER_RULE = 100;
@@ -38,6 +45,7 @@ const commissionValue = z.number().min(0);
 export const autoAffiliationFormSchema = z.object({
   userTagIds: z.array(z.string().uuid()).min(1).max(MAX_TAGS_PER_RULE),
   applyTo: z.enum(APPLY_TO),
+  enabled: z.boolean(),
   sameAsFront: z.boolean(),
   frontCommissionType: commissionType,
   frontCommissionValue: commissionValue,
@@ -52,6 +60,7 @@ export type AutoAffiliationFormValues = z.infer<typeof autoAffiliationFormSchema
 export const EMPTY_RULE_FORM: AutoAffiliationFormValues = {
   userTagIds: [],
   applyTo: 'NEW_USERS',
+  enabled: true,
   sameAsFront: false,
   frontCommissionType: 'CPA',
   frontCommissionValue: 0,
@@ -63,21 +72,29 @@ export const EMPTY_RULE_FORM: AutoAffiliationFormValues = {
 
 export type AutomaticAffiliationRule = AutoAffiliationFormValues & {
   id: string;
+  jobStatus: AutomaticAffiliationJobStatus;
   updatedAt: string;
 };
 
-export type AutomaticAffiliationCreateBody = {
-  userTagIds: string[];
-  applyTo: ApplyTo;
-  frontCommissionType: CommissionType;
-  frontCommissionValue: number;
-  backCommissionType: CommissionType;
-  backCommissionValue: number;
-  recurrenceCommissionType: CommissionType;
-  recurrenceCommissionValue: number;
-};
+export function toRule(row: AutomaticAffiliation): AutomaticAffiliationRule {
+  return {
+    id: row.id,
+    userTagIds: row.userTags.map((tag) => tag.id),
+    applyTo: row.applyTo,
+    enabled: row.enabled,
+    jobStatus: row.jobStatus ?? 'PENDING',
+    sameAsFront: false,
+    frontCommissionType: row.frontCommissionType,
+    frontCommissionValue: Number(row.frontCommissionValue),
+    backCommissionType: row.backCommissionType,
+    backCommissionValue: Number(row.backCommissionValue),
+    recurrenceCommissionType: row.recurrenceCommissionType,
+    recurrenceCommissionValue: Number(row.recurrenceCommissionValue),
+    updatedAt: row.updatedAt,
+  };
+}
 
-export function createBodyFrom(values: AutoAffiliationFormValues): AutomaticAffiliationCreateBody {
+export function createBodyFrom(values: AutoAffiliationFormValues): AutomaticAffiliationWriteBody {
   const uniqueIds = [...new Set(values.userTagIds)];
   const backType = values.sameAsFront ? values.frontCommissionType : values.backCommissionType;
   const backValue = values.sameAsFront ? values.frontCommissionValue : values.backCommissionValue;
@@ -91,6 +108,7 @@ export function createBodyFrom(values: AutoAffiliationFormValues): AutomaticAffi
   return {
     userTagIds: uniqueIds,
     applyTo: values.applyTo,
+    enabled: values.enabled,
     frontCommissionType: values.frontCommissionType,
     frontCommissionValue: values.frontCommissionValue,
     backCommissionType: backType,
@@ -110,6 +128,7 @@ export function formValuesFromRule(rule: AutomaticAffiliationRule): AutoAffiliat
   return {
     userTagIds: rule.userTagIds,
     applyTo: rule.applyTo,
+    enabled: rule.enabled,
     sameAsFront: rule.sameAsFront || sameAsFront,
     frontCommissionType: rule.frontCommissionType,
     frontCommissionValue: rule.frontCommissionValue,

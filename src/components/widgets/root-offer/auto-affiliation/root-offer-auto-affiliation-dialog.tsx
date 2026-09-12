@@ -6,9 +6,10 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { useState } from 'react';
 
-import { Button, Checkbox, Modal } from '@heroui/react';
+import { Button, Checkbox, Modal, Switch } from '@heroui/react';
 
 import { TextField } from '@/components/composites';
+import type { AutomaticAffiliationWriteBody } from '@/store/services/offers/offer-details.types';
 import { useGetUserTagsQuery } from '@/store/services/settings';
 import type { UserTag } from '@/store/services/settings';
 
@@ -23,7 +24,6 @@ import {
 } from './root-offer-auto-affiliation.form';
 import type {
   AutoAffiliationFormValues,
-  AutomaticAffiliationCreateBody,
   AutomaticAffiliationRule,
 } from './root-offer-auto-affiliation.form';
 
@@ -35,7 +35,7 @@ interface RootOfferAutoAffiliationDialogProps {
   editing: AutomaticAffiliationRule | null;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmitRule: (body: AutomaticAffiliationCreateBody) => void | Promise<void>;
+  onSubmitRule: (body: AutomaticAffiliationWriteBody) => void | Promise<void>;
 }
 
 const matchTag = (tags: UserTag[], draft: string) => {
@@ -86,7 +86,7 @@ const DialogForm = ({
 }: {
   editing: AutomaticAffiliationRule | null;
   onOpenChange: (open: boolean) => void;
-  onSubmitRule: (body: AutomaticAffiliationCreateBody) => void | Promise<void>;
+  onSubmitRule: (body: AutomaticAffiliationWriteBody) => void | Promise<void>;
 }) => {
   const { data: userTags } = useGetUserTagsQuery(PAGE);
   const [draft, setDraft] = useState('');
@@ -133,7 +133,7 @@ const DialogForm = ({
       <Modal.Body className="flex flex-col gap-5 overflow-y-auto">
         <section className="flex flex-col gap-2">
           <span className="text-sm font-medium">Tags</span>
-          <p className="text-muted text-xs">Qualquer uma destas tags aprova o pedido.</p>
+          <p className="text-muted text-xs">Quem tiver uma destas etiquetas entra na regra.</p>
 
           <TextField
             aria-label="Adicionar tag de usuário"
@@ -224,6 +224,28 @@ const DialogForm = ({
           />
           <p className="text-muted text-xs">{applyHint}</p>
         </section>
+
+        <Controller
+          control={form.control}
+          name="enabled"
+          render={({ field }) => (
+            <div className="border-border flex items-center justify-between gap-4 rounded-xl border px-4 py-3">
+              <div>
+                <p className="text-sm font-medium">Regra ligada</p>
+                <p className="text-muted text-xs">
+                  Desligada, salvar e etiqueta não afiliam ninguém.
+                </p>
+              </div>
+              <Switch isSelected={field.value} onChange={field.onChange}>
+                <Switch.Content>
+                  <Switch.Control>
+                    <Switch.Thumb />
+                  </Switch.Control>
+                </Switch.Content>
+              </Switch>
+            </div>
+          )}
+        />
 
         <section className="flex flex-col gap-3">
           <span className="text-sm font-medium">Comissão da regra</span>

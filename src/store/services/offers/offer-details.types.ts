@@ -29,7 +29,6 @@ export type BuyLinksResponse = { data: BuyLink[] };
 export type BuyLinkWriteBody = {
   title: string;
   description: string | null;
-  imageUrl: string | null;
   imageUploadId: string | null;
   url: string;
   value: number;
@@ -62,6 +61,10 @@ export type OfferSubListParams = PaginationParams;
 
 export type ApplyTo = 'NEW_USERS' | 'OLD_USERS' | 'ALL_USERS';
 
+export type AutomaticAffiliationJobStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+
+export type AutomaticAffiliationExecuteAction = 'AFFILIATE' | 'UNAFFILIATE';
+
 export type AutomaticAffiliationUserTag = {
   id: string;
   name: string;
@@ -72,6 +75,7 @@ export type AutomaticAffiliation = {
   offerId: string;
   enabled: boolean;
   applyTo: ApplyTo;
+  jobStatus: AutomaticAffiliationJobStatus;
   commissionMode: 'STANDARD' | 'ADVANCED';
   frontCommissionType: 'CPA' | 'REV_SHARE';
   frontCommissionValue: string;
@@ -87,14 +91,65 @@ export type AutomaticAffiliation = {
 export type AutomaticAffiliationsResponse = PaginatedResponse<AutomaticAffiliation>;
 
 export type AutomaticAffiliationWriteBody = {
-  userTagIds: string[];
-  applyTo: ApplyTo;
+  userTagIds?: string[];
+  applyTo?: ApplyTo;
+  enabled?: boolean;
+  frontCommissionType?: 'CPA' | 'REV_SHARE';
+  frontCommissionValue?: number;
+  backCommissionType?: 'CPA' | 'REV_SHARE';
+  backCommissionValue?: number;
+  recurrenceCommissionType?: 'CPA' | 'REV_SHARE';
+  recurrenceCommissionValue?: number;
+};
+
+export type AutomaticAffiliationExecuteResult = {
+  id: string;
+  action: AutomaticAffiliationExecuteAction;
+  canceled?: number;
+};
+
+export type CoproducerStatus = 'INVITED' | 'ACTIVE' | 'PAUSED';
+
+export type CoproducerUser = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+export type Coproducer = {
+  id: string;
+  offerId: string;
+  userId: string;
+  user: CoproducerUser;
+  status: CoproducerStatus;
+  commissionMode: 'STANDARD' | 'ADVANCED';
   frontCommissionType: 'CPA' | 'REV_SHARE';
-  frontCommissionValue: number;
+  frontCommissionValue: string;
   backCommissionType: 'CPA' | 'REV_SHARE';
-  backCommissionValue: number;
+  backCommissionValue: string;
   recurrenceCommissionType: 'CPA' | 'REV_SHARE';
-  recurrenceCommissionValue: number;
+  recurrenceCommissionValue: string;
+  excludedUserIds: string[];
+  payRefund: boolean;
+  payTransactionalTax: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CoproducersResponse = PaginatedResponse<Coproducer>;
+
+export type CoproducerWriteBody = {
+  userId?: string;
+  status?: CoproducerStatus;
+  frontCommissionType?: 'CPA' | 'REV_SHARE';
+  frontCommissionValue?: number;
+  backCommissionType?: 'CPA' | 'REV_SHARE';
+  backCommissionValue?: number;
+  recurrenceCommissionType?: 'CPA' | 'REV_SHARE';
+  recurrenceCommissionValue?: number;
+  excludedUserIds?: string[];
+  payRefund?: boolean;
+  payTransactionalTax?: boolean;
 };
 
 export type AffiliationStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELED';
@@ -188,7 +243,7 @@ export type AdminAffiliationsResponse = PaginatedResponse<AdminAffiliation> & {
 export type OfferAuditEntity =
   | 'OFFER'
   | 'BUY_LINK'
-  | 'OFFER_COPRODUCER'
+  | 'COPRODUCER'
   | 'AUTOMATIC_AFFILIATION'
   | 'AFFILIATION'
   | 'OFFER_CREATIVE'

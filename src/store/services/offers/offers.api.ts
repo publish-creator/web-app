@@ -4,10 +4,14 @@ import { api } from '../api/base-api';
 import type {
   AdminAffiliationsResponse,
   AffiliationDetail,
+  AutomaticAffiliationExecuteAction,
+  AutomaticAffiliationExecuteResult,
   AutomaticAffiliationWriteBody,
   AutomaticAffiliationsResponse,
   BuyLinkWriteBody,
   BuyLinksResponse,
+  CoproducerWriteBody,
+  CoproducersResponse,
   OfferAffiliationsResponse,
   OfferAuditEntry,
   OfferAuditListResponse,
@@ -153,6 +157,70 @@ export const offersApi = api.injectEndpoints({
       }),
       invalidatesTags: (_result, _error, { offerId }) => [
         { type: 'Offers', id: `${offerId}:automatic-affiliations` },
+      ],
+    }),
+
+    executeAutomaticAffiliation: builder.mutation<
+      AutomaticAffiliationExecuteResult,
+      { offerId: string; id: string; action: AutomaticAffiliationExecuteAction }
+    >({
+      query: ({ offerId, id, action }) => ({
+        url: `/offers/${offerId}/automatic-affiliations/${id}/execute`,
+        method: 'PUT',
+        body: { action },
+      }),
+      invalidatesTags: (_result, _error, { offerId }) => [
+        { type: 'Offers', id: `${offerId}:automatic-affiliations` },
+        { type: 'Offers', id: `${offerId}:affiliations` },
+        { type: 'Affiliations', id: 'LIST' },
+      ],
+    }),
+
+    getCoproducers: builder.query<CoproducersResponse, { offerId: string } & OfferSubListParams>({
+      query: ({ offerId, ...params }) => ({ url: `/offers/${offerId}/coproducers`, params }),
+      serializeQueryArgs: ({ queryArgs }) => stableQueryKey(queryArgs as Record<string, unknown>),
+      providesTags: (_result, _error, { offerId }) => [
+        { type: 'Offers', id: `${offerId}:coproducers` },
+      ],
+    }),
+
+    createCoproducer: builder.mutation<
+      { id: string; userId: string; status: string },
+      { offerId: string; body: CoproducerWriteBody }
+    >({
+      query: ({ offerId, body }) => ({
+        url: `/offers/${offerId}/coproducers`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: (_result, _error, { offerId }) => [
+        { type: 'Offers', id: `${offerId}:coproducers` },
+        { type: 'Offers', id: `${offerId}:affiliations` },
+        { type: 'Affiliations', id: 'LIST' },
+      ],
+    }),
+
+    updateCoproducer: builder.mutation<
+      { id: string; updated: boolean },
+      { offerId: string; id: string; body: CoproducerWriteBody }
+    >({
+      query: ({ offerId, id, body }) => ({
+        url: `/offers/${offerId}/coproducers/${id}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: (_result, _error, { offerId }) => [
+        { type: 'Offers', id: `${offerId}:coproducers` },
+      ],
+    }),
+
+    deleteCoproducer: builder.mutation<{ id: string }, { offerId: string; id: string }>({
+      query: ({ offerId, id }) => ({
+        url: `/offers/${offerId}/coproducers/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (_result, _error, { offerId }) => [
+        { type: 'Offers', id: `${offerId}:coproducers` },
       ],
     }),
 
@@ -302,6 +370,11 @@ export const {
   useCreateAutomaticAffiliationMutation,
   useUpdateAutomaticAffiliationMutation,
   useDeleteAutomaticAffiliationMutation,
+  useExecuteAutomaticAffiliationMutation,
+  useGetCoproducersQuery,
+  useCreateCoproducerMutation,
+  useUpdateCoproducerMutation,
+  useDeleteCoproducerMutation,
   useGetOfferAffiliationsQuery,
   useGetOfferAuditQuery,
   useGetOfferAuditEntryQuery,

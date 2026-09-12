@@ -7,7 +7,14 @@ import { ToggleButton, ToggleButtonGroup } from '@heroui/react';
 
 import { TextField } from '@/components/composites';
 
-import type { AutoAffiliationFormValues } from './root-offer-auto-affiliation.form';
+type CommissionForm = {
+  frontCommissionType: 'CPA' | 'REV_SHARE';
+  frontCommissionValue: number;
+  backCommissionType: 'CPA' | 'REV_SHARE';
+  backCommissionValue: number;
+  recurrenceCommissionType: 'CPA' | 'REV_SHARE';
+  recurrenceCommissionValue: number;
+};
 
 const TYPES = [
   { id: 'CPA', label: 'CPA' },
@@ -24,14 +31,14 @@ type CommissionValueName =
   | 'backCommissionValue'
   | 'recurrenceCommissionValue';
 
-export const RootOfferAutoAffiliationCommissionRow = ({
+export const RootOfferAutoAffiliationCommissionRow = <T extends CommissionForm>({
   control,
   label,
   hint,
   typeName,
   valueName,
 }: {
-  control: Control<AutoAffiliationFormValues>;
+  control: Control<T>;
   label: string;
   hint: string;
   typeName: CommissionTypeName;

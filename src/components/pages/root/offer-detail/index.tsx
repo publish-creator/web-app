@@ -22,6 +22,7 @@ import {
   RootOfferAutoAffiliationTab,
   RootOfferBuyLinksTab,
   RootOfferCommissionTab,
+  RootOfferCoproducersTab,
   RootOfferDetailsTab,
   RootOfferHeader,
   RootOfferPendingTab,
@@ -34,7 +35,6 @@ import type { OfferFormInput, OfferTab } from '@/widgets/root-offer';
 
 const PENDING: Record<string, string> = {
   arquivos: 'Criativos, cópias e avatares dependem do subsistema de upload ligado nesta tela.',
-  coprodutores: 'Quem divide a comissão chega junto com os buy links.',
 };
 
 export function RootOfferDetailPage() {
@@ -135,6 +135,7 @@ const OfferDetailPanels = ({
   }
 
   if (active === 'afiliacao-automatica') return <RootOfferAutoAffiliationTab offer={offer} />;
+  if (active === 'coprodutores') return <RootOfferCoproducersTab offer={offer} />;
   if (active === 'buy-links') return <RootOfferBuyLinksTab offer={offer} />;
   if (active === 'auditoria') return <RootOfferAuditTab offerId={offer.id} />;
 

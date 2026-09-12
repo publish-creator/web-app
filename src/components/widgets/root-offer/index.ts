@@ -2,6 +2,7 @@ export { RootOfferAffiliateAssign } from './affiliate-assign';
 export { RootOfferAuditDetail, RootOfferAuditTab } from './audit';
 export { formatCommissionAmount, RootOfferAutoAffiliationTab } from './auto-affiliation';
 export { RootOfferBuyLinksTab } from './buy-links';
+export { RootOfferCoproducersTab } from './coproducers';
 export { RootOfferChoice, RootOfferMultiSelect } from './fields';
 export { RootOfferCommissionTab } from './root-offer-commission-tab';
 export { RootOfferDetailsTab } from './root-offer-details-tab';

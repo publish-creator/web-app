@@ -29,6 +29,6 @@ describe('writeBodyFrom', () => {
     });
 
     expect(body.imageUploadId).toBe('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb');
-    expect(body.imageUrl).toBeNull();
+    expect(body).not.toHaveProperty('imageUrl');
   });
 });

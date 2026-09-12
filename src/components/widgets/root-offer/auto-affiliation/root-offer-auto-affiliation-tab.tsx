@@ -1,49 +1,34 @@
 'use client';
 
-import { Pencil, Plus, TrashBin } from '@gravity-ui/icons';
+import { Plus } from '@gravity-ui/icons';
 
 import { useMemo, useState } from 'react';
 
-import { Button, Chip, ListBox, Select } from '@heroui/react';
+import { Button, ListBox, Select } from '@heroui/react';
 
-import type { AutomaticAffiliation } from '@/store/services/offers/offer-details.types';
+import type { AutomaticAffiliationWriteBody } from '@/store/services/offers/offer-details.types';
 import {
   useCreateAutomaticAffiliationMutation,
   useDeleteAutomaticAffiliationMutation,
+  useExecuteAutomaticAffiliationMutation,
   useGetAutomaticAffiliationsQuery,
   useUpdateAutomaticAffiliationMutation,
 } from '@/store/services/offers/offers.api';
 import type { Offer } from '@/store/services/offers/offers.types';
 import { useGetUserTagsQuery } from '@/store/services/settings';
 
+import { RootOfferAutoAffiliationCard } from './root-offer-auto-affiliation-card';
 import { RootOfferAutoAffiliationDialog } from './root-offer-auto-affiliation-dialog';
 import {
   APPLY_TO,
   MAX_RULES_PER_OFFER,
   applyToMeta,
-  formatCommissionAmount,
+  toRule,
 } from './root-offer-auto-affiliation.form';
-import type {
-  AutomaticAffiliationCreateBody,
-  AutomaticAffiliationRule,
-} from './root-offer-auto-affiliation.form';
+import type { AutomaticAffiliationRule } from './root-offer-auto-affiliation.form';
 
 const PAGE = { page: 1, pageSize: 100 } as const;
 const FILTER_ALL = 'ALL';
-
-const toRule = (row: AutomaticAffiliation): AutomaticAffiliationRule => ({
-  id: row.id,
-  userTagIds: row.userTags.map((tag) => tag.id),
-  applyTo: row.applyTo,
-  sameAsFront: false,
-  frontCommissionType: row.frontCommissionType,
-  frontCommissionValue: Number(row.frontCommissionValue),
-  backCommissionType: row.backCommissionType,
-  backCommissionValue: Number(row.backCommissionValue),
-  recurrenceCommissionType: row.recurrenceCommissionType,
-  recurrenceCommissionValue: Number(row.recurrenceCommissionValue),
-  updatedAt: row.updatedAt,
-});
 
 interface RootOfferAutoAffiliationTabProps {
   offer: Offer;
@@ -54,6 +39,7 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
   const [applyFilter, setApplyFilter] = useState<string>(FILTER_ALL);
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<AutomaticAffiliationRule | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const listArgs = {
     offerId: offer.id,
@@ -66,6 +52,7 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
   const [createRule] = useCreateAutomaticAffiliationMutation();
   const [updateRule] = useUpdateAutomaticAffiliationMutation();
   const [deleteRule] = useDeleteAutomaticAffiliationMutation();
+  const [executeRule] = useExecuteAutomaticAffiliationMutation();
 
   const rules = (data?.data ?? []).map(toRule);
   const names = useMemo(() => {
@@ -80,17 +67,16 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
 
   const atLimit = (data?.meta.total ?? rules.length) >= MAX_RULES_PER_OFFER;
 
-  const openCreate = () => {
-    setEditing(null);
-    setIsOpen(true);
+  const run = async (id: string, work: () => Promise<unknown>) => {
+    setBusyId(id);
+    try {
+      await work();
+    } finally {
+      setBusyId(null);
+    }
   };
 
-  const openEdit = (rule: AutomaticAffiliationRule) => {
-    setEditing(rule);
-    setIsOpen(true);
-  };
-
-  const saveRule = async (body: AutomaticAffiliationCreateBody) => {
+  const saveRule = async (body: AutomaticAffiliationWriteBody) => {
     if (editing) {
       await updateRule({ offerId: offer.id, id: editing.id, body }).unwrap();
       return;
@@ -102,8 +88,9 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-muted max-w-lg text-sm">
-          Pedido com uma destas tags entra aprovado, com a comissão da regra.
+        <p className="text-muted max-w-xl text-sm">
+          Quem tem a etiqueta entra na oferta com a comissão da regra. Salvar antigos ou todos
+          afilia na hora se a oferta estiver no ar. Desafiliar tira a pessoa; a regra continua.
         </p>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -136,7 +123,13 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
             </Select.Popover>
           </Select>
 
-          <Button isDisabled={atLimit} onPress={openCreate}>
+          <Button
+            isDisabled={atLimit}
+            onPress={() => {
+              setEditing(null);
+              setIsOpen(true);
+            }}
+          >
             <Plus className="size-4" />
             Nova regra
           </Button>
@@ -150,12 +143,31 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
       ) : (
         <div className="flex flex-col gap-3">
           {rules.map((rule) => (
-            <RuleCard
+            <RootOfferAutoAffiliationCard
+              busy={busyId === rule.id}
               currency={offer.currency}
               key={rule.id}
               names={names}
-              onEdit={() => openEdit(rule)}
+              onAffiliate={() =>
+                void run(rule.id, () =>
+                  executeRule({ offerId: offer.id, id: rule.id, action: 'AFFILIATE' }).unwrap(),
+                )
+              }
+              onEdit={() => {
+                setEditing(rule);
+                setIsOpen(true);
+              }}
               onRemove={() => void deleteRule({ offerId: offer.id, id: rule.id })}
+              onToggle={(enabled) =>
+                void run(rule.id, () =>
+                  updateRule({ offerId: offer.id, id: rule.id, body: { enabled } }).unwrap(),
+                )
+              }
+              onUnaffiliate={() =>
+                void run(rule.id, () =>
+                  executeRule({ offerId: offer.id, id: rule.id, action: 'UNAFFILIATE' }).unwrap(),
+                )
+              }
               rule={rule}
             />
           ))}
@@ -176,89 +188,3 @@ export const RootOfferAutoAffiliationTab = ({ offer }: RootOfferAutoAffiliationT
     </div>
   );
 };
-
-const RuleCard = ({
-  rule,
-  names,
-  currency,
-  onEdit,
-  onRemove,
-}: {
-  rule: AutomaticAffiliationRule;
-  names: Map<string, string>;
-  currency: string | null;
-  onEdit: () => void;
-  onRemove: () => void;
-}) => {
-  const meta = applyToMeta(rule.applyTo);
-
-  return (
-    <article className="border-border flex flex-col gap-3 rounded-2xl border p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Chip size="sm" variant="secondary">
-            {meta.label}
-          </Chip>
-          {rule.userTagIds.map((id) => (
-            <Chip key={id} size="sm" variant="soft">
-              {names.get(id) ?? 'tag'}
-            </Chip>
-          ))}
-        </div>
-        <div className="flex items-center gap-1">
-          <Button onPress={onEdit} size="sm" variant="tertiary">
-            <Pencil className="size-4" />
-            Editar
-          </Button>
-          <Button className="text-danger" onPress={onRemove} size="sm" variant="tertiary">
-            <TrashBin className="size-4" />
-            Remover
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-3">
-        <CommissionCell
-          currency={currency}
-          label="FRONT"
-          type={rule.frontCommissionType}
-          value={rule.frontCommissionValue}
-        />
-        <CommissionCell
-          currency={currency}
-          label="BACK"
-          type={rule.backCommissionType}
-          value={rule.backCommissionValue}
-        />
-        <CommissionCell
-          currency={currency}
-          label="REC."
-          type={rule.recurrenceCommissionType}
-          value={rule.recurrenceCommissionValue}
-        />
-      </div>
-    </article>
-  );
-};
-
-const CommissionCell = ({
-  label,
-  type,
-  value,
-  currency,
-}: {
-  label: string;
-  type: AutomaticAffiliationRule['frontCommissionType'];
-  value: number;
-  currency: string | null;
-}) => (
-  <div className="bg-surface-secondary flex items-center justify-between rounded-xl px-3 py-2">
-    <div className="flex flex-col">
-      <span className="text-muted text-[11px] font-semibold tracking-wide">{label}</span>
-      <span className="text-sm font-semibold">{formatCommissionAmount(type, value, currency)}</span>
-    </div>
-    <Chip color="success" size="sm" variant="soft">
-      {type === 'REV_SHARE' ? 'REV' : 'CPA'}
-    </Chip>
-  </div>
-);
